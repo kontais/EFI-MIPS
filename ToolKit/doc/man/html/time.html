@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TIME.html">TIME(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="TIME.html">TIME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>time</B> - get time of day
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>time</I><B>_</B><I>t</I>
+     <B>time</B>(<I>time</I><B>_</B><I>t</I> <I>*tloc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>time</B>() function returns the value of time in seconds since 0 hours, 0
+     minutes, 0 seconds, January 1, 1970, Coordinated Universal Time.
+
+     A copy of the time value may be saved to the area indicated by the point-
+     er <I>tloc</I>. If <I>tloc</I> is a NULL pointer, no value is stored.
+
+     Upon successful completion, <B>time</B>() returns the value of time.  Otherwise
+     a value of ((<I>time</I><B>_</B><I>t</I>) -1) is returned and the global variable <I>errno</I> is set
+     to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The following error codes may be set in <I>errno</I>:
+
+     [EFAULT]  An argument address referenced invalid memory.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="gettimeofday.html">gettimeofday(2)</A></B>,  <B><A HREF="ctime.html">ctime(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>time</B>() function appeared in Version 6 AT&amp;T UNIX.
+
+4th Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,85 @@
+#/*++
+#
+# Copyright (c) 2005, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution. The full text of the license may be found at         
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    hexedit.inf
+#
+#  Abstract: 
+#
+#    Component description file for EFI Shell module.
+#
+#--*/
+
+[defines]
+BASE_NAME            = hexedit
+FILE_GUID            = A5A41A42-5B2B-4de6-9556-DDC6DC31231C
+COMPONENT_TYPE       = APPLICATION
+
+[sources.common]
+  ../ShCommonStrings.uni
+  HexeditStrings.uni
+  heditor.h
+  heditortype.h
+  main.c
+  libBufferImage.c
+  libFileImage.c
+  libDiskImage.c
+  libMemImage.c
+  libEditor.c
+  libTitleBar.c
+  libStatusBar.c
+  libInputBar.c
+  libMenuBar.c
+  libClipBoard.c
+  libMisc.c
+
+
+[includes.common]
+  .
+  ../Inc
+  ../Library
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/FrameWork
+  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(DEST_DIR)/
+
+[libraries.common]  
+  EfiShellLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+
+[--]
+
+#
+# To enable building shell commands standalone or built into the shell,
+# we will specify some additional DEFINEs on the compile command line.
+#
+[nmake.common]
+  C_PROJ_FLAGS += 
+  IMAGE_ENTRY_POINT=InitializeEFIHexEditor
+  C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+  C_STD_FLAGS += -D EFI_BOOTSHELL
+
+
+ 

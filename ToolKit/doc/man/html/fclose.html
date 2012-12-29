@@ -1,0 +1,67 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FCLOSE.html">FCLOSE(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="FCLOSE.html">FCLOSE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fclose</B> - close a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fclose</B>(<I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fclose</B>() function dissociates the named <I>stream</I> from its underlying
+     file or set of functions.	If the stream was being used for output, any
+     buffered data is written first, using <B><A HREF="fflush.html">fflush(3)</A></B>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion 0 is returned.	Otherwise, EOF is returned and
+     the global variable <I>errno</I> is set to indicate the error.  In either case
+     no further access to the stream is possible.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>fclose</B>() function may also fail and set <I>errno</I> for any of the errors
+     specified for the routines <B><A HREF="close.html">close(2)</A></B> or <B><A HREF="fflush.html">fflush(3)</A></B>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     <B>fclose</B>() does not handle NULL arguments; they will result in a segmenta-
+     tion violation.  This is intentional - it makes it easier to make sure
+     programs written under FreeBSD are bug free.  This behaviour is an imple-
+     mentation detail, and programs should not rely upon it.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="close.html">close(2)</A></B>,	<B><A HREF="fflush.html">fflush(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="setbuf.html">setbuf(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>fclose</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

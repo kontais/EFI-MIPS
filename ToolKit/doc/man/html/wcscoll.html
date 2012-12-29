@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSCOLL(3)</B>             FreeBSD Library Functions Manual             <B>WCSCOLL(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcscoll</B> - compare strings according to current collation
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>int</I>
+     <B>wcscoll</B>(<I>const</I> <I>wchar</I><B>_</B><I>t</I> <I>*s1</I>, <I>const</I> <I>wchar</I><B>_</B><I>t</I> <I>*s2</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcscoll</B>() function lexicographically compares the null-terminated
+     strings <I>s1</I> and <I>s2</I> according to the current locale collation if any, oth-
+     erwise call <I>strcmp</I>, and returns an integer greater than, equal to, or
+     less than 0, according as <I>s1</I> is greater than, equal to, or less than <I>s2</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>setlocale(3)</B>,  <B>wcscmp(3)</B>,  <B>wcsxfrm(3)</B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wcscoll</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD                              June 4, 1993                                1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

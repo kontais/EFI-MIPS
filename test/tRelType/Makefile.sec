@@ -1,0 +1,19 @@
+LOAD_ADDR=0x00400000
+#LOAD_ADDR=0x80000000
+TOOL_DIR=/home/loongson/EFI-MIPS/Sample/Platform/YeeLoong/Build/Tools
+FWIMAGE=$(TOOL_DIR)/FwImage
+ELFLINK=$(TOOL_DIR)/ElfLink
+ELFTOBIN=$(TOOL_DIR)/ElfToBin
+
+all: 
+	ld -r -d -N -G 0 -o S.rel S.o
+	$(FWIMAGE) -t 0 SECURITY_CORE S.rel S.efi
+	$(ELFLINK) $(LOAD_ADDR) S.efi S.link
+	objcopy -R .reginfo S.rel
+	ld -e start -d -N -G 0 -Ttext $(LOAD_ADDR) -o S.elf S.rel
+	objcopy -R .reginfo -O binary --set-section-flags .bss=alloc,load,contents S.elf S.bin
+	$(ELFTOBIN) S.elf S.bin2
+
+
+clean:
+	rm -rf S.elf S.efi.readelf S.efi S.rel S.hex S.bin S.link *.bin* *.hex

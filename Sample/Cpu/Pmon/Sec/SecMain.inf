@@ -1,0 +1,109 @@
+#/*++
+#
+# Copyright (c) 2004 - 2006, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    SecMain.inf
+#
+#  Abstract:
+#
+#    Component description file for PMON Sec.
+#
+#    Warning the [sources.*] does not work like you think!
+#    If you add a file you need to update the makefile in the NT32 build tip
+#    SEC_OBJECTS needs to get the OBJ of the new C file added in. 
+#    We keep [sources.*] synced up with SEC_OBJECTS so dependencies work
+#    properly.
+#
+#    Libraries.Common does not work you must update SEC_OBJECTS in the platform
+#    makefile
+#
+#--*/
+
+[defines]
+BASE_NAME       = SecMain
+COMPONENT_TYPE  = SECURITY_CORE
+FILE_GUID       = 1BA0062E-C779-4582-8566-336AE8F78F09
+
+[sources.common]
+#
+# This needs to match SEC_OBJECTS in Makefile
+#
+  SecMain.c
+  FwVol.c
+  LinuxThunk.c
+  SecMain.h
+  Start.s
+
+[sources.Mips32]
+  Mips32/SecSwitchStacks.s
+  Mips32/ArchSecInit.s
+  Mips32/LoongsonSecTlbInit.h
+  Mips32/LoongsonSecTlbInit.s
+  Mips32/LoongsonSecCacheInit.h
+  Mips32/LoongsonSecCacheInit.s
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Include/Pei
+  $(EDK_SOURCE)/Foundation/Library/Pei/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Sample/Include
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
+  $(EDK_SOURCE)/Sample/Cpu/Pmon/PmonLib/include
+  
+[includes.Mips32.YeeLoong]
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong/Include
+
+[includes.Mips32.FuLoong2F]
+  $(EDK_SOURCE)/Sample/Platform/FuLoong2F
+  $(EDK_SOURCE)/Sample/Platform/FuLoong2F/Include
+  
+[libraries.common]
+#
+# Update SEC_OBJ in platform makefile in place of using this section
+#
+  PmonLib
+  LibcLib
+  PlatformSecLib
+  Ns16550SecInit
+  Cs5536SecInit
+  BonitoSecInit
+  RegInit
+  SecDebug
+  CpuMips32Lib
+  EdkFrameworkPpiLib
+  PeiHobLib
+  PeiLib                                      
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+  EdkPmon32PpiLib
+
+[nmake.common]
+    IMAGE_ENTRY_POINT=start
+

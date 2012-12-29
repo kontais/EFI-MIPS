@@ -1,0 +1,78 @@
+#/*++
+#
+#  Copyright (c) 2005, Intel Corporation                                                         
+#  All rights reserved. This program and the accompanying materials                          
+#  are licensed and made available under the terms and conditions of the BSD License         
+#  which accompanies this distribution. The full text of the license may be found at         
+#  http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                            
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+#  
+#  Module Name:
+#
+#    Vol.inf
+#
+#  Abstract:
+#
+#    Component description file for building an application for the shell
+#    command vol.
+#
+#  Notes:
+#    BASE_NAME   - names the output file (mount.efi here)
+#    FILE_GUID   - required by the build tool, but not used anywhere for this
+#    BUILD_TYPE  - tells the build process to use the 
+#                  [build.$(PROCESSOR).$(BUILD_TYPE)] section of the DSC file
+#                  to build it. Make sure the DSC file has this section.
+#    FV          - define as NULL to indicate to the build tools that the
+#                  final build target does not go into any firmware volume.
+#
+#  Use of this file requires building in and linking the Shell library.
+#  You must also add it to the DSC file somewhere after the shell has been 
+#  built.
+#
+--*/
+
+[defines]
+BASE_NAME            = Vol
+FILE_GUID            = 86D2167C-42D6-4bcc-B33D-2DDE2E24C6DA
+COMPONENT_TYPE       = APPLICATION
+
+
+[sources.common]
+   ../ShCommonStrings.uni   
+   VolStrings.uni
+   Vol.c
+   Vol.h 
+                                          
+[includes.common]
+  .
+  ../Inc
+  ../Library
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/FrameWork
+  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(DEST_DIR)/
+
+[libraries.common]  
+  EfiShellLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+
+[nmake.common]
+  IMAGE_ENTRY_POINT=InitializeVol
+  C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+  C_STD_FLAGS += -D EFI_BOOTSHELL
+

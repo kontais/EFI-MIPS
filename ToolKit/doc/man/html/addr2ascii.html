@@ -1,0 +1,149 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ADDR2ASCII.html">ADDR2ASCII(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="ADDR2ASCII.html">ADDR2ASCII(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>addr2ascii</B>, <B>ascii2addr</B> - Generic address formatting routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;netinet/in.h&gt;</B>
+     <B>#include</B> <B>&lt;arpa/inet.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>addr2ascii</B>(<I>int</I> <I>af</I>, <I>const</I> <I>void</I> <I>*addrp</I>, <I>int</I> <I>len</I>, <I>char</I> <I>*buf</I>)
+
+     <I>int</I>
+     <B>ascii2addr</B>(<I>int</I> <I>af</I>, <I>const</I> <I>char</I> <I>*ascii</I>, <I>void</I> <I>*result</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The routines <B>addr2ascii</B>() and <B>ascii2addr</B>() are used to convert network
+     addresses between binary form and a printable form appropriate to the ad-
+     dress family.  Both functions take an <I>af</I> argument, specifying the address
+     family to be used in the conversion process.  (Currently, only the
+     AF_INET and AF_LINK address families are supported.)
+
+     The <B>addr2ascii</B>() function is used to convert binary, network-format ad-
+     dresses into printable form.  In addition to <I>af</I>, there are three other
+     arguments.  The <I>addrp</I> argument is a pointer to the network address to be
+     converted.  The <I>len</I> argument is the length of the address.  The <I>buf</I> argu-
+     ment is an optional pointer to a caller-allocated buffer to hold the re-
+     sult; if a null pointer is passed, <B>addr2ascii</B>() uses a statically-allo-
+     cated buffer.
+
+     The <B>ascii2addr</B>() function performs the inverse operation to <B>addr2ascii</B>().
+     In addition to <I>af</I>, it takes two parameters, <I>ascii</I> and <I>result</I>. The <I>ascii</I>
+     parameter is a pointer to the string which is to be converted into bina-
+     ry.  The <I>result</I> parameter is a pointer to an appropriate network address
+     structure for the specified family.
+
+     The following gives the appropriate structure to use for binary addresses
+     in the specified family:
+
+     AF_INET	  struct in_addr (in &lt;<I>netinet/in.h</I>&gt;)
+     AF_LINK	  struct sockaddr_dl (in &lt;<I>net/if</I><B>_</B><I>dl.h</I>&gt;)
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>addr2ascii</B>() function returns the address of the buffer it was
+     passed, or a static buffer if the a null pointer was passed; on failure,
+     it returns a null pointer.  The <B>ascii2addr</B>() function returns the length
+     of the binary address in bytes, or -1 on failure.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     The <B><A HREF="inet.html">inet(3)</A></B> functions <B>inet_ntoa</B>() and <B>inet_aton</B>() could be implemented
+     thusly:
+
+	   #include &lt;sys/types.h&gt;
+	   #include &lt;sys/socket.h&gt;
+	   #include &lt;netinet/in.h&gt;
+	   #include &lt;arpa/inet.h&gt;
+
+	   char *
+	   inet_ntoa(struct in_addr addr)
+	   {
+		   return addr2ascii(AF_INET, &amp;addr, sizeof addr, 0);
+	   }
+
+	   int
+	   inet_aton(const char *ascii, struct in_addr *addr)
+	   {
+		   return (ascii2addr(AF_INET, ascii, addr)
+		       == sizeof(*addr));
+	   }
+
+     In actuality, this cannot be done because <B>addr2ascii</B>() and <B>ascii2addr</B>()
+     are implemented in terms of the <B><A HREF="inet.html">inet(3)</A></B> functions, rather than the other
+     way around.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     When a failure is returned, errno is set to one of the following values:
+
+     [ENAMETOOLONG]	The <B>addr2ascii</B>() routine was passed a <I>len</I> parameter
+			which was inappropriate for the address family given
+			by <I>af</I>.
+
+     [EPROTONOSUPPORT]	Either routine was passed an <I>af</I> parameter other than
+			AF_INET or AF_LINK.
+
+     [EINVAL]		The string passed to <B>ascii2addr</B>() was improperly for-
+			matted for address family <I>af</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="inet.html">inet(3)</A></B>,  <B><A HREF="linkaddr.html">linkaddr(3)</A></B>,  <B><A HREF="inet.html">inet(4)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     An interface close to this one was originally suggested by Craig Par-
+     tridge.  This particular interface originally appeared in the INRIA IPv6
+     implementation.
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+     Code and documentation by Garrett A. Wollman, MIT Laboratory for Computer
+     Science.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The original implementations supported IPv6.  This support should eventu-
+     ally be resurrected.  The NRL implementation also included support for
+     the AF_ISO and AF_NS address families.
+
+     The genericity of this interface is somewhat questionable.  A truly
+     generic interface would provide a means for determining the length of the
+     buffer to be used so that it could be dynamically allocated, and would
+     always require a ``struct sockaddr'' to hold the binary address.  Unfor-
+     tunately, this is incompatible with existing practice.  This limitation
+     means that a routine for printing network addresses from arbitrary ad-
+     dress families must still have internal knowledge of the maximum buffer
+     length needed and the appropriate part of the address to use as the bina-
+     ry address.
+
+BSD				 June 13, 1996				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

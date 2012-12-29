@@ -1,0 +1,55 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FREXP.html">FREXP(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FREXP.html">FREXP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>frexp</B> - convert floating-point number to fractional and integral compo-
+     nents
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>frexp</B>(<I>double</I> <I>value</I>, <I>int</I> <I>*exp</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>frexp</B>() function breaks a floating-point number into a normalized
+     fraction and an integral power of 2.  It stores the integer in the <I>int</I>
+     object pointed to by <I>exp</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>frexp</B>() function returns the value <I>x</I>, such that <I>x</I> is a <I>double</I> with
+     magnitude in the interval [1/2, 1] or zero, and <I>value</I> equals <I>x</I> times 2
+     raised to the power <I>*exp</I>. If <I>value</I> is zero, both parts of the result are
+     zero.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ldexp.html">ldexp(3)</A></B>,	<B><A HREF="math.html">math(3)</A></B>,  <B><A HREF="modf.html">modf(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>frexp</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

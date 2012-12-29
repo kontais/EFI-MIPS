@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ABORT.html">ABORT(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="ABORT.html">ABORT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>abort</B> - cause abnormal program termination
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>void</I>
+     <B>abort</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>abort</B>() function causes abnormal program termination to occur, unless
+     the signal SIGABRT is being caught and the signal handler does not re-
+     turn.
+
+     Any open streams are flushed and closed.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>abort</B>() function never returns.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="sigaction.html">sigaction(2)</A></B>,  <B><A HREF="exit.html">exit(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>abort</B>() function conforms to IEEE Std1003.1-1990 (``POSIX'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

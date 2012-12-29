@@ -1,0 +1,122 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FSEEK.html">FSEEK(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FSEEK.html">FSEEK(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fgetpos</B>, <B>fseek</B>, <B>fseeko</B>, <B>fsetpos</B>, <B>ftell</B>, <B>ftello</B>, <B>rewind</B> - reposition a
+     stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fseek</B>(<I>FILE</I> <I>*stream</I>, <I>long</I> <I>offset</I>, <I>int</I> <I>whence</I>)
+
+     <I>long</I>
+     <B>ftell</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>void</I>
+     <B>rewind</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>fgetpos</B>(<I>FILE</I> <I>*stream</I>, <I>fpos</I><B>_</B><I>t</I> <I>*pos</I>)
+
+     <I>int</I>
+     <B>fsetpos</B>(<I>FILE</I> <I>*stream</I>, <I>const</I> <I>fpos</I><B>_</B><I>t</I> <I>*pos</I>)
+
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+
+     <I>int</I>
+     <B>fseeko</B>(<I>FILE</I> <I>*stream</I>, <I>off</I><B>_</B><I>t</I> <I>offset</I>, <I>int</I> <I>whence</I>)
+
+     <I>off</I><B>_</B><I>t</I>
+     <B>ftello</B>(<I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fseek</B>() function sets the file position indicator for the stream
+     pointed to by <I>stream</I>. The new position, measured in bytes, is obtained by
+     adding <I>offset</I> bytes to the position specified by <I>whence</I>. If <I>whence</I> is set
+     to SEEK_SET, SEEK_CUR, or SEEK_END, the offset is relative to the start
+     of the file, the current position indicator, or end-of-file, respective-
+     ly.  A successful call to the <B>fseek</B>() function clears the end-of-file in-
+     dicator for the stream and undoes any effects of the <B><A HREF="ungetc.html">ungetc(3)</A></B> function
+     on the same stream.
+
+     The <B>ftell</B>() function obtains the current value of the file position indi-
+     cator for the stream pointed to by <I>stream</I>.
+
+     The <B>rewind</B>() function sets the file position indicator for the stream
+     pointed to by <I>stream</I> to the beginning of the file.  It is equivalent to:
+
+	   (void)fseek(stream, 0L, SEEK_SET)
+
+     except that the error indicator for the stream is also cleared (see
+     <B><A HREF="ferror.html">clearerr(3)</A></B>).
+
+     The <B>fseeko</B>() function is identical to <B>fseek</B>(), except it takes an <I>off</I><B>_</B><I>t</I>
+     argument instead of a <I>long</I>. Likewise, the <B>ftello</B>() function is identical
+     to <B>ftell</B>(), except it returns an <I>off</I><B>_</B><I>t</I>.
+
+     The <B>fgetpos</B>() and <B>fsetpos</B>() functions are alternate interfaces equivalent
+     to <B>ftell</B>() and <B>fseek</B>() (with whence set to SEEK_SET), setting and storing
+     the current value of the file offset into or from the object referenced
+     by <I>pos</I>. On some (non-UNIX) systems an ``<I>fpos</I><B>_</B><I>t</I>'' object may be a complex
+     object and these routines may be the only way to portably reposition a
+     text stream.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>rewind</B>() function returns no value.  Upon successful completion,
+     <B>fgetpos</B>(), <B>fseek</B>(), <B>fseeko</B>(), and <B>fsetpos</B>() return 0, and <B>ftell</B>() and
+     <B>ftello</B>() return the current offset.  Otherwise, -1 is returned and the
+     global variable errno is set to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EBADF]   The <I>stream</I> specified is not a seekable stream.
+
+     [EINVAL]  The <I>whence</I> argument to <B>fseek</B>() was not SEEK_SET, SEEK_END, or
+	       SEEK_CUR.
+
+     [EOVERFLOW]
+	       For <B>ftell</B>(), the resulting file offset would be a value which
+	       cannot be represented correctly in an object of type long.
+
+     The functions <B>fgetpos</B>(), <B>fseek</B>(), <B>fseeko</B>(), <B>fsetpos</B>(), <B>ftell</B>(), and
+     <B>ftello</B>() may also fail and set <I>errno</I> for any of the errors specified for
+     the routines <B><A HREF="fflush.html">fflush(3)</A></B>,  <B><A HREF="fstat.html">fstat(2)</A></B>,  <B><A HREF="lseek.html">lseek(2)</A></B>,  and <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="lseek.html">lseek(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>fgetpos</B>(), <B>fsetpos</B>(), <B>fseek</B>(), <B>ftell</B>(), and <B>rewind</B>() functions con-
+     form to ISO 9899: 1990 (``ISO C'').
+
+     The <B>fseeko</B>() and <B>ftello</B>() functions conform to Version 2 of the Single
+     UNIX Specification.
+
+BSD				  Mar 5, 1999				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

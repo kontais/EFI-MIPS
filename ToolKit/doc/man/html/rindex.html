@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="RINDEX.html">RINDEX(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="RINDEX.html">RINDEX(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>rindex</B> - locate character in string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>rindex</B>(<I>const</I> <I>char</I> <I>*s</I>, <I>int</I> <I>c</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>rindex</B>() function locates the last character matching <I>c</I> (converted to
+     a <I>char</I>) in the null-terminated string <I>s</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A pointer to the character is returned if it is found; otherwise NULL is
+     returned.	If <I>c</I> is `\0', <B>rindex</B>() locates the terminating `\0'.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="index.html">index(3)</A></B>,	<B><A HREF="memchr.html">memchr(3)</A></B>,  <B><A HREF="strchr.html">strchr(3)</A></B>,	<B><A HREF="strcspn.html">strcspn(3)</A></B>,  <B><A HREF="strpbrk.html">strpbrk(3)</A></B>,  <B><A HREF="strrchr.html">strrchr(3)</A></B>,
+     <B><A HREF="strsep.html">strsep(3)</A></B>,  <B><A HREF="strspn.html">strspn(3)</A></B>,  <B><A HREF="strstr.html">strstr(3)</A></B>,  <B><A HREF="strtok.html">strtok(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>rindex</B>() function appeared in Version 6 AT&amp;T UNIX.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,19 @@
+LOAD_ADDR=0x00400000
+#LOAD_ADDR=0x80000000
+TOOL_DIR=/home/zhangtao/EFI-MIPS/Sample/Platform/YeeLoong/Build/Tools
+FWIMAGE=$(TOOL_DIR)/FwImage
+ELFLINK=$(TOOL_DIR)/ElfLink
+ELFTOBIN=$(TOOL_DIR)/ElfToBin
+
+all: 
+	ld -r -d -N -G 0 -o I.rel I.o
+	$(FWIMAGE) -t 0 SECURITY_CORE I.rel I.efi
+	$(ELFLINK) $(LOAD_ADDR) I.efi I.link
+	objcopy -R .reginfo I.rel
+	ld -e PeimInitializeDxeIpl -d -N -G 0 -Ttext $(LOAD_ADDR) -o I.elf I.rel
+	objcopy -R .reginfo -O binary --set-section-flags .sbss=alloc,load,contents --set-section-flags .bss=alloc,load,contents I.elf I.bin
+	$(ELFTOBIN) I.elf I.bin2
+
+
+clean:
+	rm -rf I.elf I.efi.readelf I.efi I.rel I.hex I.bin I.link *.bin* *.hex

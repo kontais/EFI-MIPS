@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>EFI Image</B> 		     Libc    Manual 		       <B>EFI Image</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>LoadImage</B>, <B>StartImage</B>, <B>UnloadImage</B>
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>EFI_STATUS</I>
+     <B>LoadImage</B>(<I>CHAR16 *Path</I>, <I>EFI_HANDLE *ImageHandle</I>)
+
+     <I>EFI_STATUS</I>
+     <B>StartImage</B>(<I>EFI_HANDLE       ImageHandle</I>,
+                <I>UINT32           LoadOptionsSize</I>,
+                <I>CHAR16           *LoadOptions</I>,
+                <I>EFI_SYSTEM_TABLE *SystemTable</I>,
+                <I>UINTN            *ExitDataSize</I>,
+                <I>CHAR16           **ExitData</I>)
+
+     <I>EFI_STATUS</I>
+     <B>UnloadImage</B>(<I>EFI_HANDLE ImageHandle</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The EFI image functions allow any valid EFI image to be loaded, started,
+     and unloaded programmatically. 
+
+     The <B>loadImage</B>() call loads the EFI image specified in <I>Path</I> and returns a
+     EFI_HANDLE for the load image.  The Path can be explicit (fs0:/dir/filename.ext),
+     root relative to the current working directory device (/dir/filename.ext),
+     relative to the current working directory (../dir/filename.ext), or simply
+     the file name (filname.ext).  In this latter case, if "path" or "PATH" is
+     set in the environment, their directories will be searched to attempt to
+     find the file.  If a path is not set, the current working directory is
+     assumed.
+
+     Control is transferred to the loaded image by calling <B>startImage</B>().
+     <I/>LoadOptions</I>, <I>SystemTable</I>, and <I>ExitData</I> are all optional.  Pass NULL
+     or 0 for those parameters that are not supplied.  The return value is
+     whatever was returned by the loaded image.
+
+     The <B>unloadImage</B>() call will use EFI boot services to unload an image
+     from memory
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     All calls return the EFI_STATUS code of the underlying EFI boot services call. 
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="system.html">system(3)<A/></B>
+
+</PRE>
+</BODY>
+</HTML>

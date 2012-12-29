@@ -1,0 +1,71 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CTERMID.html">CTERMID(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="CTERMID.html">CTERMID(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ctermid</B> - generate terminal pathname
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>ctermid</B>(<I>char</I> <I>*buf</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>ctermid</B>() function generates a string, that, when used as a pathname,
+     refers to the current controlling terminal of the calling process.
+
+     If <I>buf</I> is the NULL pointer, a pointer to a static area is returned.  Oth-
+     erwise, the pathname is copied into the memory referenced by <I>buf</I>. The ar-
+     gument <I>buf</I> is assumed to be at least L_ctermid (as defined in the include
+     file &lt;<I>stdio.h</I>&gt;) bytes long.
+
+     The current implementation simply returns `/dev/tty'.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, a non-NULL pointer is returned.  Otherwise, a
+     NULL pointer is returned and the global variable <I>errno</I> is set to indicate
+     the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The current implementation detects no error conditions.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ttyname.html">ttyname(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>ctermid</B>() function conforms to IEEE Std1003.1-1988 (``POSIX'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     By default the <B>ctermid</B>() function writes all information to an internal
+     static object.  Subsequent calls to <B>ctermid</B>() will modify the same ob-
+     ject.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,181 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRFTIME.html">STRFTIME(3)</A></B>	       FreeBSD Library Functions Manual 	   <B><A HREF="STRFTIME.html">STRFTIME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strftime</B> - format date and time
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>strftime</B>(<I>char</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>maxsize</I>, <I>const</I> <I>char</I> <I>*format</I>,
+	     <I>const</I> <I>struct</I> <I>tm</I> <I>*timeptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strftime</B>() function formats the information from <I>timeptr</I> into the
+     buffer <I>buf</I> according to the string pointed to by <I>format</I>.
+
+     The <I>format</I> string consists of zero or more conversion specifications and
+     ordinary characters.  All ordinary characters are copied directly into
+     the buffer.  A conversion specification consists of a percent sign
+     ```%''' and one other character.
+
+     No more than <I>maxsize</I> characters will be placed into the array.  If the
+     total number of resulting characters, including the terminating NUL char-
+     acter, is not more than <I>maxsize</I>, <B>strftime</B>() returns the number of charac-
+     ters in the array, not counting the terminating NUL.  Otherwise, zero is
+     returned and the buffer contents is indeterminate.
+
+     The conversion specifications are copied to the buffer after expansion as
+     follows:-
+
+     <B>%A</B>    is replaced by national representation of the full weekday name.
+
+     <B>%a</B>    is replaced by national representation of the abbreviated weekday
+	   name, where the abbreviation is the first three characters.
+
+     <B>%B</B>    is replaced by national representation of the full month name.
+
+     <B>%b</B>    is replaced by national representation of the abbreviated month
+	   name, where the abbreviation is the first three characters.
+
+     <B>%C</B>    is replaced by (year / 100) as decimal number; single digits are
+	   preceded by a zero.
+
+     <B>%c</B>    is replaced by national representation of time and date (the format
+	   is similar with produced by <B><A HREF="ctime.html">asctime(3)</A></B>).
+
+     <B>%D</B>    is equivalent to ``%m/%d/%y''.
+
+     <B>%d</B>    is replaced by the day of the month as a decimal number (01-31).
+
+     <B>%E*</B>   POSIX locale extensions.  The sequences %Ec %EC %Ex %Ey %EY %Od %Oe
+	   %OH %OI %Om %OM %OS %Ou %OU %OV %Ow %OW %Oy are supposed to provide
+	   alternate representations.
+
+     <B>%e</B>    is replaced by the day of month as a decimal number (1-31); single
+	   digits are preceded by a blank.
+
+     <B>%G</B>    is replaced by a year as a decimal number with century.  This year
+	   is the one that contains the greater part of the week (Monday as
+	   the first day of the week).
+
+     <B>%g</B>    is replaced by the same year as in ``%G'', but as a decimal number
+
+	   without century (00-99).
+
+     <B>%H</B>    is replaced by the hour (24-hour clock) as a decimal number
+	   (00-23).
+
+     <B>%h</B>    the same as %b.
+
+     <B>%I</B>    is replaced by the hour (12-hour clock) as a decimal number
+	   (01-12).
+
+     <B>%j</B>    is replaced by the day of the year as a decimal number (001-366).
+
+     <B>%k</B>    is replaced by the hour (24-hour clock) as a decimal number (0-23);
+	   single digits are preceded by a blank.
+
+     <B>%l</B>    is replaced by the hour (12-hour clock) as a decimal number (1-12);
+	   single digits are preceded by a blank.
+
+     <B>%M</B>    is replaced by the minute as a decimal number (00-59).
+
+     <B>%m</B>    is replaced by the month as a decimal number (01-12).
+
+     <B>%n</B>    is replaced by a newline.
+
+     <B>%O*</B>   the same as %E*.
+
+     <B>%p</B>    is replaced by national representation of either "ante meridiem" or
+	   "post meridiem" as appropriate.
+
+     <B>%R</B>    is equivalent to ``%H:%M''.
+
+     <B>%r</B>    is equivalent to ``%I:%M:%S %p''.
+
+     <B>%S</B>    is replaced by the second as a decimal number (00-60).
+
+     <B>%s</B>    is replaced by the number of seconds since the Epoch, UTC (see
+	   <B><A HREF="ctime.html">mktime(3)</A></B>).
+
+     <B>%T</B>    is equivalent to ``%H:%M:%S''.
+
+     <B>%t</B>    is replaced by a tab.
+
+     <B>%U</B>    is replaced by the week number of the year (Sunday as the first day
+	   of the week) as a decimal number (00-53).
+
+     <B>%u</B>    is replaced by the weekday (Monday as the first day of the week) as
+	   a decimal number (1-7).
+
+     <B>%V</B>    is replaced by the week number of the year (Monday as the first day
+	   of the week) as a decimal number (01-53).  If the week containing
+	   January 1 has four or more days in the new year, then it is week 1;
+	   otherwise it is the last week of the previous year, and the next
+	   week is week 1.
+
+     <B>%v</B>    is equivalent to ``%e-%b-%Y''.
+
+     <B>%W</B>    is replaced by the week number of the year (Monday as the first day
+	   of the week) as a decimal number (00-53).
+
+     <B>%w</B>    is replaced by the weekday (Sunday as the first day of the week) as
+	   a decimal number (0-6).
+
+     <B>%X</B>    is replaced by national representation of the time.
+
+     <B>%x</B>    is replaced by national representation of the date.
+
+     <B>%Y</B>    is replaced by the year with century as a decimal number.
+
+     <B>%y</B>    is replaced by the year without century as a decimal number
+	   (00-99).
+
+     <B>%Z</B>    is replaced by the time zone name.
+
+     <B>%+</B>    is replaced by national representation of the date and time (the
+	   format is similar to that produced by <B><A HREF="date.html">date(1)</A></B>).
+
+     <B>%%</B>    is replaced by `%'.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="date.html">date(1)</A></B>,  <B><A HREF="printf.html">printf(1)</A></B>,  <B><A HREF="ctime.html">ctime(3)</A></B>,  <B><A HREF="printf.html">printf(3)</A></B>,  <B><A HREF="strptime.html">strptime(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strftime</B>() function conforms to ISO 9899: 1990 (``ISO C'') with a lot
+     of extensions including `%C', `%D', `%E*', `%e', `%G', `%g', `%h', `%k',
+     `%l', `%n', `%O*', `%R', `%r', `%s', `%T', `%t', `%u', `%V', `%+'.
+
+     The peculiar week number and year in the replacements of `%G', `%g' and
+     `%V' are defined in ISO 8601: 1988.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     There is no conversion specification for the phase of the moon.
+
+BSD				October 4, 1997 			     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

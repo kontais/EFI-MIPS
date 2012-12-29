@@ -1,0 +1,52 @@
+#/*++
+#
+# Copyright (c) 2009, kontais                                                                   
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    Ns16550SecInit.inf
+#
+#  Abstract:
+#
+#    Component description file.
+#
+#--*/
+
+[defines]
+BASE_NAME           = Ns16550SecInit
+COMPONENT_TYPE      = LIBRARY
+
+[sources.common]
+  Ns16550SecInit.h
+  Ns16550SecInit.s
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi
+  .
+  ..
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Sample/Chipset/NorthBridge/Bonito
+  $(EDK_SOURCE)/Sample/Chipset/Serial/Ns16550
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
+  $(EDK_SOURCE)/Sample/Cpu/Loongson/Sec
+
+[libraries.common]
+
+[nmake.common]
+

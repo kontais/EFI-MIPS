@@ -1,0 +1,102 @@
+﻿body, p, ul, td {font-size: 10pt; color: black; font-family:Arial, Helvetica, sans-serif;}
+
+body {background-color: white; margin: 0; padding: 0;}
+
+p, li {background-color: white; padding-top: 5px;}
+
+h1 {font-size: 150%;margin-bottom:0.5em;}
+h2 {font-size: 112%;margin-top:1.5em;margin-bottom:0.5em;}
+h3, h4, h5 {font-size: 100%;margin-top:1.2em;margin-bottom:0.5em;}
+
+UL, OL {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif}
+
+BLOCKQUOTE {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+padding-bottom: 10px;
+padding-top: 10px}
+
+A:link {background-color: white;
+color: #000000;
+font-family: Arial, Helvetica, sans-serif;
+text-decoration: underline}
+
+A:visited {background-color: white;
+color: #000000;
+text-decoration: underline}
+
+A:active {background-color: white;
+color: #FF6600;
+text-decoration: underline}
+
+A:hover {background-color: white;
+color: #FF6600;
+text-decoration: underline}
+
+.gfxbigcap {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+padding-top: 10px;
+text-align: center}
+
+.gfxsmallcap {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-size: smaller;
+padding-top: 10px;
+text-align: center}
+
+.gfxsmallcaplink {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;
+padding-top: 10px;
+text-align: center}
+
+.note {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-style: italic;
+padding-top: 10px}
+
+.important {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-style: italic;
+font-weight: bold;
+padding-top: 10px}
+
+.fnlegal {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-size: smaller;
+font-style: italic;
+padding-top: 10px}
+
+.codesample {background-color: white;
+color: black;
+font-family: "Courier New", Courier, monospace;}
+
+.kbartbody {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;}
+
+.kbartinfo {background-color: white;
+color: black;
+font-family: Arial, Helvetica, sans-serif;
+font-size: x-small;}
+
+.searchbox { font-family: Arial, Helvetica, sans-serif;
+font-size: 13px;
+font-weight: bold;
+height: 20px;
+color: #ffffff;
+background-color: #000000;
+border: 1 solid rgb(255,255,255);}
+
+.productlabel {font-weight: bold;}
+
+.error { color: #FF0000; font-weight: bold; }

@@ -1,0 +1,69 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRCPY.html">STRCPY(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STRCPY.html">STRCPY(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strcpy</B> - copy strings
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strcpy</B>(<I>char</I> <I>*dst</I>, <I>const</I> <I>char</I> <I>*src</I>)
+
+     <I>char</I> <I>*</I>
+     <B>strncpy</B>(<I>char</I> <I>*dst</I>, <I>const</I> <I>char</I> <I>*src</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strcpy</B>() and <B>strncpy</B>() functions copy the string <I>src</I> to <I>dst</I> (includ-
+     ing the terminating `\0' character).
+
+     The <B>strncpy</B>() copies not more than <I>len</I> characters into <I>dst</I>, appending
+     `\0' characters if <I>src</I> is less than <I>len</I> characters long, and <I>not</I> termi-
+     nating <I>dst</I> if <I>src</I> is more than <I>len</I> characters long.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strcpy</B>() and <B>strncpy</B>() functions return <I>dst</I>.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     The following sets ``chararray'' to ``abc\0\0\0'':
+
+	   (void)strncpy(chararray, "abc", 6).
+
+     The following sets ``chararray'' to ``abcdef'':
+
+	   (void)strncpy(chararray, "abcdefgh", 6);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bcopy.html">bcopy(3)</A></B>,	<B><A HREF="memccpy.html">memccpy(3)</A></B>,  <B><A HREF="memcpy.html">memcpy(3)</A></B>,  <B><A HREF="memmove.html">memmove(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strcpy</B>() and <B>strncpy</B>() functions conform to ISO 9899: 1990 (``ISO
+     C'').
+
+4th Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

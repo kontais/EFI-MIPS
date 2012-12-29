@@ -1,0 +1,99 @@
+#
+#  Copyright (C) 2001-2003 Hewlett-Packard Co.
+#	Contributed by Stephane Eranian <eranian@hpl.hp.com>
+#	Contributed by Chandramouli Narayanan<mouli@linux.intel.com>
+#
+# This file is part of ELILO, the LINUX EFI boot loader.
+#
+#  ELILO is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2, or (at your option)
+#  any later version.
+#
+#  ELILO is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with ELILO; see the file COPYING.  If not, write to the Free
+#  Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+#  02111-1307, USA.
+#
+# Please check out the elilo.txt for complete documentation on how
+# to use this program.
+#
+
+#
+# File system selection. At least one filesystem must be enabled
+#
+CONFIG_localfs=y
+CONFIG_netfs=y
+
+#
+# WARNING WARNING WARNING
+#
+# Use this option with caution. This filesystem module does not
+# support ext3 formatted partitions, i.e., it does not know how
+# to recover from failures (ignores the log).
+#
+CONFIG_ext2fs=n
+
+#
+# Chooser selection(at least one must be defined)
+#
+CONFIG_chooser_simple=y
+CONFIG_chooser_textmenu=y
+
+#
+# Enable IP-address based config file (elilo.conf) when netbooted
+#
+CONFIG_machspec_netconfig=y
+
+
+ARCH	   = Mips32
+
+C_FLAGS   += -DCONFIG_$(ARCH) 
+
+
+ifeq ($(CONFIG_machspec_netconfig),y)
+C_FLAGS += -DENABLE_MACHINE_SPECIFIC_NETCONFIG
+endif
+
+ifeq ($(CONFIG_localfs),y)
+C_FLAGS += -DCONFIG_LOCALFS
+endif
+
+ifeq ($(CONFIG_netfs),y)
+C_FLAGS += -DCONFIG_NETFS
+endif
+
+ifeq ($(CONFIG_ext2fs),y)
+C_FLAGS += -DCONFIG_EXT2FS
+endif
+
+ifeq ($(CONFIG_chooser_simple),y)
+C_FLAGS += -DCONFIG_CHOOSER_SIMPLE
+endif
+
+ifeq ($(CONFIG_chooser_textmenu),y)
+C_FLAGS += -DCONFIG_CHOOSER_TEXTMENU
+endif
+
+
+# Use Modified binutils that supports x86_64 using UEFI ABI
+ifeq ($(ARCH), x86_64)
+        C_FLAGS   += -DEFI_FUNCTION_WRAPPER
+	OBJCOPY	  = /usr/bin/objcopy
+endif
+
+ifeq ($(ARCH),ia64)
+ GCC_VERSION=$(shell $(CROSS_COMPILE)$(CC) -v 2>&1 | fgrep 'gcc version' | cut -f3 -d' ' | cut -f1 -d'.')
+
+ ifneq ($(GCC_VERSION),2)
+        C_FLAGS += -frename-registers
+ endif
+
+ # EFI specs allows only lower floating point partition to be used
+ C_FLAGS += -mfixed-range=f32-f127
+endif

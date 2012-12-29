@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSCPY(3)</B>	       FreeBSD Library Functions Manual 	     <B>WCSCPY(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcscpy</B> - copy wide strings
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>wchar_t</I> <I>*</I>
+     <B>wcscpy</B>(<I>wchar_t</I> <I>*dst</I>, <I>const</I> <I>wchar_t</I> <I>*src</I>)
+
+     <I>wchar_t</I> <I>*</I>
+     <B>wcsncpy</B>(<I>wchar_t</I> <I>*dst</I>, <I>const</I> <I>wchar_t</I> <I>*src</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcscpy</B>() and <B>wcsncpy</B>() functions copy the string <I>src</I> to <I>dst</I> (includ-
+     ing the terminating `\0' character).
+
+     The <B>wcsncpy</B>() copies not more than <I>len</I> characters into <I>dst</I>, appending
+     `\0' characters if <I>src</I> is less than <I>len</I> characters long, and <I>not</I> termi-
+     nating <I>dst</I> if <I>src</I> is more than <I>len</I> characters long.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wcscpy</B>() and <B>wcsncpy</B>() functions return <I>dst</I>.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     The following sets ``chararray'' to ``abc\0\0\0'':
+
+	   (void)wcsncpy(chararray, L"abc", 6).
+
+     The following sets ``chararray'' to ``abcdef'':
+
+	   (void)wcsncpy(chararray, L"abcdefgh", 6);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>bcopy(3)</B>,	<B>memccpy(3)</B>,  <B>memcpy(3)</B>,  <B>memmove(3)</B>
+
+
+4th Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

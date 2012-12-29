@@ -1,0 +1,115 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETNETENT.html">GETNETENT(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="GETNETENT.html">GETNETENT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getnetent</B>, <B>getnetbyaddr</B>, <B>getnetbyname</B>, <B>setnetent</B>, <B>endnetent</B> - get network
+     entry
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;netdb.h&gt;</B>
+
+     <I>struct</I> <I>netent</I> <I>*</I>
+     <B>getnetent</B>(<I>void</I>)
+
+     <I>struct</I> <I>netent</I> <I>*</I>
+     <B>getnetbyname</B>(<I>const</I> <I>char</I> <I>*name</I>)
+
+     <I>struct</I> <I>netent</I> <I>*</I>
+     <B>getnetbyaddr</B>(<I>unsigned</I> <I>long</I> <I>net</I>, <I>int</I> <I>type</I>)
+
+     <I>void</I>
+     <B>setnetent</B>(<I>int</I> <I>stayopen</I>)
+
+     <I>void</I>
+     <B>endnetent</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>getnetent</B>(), <B>getnetbyname</B>(), and <B>getnetbyaddr</B>() functions each return
+     a pointer to an object with the following structure containing the bro-
+     ken-out fields of a line in the network data base, <I>/etc/networks</I>.
+
+	   struct  netent {
+		   char 	   *n_name;	   /* official name of net */
+		   char 	   **n_aliases;    /* alias list */
+		   int		   n_addrtype;	   /* net number type */
+		   unsigned long   n_net;	   /* net number */
+	   };
+
+     The members of this structure are:
+
+     <I>n</I><B>_</B><I>name</I>	 The official name of the network.
+
+     <I>n</I><B>_</B><I>aliases</I>	 A zero terminated list of alternate names for the network.
+
+     <I>n</I><B>_</B><I>addrtype</I>  The type of the network number returned; currently only
+		 AF_INET.
+
+     <I>n</I><B>_</B><I>net</I>	 The network number.  Network numbers are returned in machine
+		 byte order.
+
+     The <B>getnetent</B>() function reads the next line of the file, opening the
+     file if necessary.
+
+     The <B>setnetent</B>() function opens and rewinds the file.  If the <I>stayopen</I>
+     flag is non-zero, the net data base will not be closed after each call to
+     <B>getnetbyname</B>() or <B>getnetbyaddr</B>().
+
+     The <B>endnetent</B>() function closes the file.
+
+     The <B>getnetbyname</B>() function and <B>getnetbyaddr</B>() sequentially search from
+     the beginning of the file until a matching net name or net address and
+     type is found, or until EOF is encountered. The <I>type</I> must be AF_INET.
+     Network numbers are supplied in host order.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+
+     /etc/networks
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     Null pointer (0) returned on EOF or error.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="networks.html">networks(5)</A></B>
+
+     <I>RFC</I> <I>1101</I>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getnetent</B>(), <B>getnetbyaddr</B>(), <B>getnetbyname</B>(), <B>setnetent</B>(), and
+     <B>endnetent</B>() functions appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The data space used by these functions is static; if future use requires
+     the data, it should be copied before any subsequent calls to these func-
+     tions overwrite it.  Only Internet network numbers are currently under-
+     stood.  Expecting network numbers to fit in no more than 32 bits is prob-
+     ably naive.
+
+4.2 Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

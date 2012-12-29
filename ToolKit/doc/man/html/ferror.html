@@ -1,0 +1,72 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FERROR.html">FERROR(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="FERROR.html">FERROR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>clearerr</B>, <B>feof</B>, <B>ferror</B>, <B>fileno</B> - check and reset stream status
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>void</I>
+     <B>clearerr</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>feof</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>ferror</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>fileno</B>(<I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The function <B>clearerr</B>() clears the end-of-file and error indicators for
+     the stream pointed to by <I>stream</I>.
+
+     The function <B>feof</B>() tests the end-of-file indicator for the stream point-
+     ed to by <I>stream</I>, returning non-zero if it is set.	The end-of-file indi-
+     cator can only be cleared by the function <B>clearerr</B>().
+
+     The function <B>ferror</B>() tests the error indicator for the stream pointed to
+     by <I>stream</I>, returning non-zero if it is set.  The error indicator can only
+     be reset by the <B>clearerr</B>() function.
+
+     The function <B>fileno</B>() examines the argument <I>stream</I> and returns its inte-
+     ger descriptor.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     These functions should not fail and do not set the external variable
+     <I>errno</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="stdio.html">stdio(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>clearerr</B>(), <B>feof</B>(), and <B>ferror</B>() conform to ISO 9899: 1990
+     (``ISO C'').
+
+BSD				April 19, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

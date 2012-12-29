@@ -1,0 +1,61 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ASIN.html">ASIN(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="ASIN.html">ASIN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>asin</B>, <B>asinf</B> - arc sine functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>asin</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>asinf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>asin</B>() and the <B>asinf</B>() functions compute the principal value of the
+     arc sine of <I>x</I>. A domain error occurs for arguments not in the range [-1,
+     +1].  For a discussion of error due to roundoff, see <B><A HREF="math.html">math(3)</A></B>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>asin</B>() and the <B>asinf</B>() functions return the arc sine in the range
+     [-pi/2, +pi/2] radians.  On the VAX, and Tahoe , if:
+
+	   |<I>x</I>| &gt; 1
+
+     the global variable <I>errno</I> is set to EDOM and a reserved operand fault
+     generated.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="acos.html">acos(3)</A></B>,  <B><A HREF="atan.html">atan(3)</A></B>,  <B><A HREF="atan2.html">atan2(3)</A></B>,  <B><A HREF="cos.html">cos(3)</A></B>,  <B><A HREF="cosh.html">cosh(3)</A></B>,  <B><A HREF="math.html">math(3)</A></B>,  <B><A HREF="sin.html">sin(3)</A></B>,
+     <B><A HREF="sinh.html">sinh(3)</A></B>,  <B><A HREF="tan.html">tan(3)</A></B>,	<B><A HREF="tanh.html">tanh(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>asin</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				  May 2, 1991				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,106 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="DUP.html">DUP(2)</A></B>			  FreeBSD System Calls Manual			<B><A HREF="DUP.html">DUP(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>dup</B>, <B>dup2</B> - duplicate an existing file descriptor
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>dup</B>(<I>int</I> <I>oldd</I>)
+
+     <I>int</I>
+     <B>dup2</B>(<I>int</I> <I>oldd</I>, <I>int</I> <I>newd</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Dup</B>() duplicates an existing object descriptor and returns its value to
+     the calling process (<I>newd</I> = <B>dup</B>(<I>oldd</I>)). The argument <I>oldd</I> is a small non-
+     negative integer index in the per-process descriptor table.  The value
+     must be less than the size of the table, which is returned by
+     <B><A HREF="getdtablesize.html">getdtablesize(2)</A></B>.	The new descriptor returned by the call is the lowest
+     numbered descriptor currently not in use by the process.
+
+     The object referenced by the descriptor does not distinguish between <I>oldd</I>
+     and <I>newd</I> in any way.  Thus if <I>newd</I> and <I>oldd</I> are duplicate references to
+     an open file, <B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="write.html">write(2)</A></B> and <B><A HREF="lseek.html">lseek(2)</A></B> calls all move a single
+     pointer into the file, and append mode, non-blocking I/O and asynchronous
+     I/O options are shared between the references.  If a separate pointer in-
+     to the file is desired, a different object reference to the file must be
+     obtained by issuing an additional <B><A HREF="open.html">open(2)</A></B> call.  The close-on-exec flag
+     on the new file descriptor is unset.
+
+     In <B>dup2</B>(), the value of the new descriptor <I>newd</I> is specified.  If this
+     descriptor is already in use and <I>oldd</I> != <I>newd</I>, the descriptor is first
+     deallocated as if a <B><A HREF="close.html">close(2)</A></B> call had been used.  If <I>oldd</I> is not a valid
+     descriptor, then <I>newd</I> is not closed.  If <I>oldd</I> == <I>newd</I> and <I>oldd</I> is a valid
+     descriptor, then <B>dup2</B>() is successful, and does nothing.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>dup</B>() is implemented as the <I>dup</I> syscall.
+
+     In the threaded library, the <I>dup</I> syscall is assembled to
+     <B>_thread_sys_dup</B>() and <B>dup</B>() is implemented as a function which locks <I>oldd</I>
+     for read and write, then calls <B>_thread_sys_dup</B>().	Before returning,
+     <B>dup</B>() unlocks <I>oldd</I>.
+
+     In the non-threaded library <B>dup2</B>() is implemented as the <I>dup2</I> syscall.
+
+     In the threaded library, the <I>dup2</I> syscall is assembled to
+     <B>_thread_sys_dup2</B>() and <B>dup2</B>() is implemented as a function which locks
+     both <I>oldd</I> and <I>newd</I> for read and write, then calls <B>_thread_sys_dup2</B>().
+     Before returning, <B>dup2</B>() unlocks <I>oldd</I>. and <I>newd</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The value -1 is returned if an error occurs in either call.  The external
+     variable <I>errno</I> indicates the cause of the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Dup</B>() and <B>dup2</B>() fail if:
+
+     [EBADF]	   <I>Oldd</I> or <I>newd</I> is not a valid active descriptor
+
+     [EMFILE]	   Too many descriptors are active.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="accept.html">accept(2)</A></B>,  <B><A HREF="close.html">close(2)</A></B>,  <B><A HREF="fcntl.html">fcntl(2)</A></B>,  <B><A HREF="getdtablesize.html">getdtablesize(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="pipe.html">pipe(2)</A></B>,
+     <B><A HREF="socket.html">socket(2)</A></B>,  <B><A HREF="socketpair.html">socketpair(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>dup</B>() and <B>dup2</B>() function calls are expected to conform to IEEE
+     Std1003.1-1990 (``POSIX'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>dup</B>() and a <B>dup2</B>() function call appeared in Version 7 AT&amp;T UNIX.
+
+4th Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

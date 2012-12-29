@@ -1,0 +1,76 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>FWIDE(3)</b>	       FreeBSD Library Functions Manual 	      <b>FWIDE(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>fwide - </b>determines the orientation of the stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <em>int</em><b> 
+     fwide</b>(<em>FILE *stream, int mode</em>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The function determines the orientation of the stream <em>stream</em>. If mode is
+     greater than zero, it first attempts to make the stream wide oriented. 
+     If mode is less than zero, it first attempts to make the stream byte oriented.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     In any event, the function returns:
+
+     <strong>o</strong>  A value greater than zero if the stream is left wide-oriented. 
+     <strong>o</strong>  Zero if the stream is left unbound. 
+     <strong>o</strong>  A value less than zero if the stream is left byte-oriented. 
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The functions <b>fwide</b>() conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

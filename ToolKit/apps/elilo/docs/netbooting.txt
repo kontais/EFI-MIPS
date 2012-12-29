@@ -1,0 +1,413 @@
+How to netboot using ELILO
+--------------------------
+
+Copyright (C) 2002-2003 Hewlett-Packard Co.
+Contributed by Stephane Eranian <eranian@hpl.hp.com>
+Updated by Jason Fleischli <jason.fleischli@hp.com>
+
+Last updated: 10/19/2009
+
+x86_64 and uefi support was added @ elilo version 3.8 and linux kernel >= 2.6.24
+
+EFI has full support for the PXE and DHCP protocol. As such 
+it is relatively easy to boot a machine from the network using EFI.
+The elilo loader has full support for both PXE and DHCP, therefore
+it is possible to download the elilo config file, the Linux kernel image 
+and the initial ramdisk from a remote server. There are many ways
+netbooting can be configured but in this document we focus 
+only on two very common cases:
+
+		- netboot but use local root filesystem.
+		- booting a diskless machine, i.e., use a NFS root filesystem.
+
+1/ How to get EFI to netboot?
+
+   You do not need any additional software to get EFI to start a netboot session.
+   Any EFI machine can be configured to start a PXE/DHCP session IF it has a network
+   adapter that has support for the UNDI/PXE protocol. Most modern cards do have such
+   support. 
+
+   To enable netbooting, you need to go into the EFI boot manager maintenance menu
+   and 'Add a boot option'. On the screen you see the list of devices to boot from.
+   At least one of them should be of the form:
+
+	Load File [Acpi(PNP0A03,0)/Pci(5|0)/Mac(00D0B7A6FC25)]
+
+   which represent Ethernet card (Mac address). If you don't have such option, it means that
+   you either do not have a network adapter in your machine or it does not have the
+   UNDI/PXE support in its option ROM.
+
+   You need to select this option and give it a logical name such as 'netboot', for instance.
+   Next, you leave the maintenance menu and go back to the main menu. You now have a new
+   boot menu option. If you select 'netboot' then EFI will start the PXE/DCHP discovery
+   request and look for a server to get an IP address. 
+
+   On the server side, you can use a standard DHCP server, such as the one shipped on
+   Redhat7.2 (dhcpd) or a PXE server (not yet available for Linux, probably available for Windows).
+   In this document we show both options. You also need a TFTP server somewhere on the network, 
+   it will be used to download the actual files.
+
+
+2/ Netbooting using DHCP
+
+   There is nothing specific to EFI that needs to be set in the /etc/dhcpd.conf file. 
+   Clearly the filename option must contains the path to the elilo.efi binary.
+
+   Elilo will auto-detect whether it was downloaded via PXE or DHCP and it will adapt
+   the kind of requests it makes to download the other files that it needs, such as
+   its config file.
+
+   A simple dhcpd.conf file which uses fixed IP addresses could be as follows:
+
+   subnet 192.168.2.0 netmask 255.255.255.0 {
+        host test_machine {
+                hardware ethernet 	00:D0:B7:A6:FC:25;
+                fixed-address 		192.168.2.10;
+                filename 		"elilo.efi";
+                option domain-name	"mydomain.com";
+                option host-name        "test_machine";
+		option routers          192.168.2.1;
+        	option subnet-mask      255.255.255.0;
+
+        }
+    }
+
+   For the tftp server, you need to make sure that it is ACTIVATED by inetd or xinetd depending
+   on your distribution. In most distributions, it is disabled by default for security reasons.
+   On distributions using xinetd, you need to check /etc/xinet.d/tftp. For inetd you need to 
+   check /etc/inetd.conf. It is typical to have the root directory for tftp be /tftpboot but it
+   can be anything. In this document we will use /tftpboot as the root directory. The files
+   that we need are as follows:
+   	- elilo.efi
+	- the elilo config file
+	- the kernel image
+	- the initial ramdisk (optional)
+  
+
+   a/ Location of the files in the tftp directory tree
+
+   For elilo version 3.3b or higher, it is possible to place the files listed above
+   in any subdirectory below the tftp root. Of course the dhcpd.conf file must
+   point to the location of elilo.efi and provide the path from the tftp root
+   directory.
+
+   Elilo will look for its config file, the kernel image, the initial ramdisk (optional)
+   only from the directory it was loaded from. This is useful when the same tftp server
+   is used to services many different kind of clients. 
+
+   Here is a simple example, suppose the dhcpd.conf file contains the following definition:
+
+   subnet 192.168.2.0 netmask 255.255.255.0 {
+        host test_machine {
+                hardware ethernet 	00:D0:B7:A6:FC:25;
+                fixed-address 		192.168.2.10;
+
+                filename 		"/rx6000/elilo.efi";
+
+                option domain-name	"mydomain.com";
+                option host-name        "test_machine";
+		option routers          192.168.2.1;
+        	option subnet-mask      255.255.255.0;
+
+        }
+    }
+
+    Elilo will be downloaded from /tftpboot/rx6000. Then elilo will look
+    for all the other files it needs in /tftpboot/rx6000. This rule is 
+    applied to all files, including the all the variation of the config
+    file.
+
+   b/ Getting the config file
+
+      With DHCP, elilo will first try to download its configuration file. It will try
+      several file names and they are as follows:
+
+   	1) AABBCCDD.conf 
+	   where AABBCCDD is the hexadecimal representation of the IP address assigned to
+	   the machine by DHCP. The hexadecimal string (AABBCCDD) MUST use upper case
+	   characters.
+
+	   This filename is an opportunity to specify a machine specific configuration file.
+
+   	2) AA[BB[CC]][-ia32|ia64|x86_64].conf 
+           As of version 3.5, elilo will also look for IPv4 class A,B,C
+           subnet-specific versions of the config file.  This is useful when you
+           want to have a common config file for all machines connected to a
+           particular subnet.
+           
+           For example, if your IP address is 10.0.0.1 (0A000001 in hex), elilo
+           will look first for 0A000001.conf, then 0A0000.conf, then 0A00.conf,
+           and finally 0A.conf.
+
+           Elilo will also try architecture-specific versions of subnet-specific
+           config files first (So for example, on an Itanium system,
+           "0A0000-ia64.conf" will be tried before "0A0000.conf")
+
+	3) elilo-ia32.conf, elilo-x86_64.conf, or elilo-ia64.conf
+	   
+	   Depending on the machine (client side) architecture elilo will try the matching
+	   architecture specific  filename.
+
+	   This filename is an opportunity to specify a architecture specific configuration file.
+	   This distinction between the architectures is useful when the same TFTP server services
+	   the three types of clients : ia32, x86_64, and ia64 machines.
+
+	 4) elilo.conf
+
+  All files use the same format. Elilo will stop at the first match. In case no file is found,
+  it will try to download a default kernel file name (vmlinux).
+
+  c/ Getting the kernel
+
+     The second request from elilo is typically the kernel image. The filename is based on what
+     is in the elilo config file. The path name depends on how the TFTP server is configured. 
+     For security reasons it is customary to have the server do a change root in /tftpboot.
+     Hence filenames are relative to /tftpboot and therefore you don't need to specify it.
+
+     For instance if elilo.conf contains:
+     	image=vmlinuz.249
+	label=linux-up
+	root=/dev/sdb2
+
+    and the user selects linux-up, then elilo will request a filename of 'vmlinux.249' 
+    which must therefore be in /tftpboot. Check the configuration of your TFTP server for
+    more on this.
+  
+  d/ Getting the initial ramdisk
+
+     This step is optional. It follows exactly the same naming rules explained for the kernel image.
+     The initial ramdisk file must therefore be somewhere under /tftpboot. 
+
+      For instance if elilo.conf contains:
+     	image=vmlinuz.249
+	label=linux-up
+	root=/dev/sdb2
+	initrd=ramdisk/initrd.249
+
+    and the user selects linux-up, then elilo will request a filename of 'ramdisk/initrd.249' 
+    which must therefore be under /tftpboot. 
+  
+
+  e/ Getting IP address information
+
+     When elilo is netbooted, the network filesystem module initializes some elilo variables
+     with the information it received from the DHCP server. At a minimum, it received the 
+     IP address.
+
+     The following information is stored in the elilo variables indicated below:
+	- assigned IP address -> %I
+	- assigned netmask    -> %M
+	- assigned domainname -> %D
+	- assigned gateway    -> %G
+
+      These variables can be used to dynamically adjust the command line arguments passed to the kernel.
+      See section 5/ below for an example.
+
+3/ Netbooting using PXE
+
+   EFI has builtin support for PXE. In fact it first tries PXE and then default to DHCP
+   when it does not find a valid PXE server.
+
+   There is a PXE server package available from Linux/ia32 however this package does not
+   have the necessary extensions to talk to the EFI side, at least on IA-64 platforms.
+
+   There is no need for special options or compile time flags to get elilo to work
+   with PXE instead of standard DHCP. When netbooted, elilo will automatically detect
+   if it has been downloaded via PXE or DHCP and it will adujst how subsequent files
+   are requested.
+
+   You need a special version of the DHCPD server developed by the Internet Software Consortium
+   (http://www.isc.org) with a special patch to add the PXE extensions. Unfortunately as of 
+   version 3.0xx, the patch has not yet made it into the official tree. It is supposed to show
+   up in version 3.1 of the dhcpd server.
+
+   In any case, the elilo package contains a simple example of how you can configure the
+   /etc/dhcpd.conf file for a PXE-aware DHCP server using the extensions provided in the
+   patch. You can look in examples/dhcpd-pxe.conf. The syntax is very different from
+   a standard dhcpd server. 
+
+   The key elements to keep in mind are the PXE layers used by elilo to request the different
+   files:
+
+   	Layer 0 : to get the name of the boot loader (elilo.efi)
+	Layer 1 : to get the name of the elilo config file
+	Layer 2 : to get the name of the kernel image
+
+  There is an IMPORTANT distinction between those layers.  The first two (0,1) and requested
+  systematically whereas the last one is used only when the configuration file is not found, i.e.,
+  what is the default kernel to boot. The actual files are STILL downloaded via TFTP. Therefore
+  the TFTP server must also be configured (see previous section for more on this).
+
+
+  a/ Getting the config file
+
+  In this mode, elilo use the PXE layer 1 to get the config file to use. Therefore this must
+  be set on the server side. Elilo will use the following sequence when
+  looking for a config file:
+
+  	- use the name provide by the PXE server Layer 1 or
+
+	- elilo-ia64.conf/elilo-ia32.conf/elilo-x86_64 or
+
+	- elilo.conf
+
+  Elilo stops at the first match. With PXE, elilo does not try to download a config file named after 
+  the assigned IP address as it does for DHCP because there is enough flexibility in the PXE server 
+  configuration to do this.
+
+  b/ Getting the kernel image
+
+  When there is no config file, elilo will use the kernel name returned by 
+  PXE layer 2. If it is not specified there, then it default to 'vmlinux'.
+
+  c/ Getting the initial ramdisk
+
+  The filename for the ramdisk MUST come from the config file. Elilo does not use a PXE layer
+  to ask for a default name.
+
+  d/ Getting IP address information
+
+  When elilo is netbooted, the network filesystem module initializes some elilo variables
+  with the information it received from the DHCP server. At a minimum, it received the 
+  IP address.
+
+  The following information is stored in the variables indicated below:
+	- assigned IP address -> %I
+	- assigned netmask    -> %M
+	- assigned domainname -> %D
+	- assigned gateway    -> %G
+
+  These variables can be used to dynamically adjust the command line arguments passed to the kernel.
+  See section 5/ below for an example of how to use the variable.
+
+
+4/ Netbooting and using a local root filesystem
+
+	This is the simplest configuration where the boot loader, its config file, the kernel
+	and its optional initial ramdisk are downloaded from the network BUT the kernel uses
+	the local disk for its root filesystem.
+
+	For such configuration there is no special option necessary in the elilo config file.
+	You simply need to specify which partition is the root partition.  A typical elilo.conf
+	would look as follows:
+
+     	image=vmlinuz.249
+	label=linux-up
+	root=/dev/sdb2
+	initrd=ramdisk/initrd.249
+
+5/ Netbooting a diskless machine
+
+   In this configuration we do not use the local machine's disks but instead rely on
+   a remote server to provide the root filesystem via NFS.
+
+   a/ Prerequisites
+
+   By default most kernels shipped by distributors do not have the support
+   compiled in for such configuration. This means that you need to recompile
+   your own kernel. For instance, vmlinuz-2.4.9 as shipped in Redhat7.2 on
+   both ia32 and ia64 platforms does not have the support builtin. 
+	
+   To get this configuration to work, you need to have a kernel compiled
+   such that it accepts a root filesystem over NFS (CONFIG_ROOT_NFS). This
+   necessitates that the network stack be configured with the, so called,
+   IP plug-and-play support (CONFIG_IP_PNP).
+
+   b/ On the server side
+
+   You need to have:
+   	- a NFS file server  to provide the root filesystem.
+	- a DHCP/PXE server to get the IP address and download the boot loader.
+
+   Note that both do not need to be on the same machine. There is no special 
+   DHCP/PXE configuration option required to get this working. All you need
+   is a kernel compiled with the options mentioned in a/. You also need to
+   make sure that the permission on the NFS server are set appropriately
+   to allow root access from the client machine (no_root_squash), see 
+   man 'exports' for more on this.
+
+   c/ The elilo configuration file
+
+   To boot successfully, the kernel needs to:
+   	- get an IP address and related networking parameters
+	- contact the NFS server to get its root filesystem
+   	
+   The 2.4.x kernel series provides several options to get the IP address:
+   	- it can do an internal DHCP request (CONFIG_IP_PNP_DHCP)
+   	- it can do an internal RARP request (CONFIG_IP_PNP_RARP)
+   	- it can do an internal BOOTP request (CONFIG_IP_PNP_BOOTP)
+	- it can get the IP address from the command line
+
+   The choice is up to you but it is a little bit stupid to go through a
+   DHCP/BOOTP/RARP phase again when this is already done by the EFI firmware.
+   So in this document, we describe how you can pass the information provided
+   by EFI on the command line of the kernel.
+
+   The syntax used to pass IP information on the command line is described in
+   the kernel source tree in Documentation/nfsroot.txt. The option is called
+   "ip=" and has the following syntax:
+
+   ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>
+
+   To designate the NFS server, you must use the "nfsroot=" option. It has the
+   following syntax:
+   	nfsroot=[<server-ip>:]<root-dir>[,<nfs-options>]
+
+   Depending on how you want your system configured you can hardcode the
+   values of the parameters in the elilo configuration file. For instance:
+
+   image=/vmlinuz
+        label=nfsroot
+        description="kernel with NFS root"
+        append="root=/dev/nfs nfsroot=192.168.2.22:/ia64_rootfs ip=192.168.2.5::192.168.2.1:255.255.255.0:test_machine:eth0:on"
+
+  Note the root=/dev/nfs indicates that the root filesystem is over NFS. 
+
+  This example works fine however, it is not very flexible because the IP
+  address, the gateway, netmask and hostname are fixed and do not used the
+  values EFI used to download the boot loader and the kernel.
+
+  Elilo provides a way to dynamically customize the parameters passed on the
+  command line using substitution variables. We describe those variables in
+  elilovar.txt. The basic idea is to allow the parameters to use the dynamic
+  information obtained by the DHCP/PXE phase.
+
+  The network support in elilo defines several variables which contained
+  network related information produced by the DHCP/PXE phase. The set of 
+  variable is:
+	%I -> the IP address obtained by DHCP/PXE
+	%M -> the netmask obtained by DHCP/PXE
+	%G -> the gateway obtained by DHCP/PXE
+	%H -> the hostname obtained by DHCP/PXE
+	%D -> the domain name obtained by DHCP/PXE
+
+ So, the configuration file can then be customized as follows:
+   image=/vmlinuz
+        label=nfsroot
+        description="kernel with NFS root"
+        append="root=/dev/nfs nfsroot=192.168.2.22:/ia64_rootfs ip=%I::%G:%M:%H:eth0:on"
+
+ Not all parameters are necessary or even used by the kernel or the user level
+ configuration scripts. There is no variable to substitute the NFS server or
+ the mount point on that server.
+
+
+ In the case of a DHCP boot, this type of customization makes sense only for
+ the shared configuration file, elilo-ia64.conf/elilo-ia32.conf/elilo-x86_64 or elilo.conf.
+ The configuration file based on the IP address (such as C0A80205.conf in this
+ case) would provide another way of customizing parameters for a specific
+ client (IP address). The same thing holds if the name of the config file 
+ returned by the PXE server is specific to a client.
+
+
+6/ References
+
+   More information on the PXE protocol can be found at the following web site:
+
+		http://developer.intel.com/ial/wfm/
+
+   The source code for the standard and (possibly) PXE-enhanced DHCPD can be
+    downloaded from:
+
+		http://www.isc.org/	
+

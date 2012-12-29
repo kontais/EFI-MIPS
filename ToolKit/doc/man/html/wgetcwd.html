@@ -1,0 +1,71 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WGETCWD(3)</B>	       FreeBSD Library Functions Manual 	     <B>WGETCWD(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wgetcwd</B> - get working directory pathname
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wunistd.h&gt;</B>
+
+     <I>wchar_t</I> <I>*</I>
+     <B>wgetcwd</B>(<I>wchar_t</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wgetcwd</B>() function copies the absolute UNICODE pathname of the current
+     working directory into the memory referenced by <I>buf</I> and returns a pointer
+     to <I>buf</I>.  The <I>size</I> argument is the size, in bytes, of the array referenced
+     by <I>buf</I>.
+
+     If <I>buf</I> is NULL, space is allocated as necessary to store the pathname.
+     This space may later be <B>free(3)</B>'d.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, a pointer to the pathname is returned.  Oth-
+     erwise a NULL pointer is returned and the global variable <I>errno</I> is set to
+     indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>getcwd</B>() function will fail if:
+
+     [EINVAL]  The <I>size</I> argument is zero.
+
+     [ENOMEM]  Insufficient memory is available.
+
+     [ERANGE]  The <I>size</I> argument is greater than zero but smaller than the
+	       length of the pathname plus 1.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wchdir(2)</B>,	<B>malloc(3)</B>,	<B>strerror(3)</B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wgetcwd</B>() function conforms to ISO 9899: 1990 (``ISO C''). The ability
+     to specify a NULL pointer and have <B>wgetcwd</B>() allocate memory as necessary
+     is an extension.
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

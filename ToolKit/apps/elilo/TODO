@@ -1,0 +1,16 @@
+Some of the things TO DO:
+-------------------------
+	- a better device naming scheme (take into account removable media)
+
+	- ability to rescan devices like when something gets inserted just
+	  before invoking elilo and the efi shell is not used (the mount())
+
+	- ability to list files from the interactive mode
+
+	- GUI-based chooser (a la RH9.x)!
+
+	- UGA support?
+
+	- Convert all filesystems (ext2fs, netfs) to use the FilesystemProtocol interface instead
+
+	- cleanup x86 loader: use the same structure as IA-64

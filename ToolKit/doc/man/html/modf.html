@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="MODF.html">MODF(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="MODF.html">MODF(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>modf</B> - extract signed integral and fractional values from floating-point
+     number
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>modf</B>(<I>double</I> <I>value</I>, <I>double</I> <I>*iptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>modf</B>() function breaks the argument <I>value</I> into integral and fraction-
+     al parts, each of which has the same sign as the argument.  It stores the
+     integral part as a <I>double</I> in the object pointed to by <I>iptr</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>modf</B>() function returns the signed fractional part of <I>value</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="frexp.html">frexp(3)</A></B>,	<B><A HREF="ldexp.html">ldexp(3)</A></B>,  <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>modf</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

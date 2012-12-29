@@ -1,0 +1,49 @@
+<HTML>
+<BODY>
+<PRE>
+</PRE>
+<H2>NAME</H2><PRE>
+        <B>ftpctrl</B>
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+        <B>ftpctrl</B> [-s] || [-n nice factor] [-t connect timeout]
+
+        -s      Stops and unloads the running FTP server.
+        -n xxx  Sets nice factor (0 - 2) for the running FTP server.
+                The nice factor controls how 'nice' the FTP server is to other
+                processes such as the EFI shell, during file transfers.
+                0 = Slowest file transfers - nicest for simultaneous EFI shell use.
+                1 = Faster file transfers* - EFI shell may run visually slower.
+                2 = Fastest file transfers - EFI shell not useable during transfers.
+                    * default
+        -t xxx  Sets inactivity timeout for the running FTP server
+                to xxx seconds. Legal values are (120 - 86400 seconds).
+                The default inactivity timeout is 7200 seconds.
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+        <B>ftpctrl</B> is an EFI shell application used to control a running EFI FTP
+        server <B><A HREF="ftpd.html">ftpd</B></A>.  It can be used to stop a running FTP server, query current
+        status, or view/adjust runtime settings. If <B>ftpctrl</B> is invoked with no
+        command line switches, the current FTP server status is displayed.
+
+        The <B>-s</B> switch will immediately stop and unload a running FTP server.
+        If there is an existing client connection or file transfer in progress,
+        the connection will be closed and the transfer aborted.
+
+        The <B>-n</B> switch provides the means to adjust how much CPU time the FTP
+        server will use while transferring files.  This affects &quot;foreground&quot;
+        programs such as the EFI shell and anything being executed from the shell.
+        The lowest nice factor will cause the FTP server to back off more often,
+        thus allowing the foreground more CPU time.  The highest nice factor will
+        cause the FTP server to use as much CPU as it can to transfer files at the
+        expense of foreground programs.
+
+        The <B>-t</B> switch sets the FTP server's inactivity timeout.  If a client is
+        connected, the timer will cause the FTP server to disconnect if no commands
+        are received within the timeout period.  The timer is also used during file
+        transfers.  The FTP server will disconnect the client if no data is
+        transferred within the timeout period.

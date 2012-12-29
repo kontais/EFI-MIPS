@@ -1,0 +1,57 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ATANH.html">ATANH(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="ATANH.html">ATANH(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>atanh</B>, <B>atanhf</B> - inverse hyperbolic tangent functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>atanh</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>atanhf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>atanh</B>() and the <B>atanhf</B>() functions compute the inverse hyperbolic
+     tangent of the real argument <I>x</I>. For a discussion of error due to round-
+     off, see <B><A HREF="math.html">math(3)</A></B>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>atanh</B>() and the <B>atanhf</B>() functions return the inverse hyperbolic tan-
+     gent of <I>x</I> if successful.  On the VAX and Tahoe, if the argument has abso-
+     lute value bigger than or equal to 1, <B>atanh</B>() sets the global variable
+     <I>errno</I> to EDOM and a reserved operand fault is generated.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="acosh.html">acosh(3)</A></B>,	<B><A HREF="asinh.html">asinh(3)</A></B>,  <B><A HREF="exp.html">exp(3)</A></B>,  <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>atanh</B>() function appeared in 4.3BSD.
+
+4.3 Berkeley Distribution	  May 6, 1991				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,103 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="IEEE.html">IEEE(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="IEEE.html">IEEE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>copysign</B>, <B>copysignf</B>, <B>finite</B>, <B>finitef</B>, <B>ilogb</B>, <B>ilogbf</B>, <B>nextafter</B>,
+     <B>nextafterf</B>, <B>remainder</B>, <B>remainderf</B>, <B>scalbn</B>, <B>scalbnf</B> - Functions for IEEE
+     arithmetic
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>copysign</B>(<I>double</I> <I>x</I>, <I>double</I> <I>y</I>)
+
+     <I>float</I>
+     <B>copysignf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>y</I>)
+
+     <I>int</I>
+     <B>finite</B>(<I>double</I> <I>x</I>)
+
+     <I>int</I>
+     <B>finitef</B>(<I>float</I> <I>x</I>)
+
+     <I>int</I>
+     <B>ilogb</B>(<I>double</I> <I>x</I>)
+
+     <I>int</I>
+     <B>ilogbf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>nextafter</B>(<I>double</I> <I>x</I>, <I>double</I> <I>y</I>)
+
+     <I>float</I>
+     <B>nextafterf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>y</I>)
+
+     <I>double</I>
+     <B>remainder</B>(<I>double</I> <I>x</I>, <I>double</I> <I>y</I>)
+
+     <I>float</I>
+     <B>remainderf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>y</I>)
+
+     <I>double</I>
+     <B>scalbn</B>(<I>double</I> <I>x</I>, <I>int</I> <I>n</I>)
+
+     <I>float</I>
+     <B>scalbnf</B>(<I>float</I> <I>x</I>, <I>int</I> <I>n</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions are required or recommended by IEEE Std754-1985.
+
+     <B>copysign</B>() and <B>copysignf</B>() return <I>x</I> with its sign changed to <I>y</I>'s.
+
+     <B>finite</B>() and <B>finitef</B>() return the value 1 just when -infinity &lt; <I>x</I> &lt; +in-
+     finity; otherwise a zero is returned (when |<I>x</I>| = infinity or <I>x</I> is <I>NaN</I>
+
+     <B>ilogb</B>() and <B>ilogbf</B>() return <I>x</I>'s exponent <I>n</I>, in integer format.
+     <B>ilogb</B>(<I>+-infinity</I>) returns INT_MAX and <B>ilogb(0)</B> returns INT_MIN.
+
+     <B>nextafter</B>() and <B>nextafterf</B>() return the next machine representable number
+     from <I>x</I> in direction <I>y</I>.
+
+     <B>remainder</B>() and <B>remainderf</B>() return the remainder <I>r</I> := <I>x</I> - <I>n*y</I> where <I>n</I> is
+     the integer nearest the exact value of <I>x</I>/<I>y</I>; moreover if |<I>n</I> - <I>x</I>/<I>y</I>| = 1/2
+     then <I>n</I> is even.  Consequently the remainder is computed exactly and |<I>r</I>|
+     &lt;= |<I>y</I>|/2. But <B>remainder</B>(<I>x</I>, <I>0</I>) and <B>remainder</B>(<I>infinity</I>, <I>0</I>) are invalid op-
+     erations that produce a <I>NaN</I>.
+
+     <B>scalbn</B>() and <B>scalbnf</B>() return <I>x</I>*(2**<I>n</I>) computed by exponent manipulation.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>ieee</B> functions appeared in 4.3BSD.
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     IEEE Std754-1985
+
+BSD				 Feb 25, 1994				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

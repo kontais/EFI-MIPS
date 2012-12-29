@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>TTYINIT(3)</B> 	     Libc    Manual 	       <B>TTYINIT(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ttyInit</B> - initialize the tty emulation library
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libtty.h&gt;</B>
+
+     <I>int</I>
+     <B>ttyInit</B>(<I>EFI_HANDLE</I> <I>ImageHandle</I>, <I>EFI_SYSTEM_TABLE</I> <I>*SystemTable</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>ttyInit</B>() function must be called to map all registered
+     EFI SERIAL_IO protocols into the libc file I/O subsytem.
+     Serial devices are named in the order returned by EFI
+     starting with tty00: and sequencially incrementing, base 10,
+     for each device found.
+
+     Access to the device can then be made using <B><A HREF="open.html">open(2)</A></B> and
+     specifying the desired device.  For example:
+
+     if (open("tty01:", O_RDWR | O_NONBLOCK) < 0) {
+         perror("Open of tty deviced failed");
+     }
+
+     There is currently no way of deterministically knowing which
+     platform serial port will be assinged which tty name.  However,
+     the naming should be consistent as long as the number of serial
+     device remains constant.
+
+     The <I>ImageHandle</I> and <I>SystemTable</I> pointers can be NULL if the
+     C libary initialization call <B><A HREF="InitializeLibC.html">InitializeLibC()</A></B> has been
+     previously made.  If not, these parameters must contain
+     valid values and <B>ttyInit</B> will initialize the C library.
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If successfull, <B>ttyInit</B>() returns the number of serial devices
+     that were mapped into the file I/O subsystem.  It returns -1 on
+     failure.  Note that errno is not set with more specific error
+     information.
+</PRE>
+</BODY>
+</HTML>

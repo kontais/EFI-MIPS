@@ -1,0 +1,46 @@
+<HTML>
+<BODY>
+<PRE>
+
+
+<B><A HREF="dhclient-script.html">dhclient-script(8)</A></B>				 <B><A HREF="dhclient-script.html">dhclient-script(8)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+       dhclient-script -  DHCP client network configuration script
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The DHCP client network configuration  script  is  invoked
+       when the dhclient(8) protocol is loaded.  This  script  is
+       used by the  dhcp client to set each  interface's  initial
+       configuration prior  to requesting an address, to test the
+       address once it has been offered, and to set the interface's
+       final configuration once a lease has been acquired.
+
+       This script is not meant to be customized by the end user.
+       If  local customizations are needed, they should be possi-
+       ble using the enter and exit hooks provided (see HOOKS for
+       details).    These  hooks  will allow the user to override
+       the  default  behaviour  of  the  client  in  creating   a
+       /etc/resolv.conf file.
+
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="dhclient.html">dhclient(8)</A></B>, <B><A HREF="dhclient.conf.html">dhclient.conf(5)</A></B>
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       <B>dhclient-script(8)</B>  was  written  by  Ted  Lemon &lt;mellon@vix.com&gt;
+       under a contract with Vixie Labs.   Funding for this  pro-
+       ject  was  provided  by the Internet Software Corporation.
+       Information about the Internet Software Consortium can  be
+       found at <B>http://www.isc.org/isc.</B>
+
+</BODY>
+</HTML>

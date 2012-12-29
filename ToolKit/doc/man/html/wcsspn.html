@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSSPN(3)</B>	       FreeBSD Library Functions Manual 	     <B>WCSSPN(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcsspn</B> - span a wide string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>wcsspn</B>(<I>const</I> <I>wchar_t</I> <I>*s</I>, <I>const</I> <I>wchar_t</I> <I>charset</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcsspn</B>() function spans the initial part of the null-terminated
+     string <I>s</I> as long as the characters from <I>s</I> occur in string <I>charset</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wcsspn</B>() function returns the number of characters spanned.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>index(3)</B>,	<B>memchr(3)</B>,  <B>rindex(3)</B>,	<B>strchr(3)</B>,  <B>strcspn(3)</B>,  <B>strpbrk(3)</B>,
+     <B>strrchr(3)</B>,  <B>strsep(3)</B>,  <B>strstr(3)</B>,  <B>strtok(3)</B>
+
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,48 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETPAGESIZE.html">GETPAGESIZE(3)</A></B>	       FreeBSD Library Functions Manual 	<B><A HREF="GETPAGESIZE.html">GETPAGESIZE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getpagesize</B> - get system page size
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>getpagesize</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Getpagesize</B>() returns the number of bytes in a page.  Page granularity is
+     the granularity of many of the memory management calls.
+
+     The page size is a system page size and may not be the same as the under-
+     lying hardware page size.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="pagesize.html">pagesize(1)</A></B>,  <B><A HREF="sbrk.html">sbrk(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getpagesze</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

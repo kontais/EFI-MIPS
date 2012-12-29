@@ -1,0 +1,231 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SCANF.html">SCANF(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="SCANF.html">SCANF(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>scanf</B>, <B>fscanf</B>, <B>sscanf</B>, <B>vscanf</B>, <B>vsscanf</B>, <B>vfscanf</B> - input format conversion
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>scanf</B>(<I>const</I> <I>char</I> <I>*format</I>, <I>...</I>)
+
+     <I>int</I>
+     <B>fscanf</B>(<I>FILE</I> <I>*stream</I>, <I>const</I> <I>char</I> <I>*format</I>, <I>...</I>)
+
+     <I>int</I>
+     <B>sscanf</B>(<I>const</I> <I>char</I> <I>*str</I>, <I>const</I> <I>char</I> <I>*format</I>, <I>...</I>)
+
+     <B>#include</B> <B>&lt;stdarg.h&gt;</B>
+
+     <I>int</I>
+     <B>vscanf</B>(<I>const</I> <I>char</I> <I>*format</I>, <I>va</I><B>_</B><I>list</I> <I>ap</I>)
+
+     <I>int</I>
+     <B>vsscanf</B>(<I>const</I> <I>char</I> <I>*str</I>, <I>const</I> <I>char</I> <I>*format</I>, <I>va</I><B>_</B><I>list</I> <I>ap</I>)
+
+     <I>int</I>
+     <B>vfscanf</B>(<I>FILE</I> <I>*stream</I>, <I>const</I> <I>char</I> <I>*format</I>, <I>va</I><B>_</B><I>list</I> <I>ap</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>scanf</B>() family of functions scans input according to a <I>format</I> as de-
+     scribed below.  This format may contain <I>conversion</I> <I>specifiers</I>; the re-
+     sults from such conversions, if any, are stored through the <I>pointer</I> argu-
+     ments.  The <B>scanf</B>() function reads input from the standard input stream
+     <I>stdin</I>, <B>fscanf</B>() reads input from the stream pointer <I>stream</I>, and <B>sscanf</B>()
+     reads its input from the character string pointed to by <I>str</I>. The
+     <B>vfscanf</B>() function is analogous to <B><A HREF="printf.html">vfprintf(3)</A></B> and reads input from the
+     stream pointer <I>stream</I> using a variable argument list of pointers (see
+     <B><A HREF="stdarg.html">stdarg(3)</A></B>).  The <B>vscanf</B>() function scans a variable argument list from
+     the standard input and the <B>vsscanf</B>() function scans it from a string;
+     these are analogous to the <B>vprintf</B>() and <B>vsprintf</B>() functions respective-
+     ly.  Each successive <I>pointer</I> argument must correspond properly with each
+     successive conversion specifier (but see `suppression' below).  All con-
+     versions are introduced by the <B>%</B> (percent sign) character.  The <I>format</I>
+     string may also contain other characters.	White space (such as blanks,
+     tabs, or newlines) in the <I>format</I> string match any amount of white space,
+     including none, in the input.  Everything else matches only itself.
+     Scanning stops when an input character does not match such a format char-
+     acter.  Scanning also stops when an input conversion cannot be made (see
+     below).
+
+
+</PRE>
+<H2>CONVERSIONS</H2><PRE>
+     Following the <B>%</B> character introducing a conversion there may be a number
+     of <I>flag</I> characters, as follows:
+
+     <B>*</B>	     Suppresses assignment.  The conversion that follows occurs as
+	     usual, but no pointer is used; the result of the conversion is
+	     simply discarded.
+
+     <B>h</B>	     Indicates that the conversion will be one of <B>dioux</B> or <B>n</B> and the
+	     next pointer is a pointer to a <I>short</I> <I>int</I> (rather than <I>int</I>).
+
+     <B>l</B>	     Indicates either that the conversion will be one of <B>dioux</B> or <B>n</B>
+	     and the next pointer is a pointer to a <I>long</I> <I>int</I> (rather than
+	     <I>int</I>), or that the conversion will be one of <B>efg</B> and the next
+
+	     pointer is a pointer to <I>double</I> (rather than <I>float</I>).
+
+     <B>L</B>	     Indicates that the conversion will be <B>efg</B> and the next pointer is
+	     a pointer to <I>long</I> <I>double</I>. (This type is not implemented; the <B>L</B>
+	     flag is currently ignored.)
+
+     <B>q</B>	     Indicates either that the conversion will be one of <B>dioux</B> or <B>n</B>
+	     and the next pointer is a pointer to a <I>long</I> <I>long</I> <I>int</I> (rather than
+	     <I>int</I>),
+
+     In addition to these flags, there may be an optional maximum field width,
+     expressed as a decimal integer, between the <B>%</B> and the conversion.	If no
+     width is given, a default of `infinity' is used (with one exception, be-
+     low); otherwise at most this many characters are scanned in processing
+     the conversion.  Before conversion begins, most conversions skip white
+     space; this white space is not counted against the field width.
+
+     The following conversions are available:
+
+     <B>%</B>	   Matches a literal `%'.  That is, `%%' in the format string matches
+	   a single input `%' character.  No conversion is done, and assign-
+	   ment does not occur.
+
+     <B>d</B>	   Matches an optionally signed decimal integer; the next pointer must
+	   be a pointer to <I>int</I>.
+
+     <B>D</B>	   Equivalent to <B>ld</B>; this exists only for backwards compatibility.
+
+     <B>i</B>	   Matches an optionally signed integer; the next pointer must be a
+	   pointer to <I>int</I>. The integer is read in base 16 if it begins with
+	   `0x' or `0X', in base 8 if it begins with `0', and in base 10 oth-
+	   erwise.  Only characters that correspond to the base are used.
+
+     <B>o</B>	   Matches an octal integer; the next pointer must be a pointer to
+	   <I>unsigned</I> <I>int</I>.
+
+     <B>O</B>	   Equivalent to <B>lo</B>; this exists for backwards compatibility.
+
+     <B>u</B>	   Matches an optionally signed decimal integer; the next pointer must
+	   be a pointer to <I>unsigned</I> <I>int</I>.
+
+     <B>x</B>	   Matches an optionally signed hexadecimal integer; the next pointer
+	   must be a pointer to <I>unsigned</I> <I>int</I>.
+
+     <B>X</B>	   Equivalent to <B>lx</B>; this violates the ISO 9899: 1990 (``ISO C''), but
+	   is backwards compatible with previous UNIX systems.
+
+     <B>f</B>	   Matches an optionally signed floating-point number; the next point-
+	   er must be a pointer to <I>float</I>.
+
+     <B>e</B>	   Equivalent to <B>f</B>.
+
+     <B>g</B>	   Equivalent to <B>f</B>.
+
+     <B>E</B>	   Equivalent to <B>lf</B>; this violates the ISO 9899: 1990 (``ISO C''), but
+	   is backwards compatible with previous UNIX systems.
+
+     <B>F</B>	   Equivalent to <B>lf</B>; this exists only for backwards compatibility.
+
+     <B>s</B>	   Matches a sequence of non-white-space characters; the next pointer
+	   must be a pointer to <I>char</I>, and the array must be large enough to
+	   accept all the sequence and the terminating NUL character.  The in-
+	   put string stops at white space or at the maximum field width,
+
+	   whichever occurs first.
+
+     <B>c</B>	   Matches a sequence of <I>width</I> count characters (default 1); the next
+	   pointer must be a pointer to <I>char</I>, and there must be enough room
+	   for all the characters (no terminating NUL is added).  The usual
+	   skip of leading white space is suppressed.  To skip white space
+	   first, use an explicit space in the format.
+
+     <B>[</B>	   Matches a nonempty sequence of characters from the specified set of
+	   accepted characters; the next pointer must be a pointer to <I>char</I>,
+	   and there must be enough room for all the characters in the string,
+	   plus a terminating NUL character.  The usual skip of leading white
+	   space is suppressed.  The string is to be made up of characters in
+	   (or not in) a particular set; the set is defined by the characters
+	   between the open bracket [ character and a close bracket ] charac-
+	   ter.  The set <I>excludes</I> those characters if the first character af-
+	   ter the open bracket is a circumflex <B>^</B>. To include a close bracket
+	   in the set, make it the first character after the open bracket or
+	   the circumflex; any other position will end the set.  The hyphen
+	   character <B>-</B> is also special; when placed between two other charac-
+	   ters, it adds all intervening characters to the set.  To include a
+	   hyphen, make it the last character before the final close bracket.
+	   For instance, `[^]0-9-]' means the set `everything except close
+	   bracket, zero through nine, and hyphen'.  The string ends with the
+	   appearance of a character not in the (or, with a circumflex, in)
+	   set or when the field width runs out.
+
+     <B>p</B>	   Matches a pointer value (as printed by `%p' in <B><A HREF="printf.html">printf(3)</A></B>);  the
+	   next pointer must be a pointer to <I>void</I>.
+
+     <B>n</B>	   Nothing is expected; instead, the number of characters consumed
+	   thus far from the input is stored through the next pointer, which
+	   must be a pointer to <I>int</I>. This is <I>not</I> a conversion, although it can
+	   be suppressed with the <B>*</B> flag.
+
+     For backwards compatibility, other conversion characters (except `\0')
+     are taken as if they were `%d' or, if uppercase, `%ld', and a `conver-
+     sion' of `%\0' causes an immediate return of EOF. The <B>F</B> and <B>X</B> conversions
+     will be changed in the future to conform to the ANSI C standard, after
+     which they will act like <B>f</B> and <B>x</B> respectively.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     These functions return the number of input items assigned, which can be
+     fewer than provided for, or even zero, in the event of a matching fail-
+     ure.  Zero indicates that, while there was input available, no conver-
+     sions were assigned; typically this is due to an invalid input character,
+     such as an alphabetic character for a `%d' conversion.  The value EOF is
+     returned if an input failure occurs before any conversion such as an end-
+     of-file occurs. If an error or end-of-file occurs after conversion has
+     begun, the number of conversions which were successfully completed is re-
+     turned.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="getc.html">getc(3)</A></B>,  <B><A HREF="printf.html">printf(3)</A></B>,  <B><A HREF="strtod.html">strtod(3)</A></B>,  <B><A HREF="strtol.html">strtol(3)</A></B>,  <B><A HREF="strtoul.html">strtoul(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>fscanf</B>(), <B>scanf</B>(), and <B>sscanf</B>() conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The functions <B>vscanf</B>(), <B>vsscanf</B>() and <B>vfscanf</B>() are new to this release.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The current situation with <B>%F</B> and <B>%X</B> conversions is unfortunate.
+
+     All of the backwards compatibility formats will be removed in the future.
+
+     Numerical strings are truncated to 512 characters; for example, <B>%f</B> and <B>%d</B>
+     are implicitly <B>%512f</B> and <B>%512d</B>.
+
+BSD			       December 11, 1993			     4
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

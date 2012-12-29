@@ -1,0 +1,26 @@
+git add .
+git commit -a
+git push git@dev.lemote.com:EFI-MIPS.git master
+
+git clone git@dev.lemote.com:EFI-MIPS.git
+
+
+git checkout master
+
+
+# git://dev.lemote.com/EFI-MIPS.git (git protocal, anonymous)
+# http://dev.lemote.com/http_git/EFI-MIPS.git (http protocal, if the git protocal is blocked by firewall)
+# git@dev.lemote.com:EFI-MIPS.git (ssh protocal, if you are this project's owner) 
+
+
+git-pull = svn update
+
+
+git status
+git add .
+git commit -a
+git push git@dev.lemote.com:EFI-MIPS.git master
+
+
+
+GitGui: C:\Documents and Settings\Administrator\.gitconfig

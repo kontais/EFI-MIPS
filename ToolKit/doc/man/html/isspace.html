@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ISSPACE.html">ISSPACE(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="ISSPACE.html">ISSPACE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>isspace</B> - white-space character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;ctype.h&gt;</B>
+
+     <I>int</I>
+     <B>isspace</B>(<I>int</I> <I>c</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>isspace</B>() function tests for the standard white-space characters.  In
+     the ASCII character set, this includes the following characters:
+
+     011 ht	   012 nl	 013 vt        014 np	     015 cr
+     040 sp
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>isspace</B>() function returns zero if the character tests false and re-
+     turns non-zero if the character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ctype.html">ctype(3)</A></B>,	<B><A HREF="ascii.html">ascii(7)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>isspace</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

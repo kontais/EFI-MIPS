@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRCAT.html">STRCAT(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STRCAT.html">STRCAT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strcat</B> - concatenate strings
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strcat</B>(<I>char</I> <I>*s</I>, <I>const</I> <I>char</I> <I>*append</I>)
+
+     <I>char</I> <I>*</I>
+     <B>strncat</B>(<I>char</I> <I>*s</I>, <I>const</I> <I>char</I> <I>*append</I>, <I>size</I><B>_</B><I>t</I> <I>count</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strcat</B>() and <B>strncat</B>() functions append a copy of the null-terminated
+     string <I>append</I> to the end of the null-terminated string <I>s</I>, then add a ter-
+     minating `\0'. The string <I>s</I> must have sufficient space to hold the re-
+     sult.
+
+     The <B>strncat</B>() function appends not more than <I>count</I> characters from
+     <I>append</I>, and then adds a terminating `\0.'
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strcat</B>() and <B>strncat</B>() functions return the pointer <I>s</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bcopy.html">bcopy(3)</A></B>,	<B><A HREF="memccpy.html">memccpy(3)</A></B>,  <B><A HREF="memcpy.html">memcpy(3)</A></B>,  <B><A HREF="memmove.html">memmove(3)</A></B>,  <B><A HREF="strcpy.html">strcpy(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strcat</B>() and <B>strncat</B>() functions conform to ISO 9899: 1990 (``ISO
+     C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

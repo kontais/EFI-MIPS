@@ -1,0 +1,48 @@
+#/*++
+#
+#  Copyright (c) 2004 - 2005, Intel Corporation                                                         
+#  All rights reserved. This program and the accompanying materials                          
+#  are licensed and made available under the terms and conditions of the BSD License         
+#  which accompanies this distribution.  The full text of the license may be found at        
+#  http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                            
+#  THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+#  WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+#  
+#   Module Name:
+#
+#     CpuMIPS32Lib.inf
+#
+#   Abstract:
+#
+#     Component description file for the Cpu MIPS32 library.
+#
+#--*/
+
+[defines]
+BASE_NAME       = CpuMips32Lib
+COMPONENT_TYPE  = LIBRARY
+
+[sources.common]
+  EfiCpuVersion.c
+
+[sources.Mips32]
+  Mips32/CpuMips32.c
+  Mips32/MipsCache.s
+  Mips32/Cp0.s
+  Mips32/Mips32Mem64.s
+
+[sources.x64]
+  x64/Cpu.asm
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  .
+  $(EDK_SOURCE)/Foundation/Include
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
+
+[nmake.common]

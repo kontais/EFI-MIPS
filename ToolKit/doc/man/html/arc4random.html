@@ -1,0 +1,62 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ARC4RANDOM.html">ARC4RANDOM(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="ARC4RANDOM.html">ARC4RANDOM(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>arc4random,</B> <B>arc4random_stir,</B> <B>arc4random_addrandom</B> - arc4 random number
+     generator.
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>u</I><B>_</B><I>int32</I><B>_</B><I>t</I>
+     <B>arc4random</B>(<I>void</I>)
+
+     <I>void</I>
+     <B>arc4random_stir</B>(<I>void</I>)
+
+     <I>void</I>
+     <B>arc4random_addrandom</B>(<I>unsigned</I> <I>char</I> <I>*dat</I>, <I>int</I> <I>datlen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>arc4random</B>() function uses the key stream generator employed by the
+     arc4 cipher, which uses 8*8 8 bit S-Boxes. The S-Boxes can be in about
+     (2**1700) states.
+
+     The <B>arc4random_stir</B>() function reads data from <I>/dev/urandom</I> and uses it
+     to permute the S-Boxes via <B>arc4random_addrandom</B>().
+
+     There is no need to call <B>arc4random_stir</B>() before using <B>arc4random</B>(),
+     since <B>arc4random</B>() automatically initializes itself.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="rand.html">rand(3)</A></B>,  <B><A HREF="random.html">random(3)</A></B>,  <B><A HREF="srandomdev.html">srandomdev(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     <I>RC4</I> has been designed by RSA Data Security, Inc. It was posted anonymous-
+     ly to the USENET and was confirmed to be equivalent by several sources
+     who had access to the original cipher. Since <I>RC4</I> used to be a trade se-
+     cret, the cipher is now referred to as <I>ARC4</I>.
+
+BSD				April 15, 1997				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,210 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SETLOCALE.html">SETLOCALE(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="SETLOCALE.html">SETLOCALE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>setlocale</B>, <B>localeconv</B> - natural language formatting for C
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;locale.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>setlocale</B>(<I>int</I> <I>category</I>, <I>const</I> <I>char</I> <I>*locale</I>)
+
+     <I>struct</I> <I>lconv</I> <I>*</I>
+     <B>localeconv</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>setlocale</B>() function sets the C library's notion of natural language
+     formatting style for particular sets of routines.	Each such style is
+     called a `locale' and is invoked using an appropriate name passed as a C
+     string.  The <B>localeconv</B>() routine returns the current locale's parameters
+     for formatting numbers.
+
+     The <B>setlocale</B>() function recognizes several categories of routines.
+     These are the categories and the sets of routines they select:
+
+     LC_ALL	  Set the entire locale generically.
+
+     LC_COLLATE   Set a locale for string collation routines.  This controls
+		  alphabetic ordering in <B>strcoll</B>() and <B>strxfrm</B>().
+
+     LC_CTYPE	  Set a locale for the <B><A HREF="ctype.html">ctype(3)</A></B>,  <B><A HREF="mbrune.html">mbrune(3)</A></B>,  <B><A HREF="multibyte.html">multibyte(3)</A></B> and
+		  <B><A HREF="rune.html">rune(3)</A></B> functions.  This controls recognition of upper and
+		  lower case, alphabetic or non-alphabetic characters, and so
+		  on.  The real work is done by the <B>setrunelocale</B>() function.
+
+     LC_MESSAGES  Set a locale for message catalogs, see <B><A HREF="catopen.html">catopen(3)</A></B> function.
+
+     LC_MONETARY  Set a locale for formatting monetary values; this affects
+		  the <B>localeconv</B>() function.
+
+     LC_NUMERIC   Set a locale for formatting numbers.	This controls the for-
+		  matting of decimal points in input and output of floating
+		  point numbers in functions such as <B>printf</B>() and <B>scanf</B>(), as
+		  well as values returned by <B>localeconv</B>().
+
+     LC_TIME	  Set a locale for formatting dates and times using the
+		  <B>strftime</B>() function.
+
+     Only three locales are defined by default, the empty string "" which de-
+     notes the native environment, and the "C" and "POSIX" locales, which de-
+     note the C language environment.  A <I>locale</I> argument of NULL causes
+     <B>setlocale</B>() to return the current locale.	By default, C programs start
+     in the "C" locale.  The only function in the library that sets the locale
+     is <B>setlocale</B>(); the locale is never changed as a side effect of some oth-
+     er routine.
+
+     The <B>localeconv</B>() function returns a pointer to a structure which provides
+     parameters for formatting numbers, especially currency values:
+
+	   struct lconv {
+		   char    *decimal_point;
+		   char    *thousands_sep;
+		   char    *grouping;
+		   char    *int_curr_symbol;
+		   char    *currency_symbol;
+		   char    *mon_decimal_point;
+		   char    *mon_thousands_sep;
+		   char    *mon_grouping;
+		   char    *positive_sign;
+		   char    *negative_sign;
+		   char    int_frac_digits;
+		   char    frac_digits;
+		   char    p_cs_precedes;
+		   char    p_sep_by_space;
+		   char    n_cs_precedes;
+		   char    n_sep_by_space;
+		   char    p_sign_posn;
+		   char    n_sign_posn;
+	   };
+
+     The individual fields have the following meanings:
+
+     <I>decimal</I><B>_</B><I>point</I>	The decimal point character, except for currency val-
+			ues.
+
+     <I>thousands</I><B>_</B><I>sep</I>	The separator between groups of digits before the dec-
+			imal point, except for currency values.
+
+     <I>grouping</I>		The sizes of the groups of digits, except for currency
+			values.  This is a pointer to a vector of integers,
+			each of size <I>char</I>, representing group size from low
+			order digit groups to high order (right to left).  The
+			list may be terminated with 0 or CHAR_MAX. If the list
+			is terminated with 0, the last group size before the 0
+			is repeated to account for all the digits.  If the
+			list is terminated with CHAR_MAX, no more grouping is
+			performed.
+
+     <I>int</I><B>_</B><I>curr</I><B>_</B><I>symbol</I>	The standardized international currency symbol.
+
+     <I>currency</I><B>_</B><I>symbol</I>	The local currency symbol.
+
+     <I>mon</I><B>_</B><I>decimal</I><B>_</B><I>point</I>	The decimal point character for currency values.
+
+     <I>mon</I><B>_</B><I>thousands</I><B>_</B><I>sep</I>	The separator for digit groups in currency values.
+
+     <I>mon</I><B>_</B><I>grouping</I>	Like <I>grouping</I> but for currency values.
+
+     <I>positive</I><B>_</B><I>sign</I>	The character used to denote nonnegative currency val-
+			ues, usually the empty string.
+
+     <I>negative</I><B>_</B><I>sign</I>	The character used to denote negative currency values,
+			usually a minus sign.
+
+     <I>int</I><B>_</B><I>frac</I><B>_</B><I>digits</I>	The number of digits after the decimal point in an in-
+			ternational-style currency value.
+
+     <I>frac</I><B>_</B><I>digits</I>	The number of digits after the decimal point in the
+			local style for currency values.
+
+     <I>p</I><B>_</B><I>cs</I><B>_</B><I>precedes</I>	1 if the currency symbol precedes the currency value
+			for nonnegative values, 0 if it follows.
+
+     <I>p</I><B>_</B><I>sep</I><B>_</B><I>by</I><B>_</B><I>space</I>	1 if a space is inserted between the currency symbol
+			and the currency value for nonnegative values, 0 oth-
+			erwise.
+
+     <I>n</I><B>_</B><I>cs</I><B>_</B><I>precedes</I>	Like <I>p</I><B>_</B><I>cs</I><B>_</B><I>precedes</I> but for negative values.
+
+     <I>n</I><B>_</B><I>sep</I><B>_</B><I>by</I><B>_</B><I>space</I>	Like <I>p</I><B>_</B><I>sep</I><B>_</B><I>by</I><B>_</B><I>space</I> but for negative values.
+
+     <I>p</I><B>_</B><I>sign</I><B>_</B><I>posn</I>	The location of the <I>positive</I><B>_</B><I>sign</I> with respect to a
+			nonnegative quantity and the <I>currency</I><B>_</B><I>symbol</I>, coded as
+			follows:
+			0    Parentheses around the entire string.
+			1    Before the string.
+			2    After the string.
+			3    Just before <I>currency</I><B>_</B><I>symbol</I>.
+			4    Just after <I>currency</I><B>_</B><I>symbol</I>.
+
+     <I>n</I><B>_</B><I>sign</I><B>_</B><I>posn</I>	Like <I>p</I><B>_</B><I>sign</I><B>_</B><I>posn</I> but for negative currency values.
+
+     Unless mentioned above, an empty string as a value for a field indicates
+     a zero length result or a value that is not in the current locale.  A
+     CHAR_MAX result similarly denotes an unavailable value.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>setlocale</B>() function returns NULL and fails to change the locale if
+     the given combination of <I>category</I> and <I>locale</I> makes no sense.  The
+     <B>localeconv</B>() function returns a pointer to a static object which may be
+     altered by later calls to <B>setlocale</B>() or <B>localeconv</B>().
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     $PATH_LOCALE/<I>locale/category</I>
+     /usr/share/locale/<I>locale/category</I>	locale file for the locale <I>locale</I> and
+					the category <I>category</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="colldef.html">colldef(1)</A></B>,  <B><A HREF="mklocale.html">mklocale(1)</A></B>,	<B><A HREF="catopen.html">catopen(3)</A></B>,  <B><A HREF="ctype.html">ctype(3)</A></B>,	<B><A HREF="mbrune.html">mbrune(3)</A></B>,
+     <B><A HREF="multibyte.html">multibyte(3)</A></B>,  <B><A HREF="rune.html">rune(3)</A></B>,  <B><A HREF="strcoll.html">strcoll(3)</A></B>,  <B><A HREF="strxfrm.html">strxfrm(3)</A></B>,	<B><A HREF="euc.html">euc(4)</A></B>,  <B><A HREF="utf2.html">utf2(4)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>setlocale</B>() and <B>localeconv</B>() functions conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>setlocale</B>() and <B>localeconv</B>() functions first appeared in 4.4BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The current implementation supports only the "C" and "POSIX" locales for
+     all but the LC_COLLATE, LC_CTYPE, and LC_TIME categories.
+
+     In spite of the gnarly currency support in <B>localeconv</B>(), the standards
+     don't include any functions for generalized currency formatting.
+
+     Use of LC_MONETARY could lead to misleading results until we have a real
+     time currency conversion function.  LC_NUMERIC and LC_TIME are personal
+     choices and should not be wrapped up with the other categories.
+
+BSD				 June 9, 1993				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,135 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SEND.html">SEND(2)</A></B> 		  FreeBSD System Calls Manual		       <B><A HREF="SEND.html">SEND(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>send</B>, <B>sendto</B>, <B>sendmsg</B> - send a message from a socket
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>send</B>(<I>int</I> <I>s</I>, <I>const</I> <I>void</I> <I>*msg</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>, <I>int</I> <I>flags</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>sendto</B>(<I>int</I> <I>s</I>, <I>const</I> <I>void</I> <I>*msg</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>, <I>int</I> <I>flags</I>,
+	     <I>const</I> <I>struct</I> <I>sockaddr</I> <I>*to</I>, <I>int</I> <I>tolen</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>sendmsg</B>(<I>int</I> <I>s</I>, <I>const</I> <I>struct</I> <I>msghdr</I> <I>*msg</I>, <I>int</I> <I>flags</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Send</B>(), <B>sendto</B>(), and <B>sendmsg</B>() are used to transmit a message to another
+     socket.  <B>Send</B>() may be used only when the socket is in a <I>connected</I> state,
+     while <B>sendto</B>() and <B>sendmsg</B>() may be used at any time.
+
+     The address of the target is given by <I>to</I> with <I>tolen</I> specifying its size.
+     The length of the message is given by <I>len</I>. If the message is too long to
+     pass atomically through the underlying protocol, the error EMSGSIZE is
+     returned, and the message is not transmitted.
+
+     No indication of failure to deliver is implicit in a <B>send</B>().  Locally de-
+     tected errors are indicated by a return value of -1.
+
+     If no messages space is available at the socket to hold the message to be
+     transmitted, then <B>send</B>() normally blocks, unless the socket has been
+     placed in non-blocking I/O mode.  The <B><A HREF="select.html">select(2)</A></B> call may be used to de-
+     termine when it is possible to send more data.
+
+     The <I>flags</I> parameter may include one or more of the following:
+
+     #define MSG_OOB	     0x1   /* process out-of-band data */
+     #define MSG_PEEK	     0x2   /* peek at incoming message */
+     #define MSG_DONTROUTE   0x4   /* bypass routing, use direct interface */
+     #define MSG_EOR	     0x8   /* data completes record */
+     #define MSG_EOF	     0x100 /* data completes transaction */
+
+     The flag MSG_OOB is used to send ``out-of-band'' data on sockets that
+     support this notion (e.g.	SOCK_STREAM); the underlying protocol must al-
+     so support ``out-of-band'' data.  MSG_EOR is used to indicate a record
+     mark for protocols which support the concept.  MSG_EOF requests that the
+     sender side of a socket be shut down, and that an appropriate indication
+     be sent at the end of the specified data; this flag is only implemented
+     for SOCK_STREAM sockets in the PF_INET protocol family, and is used to
+     implement Transaction TCP (see <B><A HREF="ttcp.html">ttcp(4)</A></B>).  MSG_DONTROUTE is usually used
+     only by diagnostic or routing programs.
+
+     See <B><A HREF="recv.html">recv(2)</A></B> for a description of the <I>msghdr</I> structure.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The call returns the number of characters sent, or -1 if an error oc-
+     curred.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+
+     <B>Send</B>(), <B>sendto</B>(), and <B>sendmsg</B>() fail if:
+
+     [EBADF]	   An invalid descriptor was specified.
+
+     [EACCES]	   The destination address is a broadcast address, and
+		   SO_BROADCAST has not been set on the socket.
+
+     [ENOTSOCK]    The argument <I>s</I> is not a socket.
+
+     [EFAULT]	   An invalid user space address was specified for a parame-
+		   ter.
+
+     [EMSGSIZE]    The socket requires that message be sent atomically, and
+		   the size of the message to be sent made this impossible.
+
+     [EAGAIN]	   The socket is marked non-blocking and the requested opera-
+		   tion would block.
+
+     [ENOBUFS]	   The system was unable to allocate an internal buffer.  The
+		   operation may succeed when buffers become available.
+
+     [ENOBUFS]	   The output queue for a network interface was full.  This
+		   generally indicates that the interface has stopped sending,
+		   but may be caused by transient congestion.
+
+     [EHOSTUNREACH]
+		   The remote host was unreachable.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Because <B>sendmsg</B>() doesn't necessarily block until the data has been
+     transferred, it is possible to transfer an open file descriptor across an
+     AF_UNIX domain socket (see <B><A HREF="recv.html">recv(2)</A></B>),  then <B>close</B>() it before it has actu-
+     ally been sent, the result being that the receiver gets a closed file de-
+     scriptor.	It is left to the application to implement an acknowlegment
+     mechanism to prevent this from happening.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="fcntl.html">fcntl(2)</A></B>,	<B><A HREF="getsockopt.html">getsockopt(2)</A></B>,	<B><A HREF="recv.html">recv(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>,  <B><A HREF="write.html">write(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>send</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution      February 15, 1995			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

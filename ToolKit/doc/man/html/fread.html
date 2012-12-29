@@ -1,0 +1,65 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FREAD.html">FREAD(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FREAD.html">FREAD(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fread</B>, <B>fwrite</B> - binary stream input/output
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>fread</B>(<I>void</I> <I>*ptr</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>, <I>size</I><B>_</B><I>t</I> <I>nmemb</I>, <I>FILE</I> <I>*stream</I>)
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>fwrite</B>(<I>const</I> <I>void</I> <I>*ptr</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>, <I>size</I><B>_</B><I>t</I> <I>nmemb</I>, <I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The function <B>fread</B>() reads <I>nmemb</I> objects, each <I>size</I> bytes long, from the
+     stream pointed to by <I>stream</I>, storing them at the location given by <I>ptr</I>.
+
+     The function <B>fwrite</B>() writes <I>nmemb</I> objects, each <I>size</I> bytes long, to the
+     stream pointed to by <I>stream</I>, obtaining them from the location given by
+     <I>ptr</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The functions <B>fread</B>() and <B>fwrite</B>() advance the file position indicator
+     for the stream by the number of bytes read or written.  They return the
+     number of objects read or written.  If an error occurs, or the end-of-
+     file is reached, the return value is a short object count (or zero).
+
+     The function <B>fread</B>() does not distinguish between end-of-file and error,
+     and callers must use <B><A HREF="ferror.html">feof(3)</A></B> and <B><A HREF="ferror.html">ferror(3)</A></B> to determine which occurred.
+     The function <B>fwrite</B>() returns a value less than <I>nmemb</I> only if a write er-
+     ror has occurred.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="write.html">write(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>fread</B>() and <B>fwrite</B>() conform to ISO 9899: 1990 (``ISO C'').
+
+BSD				 March 8, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

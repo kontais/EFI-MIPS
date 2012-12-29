@@ -1,0 +1,67 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CATOPEN.html">CATOPEN(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="CATOPEN.html">CATOPEN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>catopen</B> - open message catalog
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;nl_types.h&gt;</B>
+
+     <I>nl</I><B>_</B><I>catd</I>
+     <B>catopen</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>int</I> <I>oflag</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>catopen</B>() function opens the message catalog specified by <I>name</I> and
+     returns a message catalog descriptor.  If <I>name</I> contains a `/' then <I>name</I>
+     specifies the full pathname for the message catalog, otherwise the value
+     of the environment variable NLSPATH is used with <I>name</I> substituted for %N.
+
+     If the <I>oflag</I> argument is set to the NL_CAT_LOCALE constant, LC_MESSAGES
+     locale category used to open the message catalog; using NL_CAT_LOCALE
+     conforms to the X/Open Portability Guide Issue 4 (``XPG4'') standard. You
+     can specify 0 for compatibility with X/Open Portability Guide Issue 3
+     (``XPG3''); when <I>oflag</I> is set to 0, the LANG environment variable deter-
+     mines the message catalog locale.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+     Upon successful completion, <B>catopen</B>() returns a message catalog descrip-
+     tor.  Otherwise, (nl_catd) -1 is returned and <I>errno</I> is set to indicate
+     the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ENOMEM]	   Insufficient memory is available.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="catclose.html">catclose(3)</A></B>,  <B><A HREF="catgets.html">catgets(3)</A></B>,	<B><A HREF="setlocale.html">setlocale(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>catopen</B>() function conforms to X/Open Portability Guide Issue 4
+     (``XPG4'').
+
+BSD				 May 29, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

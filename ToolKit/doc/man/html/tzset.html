@@ -1,0 +1,170 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TZSET.html">TZSET(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="TZSET.html">TZSET(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>tzset</B>, <B>tzsetwall</B> - initialize time conversion information
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>void</I>
+     <B>tzset</B>(<I>void</I>)
+
+     <I>void</I>
+     <B>tzsetwall</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>tzset</B>() function initializes time conversion information used by the
+     library routine <B><A HREF="ctime.html">localtime(3)</A></B>.  The environment variable TZ specifies how
+     this is done.
+
+     If TZ does not appear in the environment, the best available approxima-
+     tion to local wall clock time, as specified by the <B><A HREF="tzfile.html">tzfile(5)</A></B>-format  file
+     <I>/etc/localtime</I> is used.
+
+     If TZ appears in the environment but its value is a null string, Coordi-
+     nated Universal Time (UTC) is used (without leap second correction).
+
+     If TZ appears in the environment and its value begins with a colon (`:'),
+     the rest of its value is used as a pathname of a <B><A HREF="tzfile.html">tzfile(5)</A></B>-format	file
+     from which to read the time conversion information.  If the first charac-
+     ter of the pathname is a slash (`/') it is used as an absolute pathname;
+     otherwise, it is used as a pathname relative to the system time conver-
+     sion information directory.
+
+     If its value does not begin with a colon, it is first used as the path-
+     name of a file (as described above) from which to read the time conver-
+     sion information.	If that file cannot be read, the value is then inter-
+     preted as a direct specification (the format is described below) of the
+     time conversion information.
+
+     If the TZ environment variable does not specify a <B><A HREF="tzfile.html">tzfile(5)</A></B>-format  file
+     and cannot be interpreted as a direct specification, UTC is used.
+
+     The <B>tzsetwall</B>() function sets things up so that localtime returns the
+     best available approximation of local wall clock time.
+
+
+</PRE>
+<H2>SPECIFICATION FORMAT</H2><PRE>
+     When TZ is used directly as a specification of the time conversion infor-
+     mation, it must have the following syntax (spaces inserted for clarity):
+
+	   <I>std</I> <I>offset</I> [<I>dst</I> [<I>offset</I>] [ , <I>rule</I>]]
+
+     Where:
+
+	   <I>std</I> and <I>dst</I>	Three or more bytes that are the designation for the
+			standard (<I>std</I>) or summer (<I>dst</I>) time zone.  Only <I>std</I> is
+			required; if <I>dst</I> is missing, then summer time does not
+			apply in this locale.  Upper and lowercase letters are
+			explicitly allowed.  Any characters except a leading
+			colon (`:'), digits, comma (`,'), minus (`-'), plus
+			(`+'), and ASCII NUL are allowed.
+
+	   <I>offset</I>	Indicates the value one must add to the local time to
+			arrive at Coordinated Universal Time.  The <I>offset</I> has
+			the form:
+
+			      <I>hh</I> [:<I>mm</I>[ : <I>ss</I>]]
+
+			The minutes (<I>mm</I>) and seconds (<I>ss</I>) are optional.  The
+			hour (<I>hh</I>) is required and may be a single digit.  The
+			<I>offset</I> following <I>std</I> is required.  If no <I>offset</I> fol-
+			lows <I>dst</I>, summer time is assumed to be one hour ahead
+			of standard time.  One or more digits may be used; the
+			value is always interpreted as a decimal number.  The
+			hour must be between zero and 24, and the minutes (and
+			seconds) -- if present -- between zero and 59.	If
+			preceded by a (`-') the time zone shall be east of the
+			Prime Meridian; otherwise it shall be west (which may
+			be indicated by an optional preceding (`+')).
+
+	   <I>rule</I> 	Indicates when to change to and back from summer time.
+			The <I>rule</I> has the form:
+
+			      <I>date/time,date/time</I>
+
+			where the first <I>date</I> describes when the change from
+			standard to summer time occurs and the second <I>date</I> de-
+			scribes when the change back happens.  Each <I>time</I> field
+			describes when, in current local time, the change to
+			the other time is made.
+
+			The format of <I>date</I> is one of the following:
+
+			<B>J</B> <I>n</I>	 The Julian day <I>n</I> (1 &lt;= <I>n</I> &lt;= 365).  Leap days
+				 are not counted; that is, in all years -- in-
+				 cluding leap years -- February 28 is day 59
+				 and March 1 is day 60.  It is impossible to
+				 explicitly refer to the occasional February
+				 29.
+
+			<I>n</I>	 The zero-based Julian day (0 &lt;= <I>n</I> &lt;= 365 ) .
+				 Leap days are counted, and it is possible to
+				 refer to February 29.
+
+			<B>M</B> <I>m.n.d</I>  The <I>d</I>'th day (0 &lt;= <I>d</I> &lt;= 6 ) of week <I>n</I> of
+				 month <I>m</I> of the year (1 &lt;= <I>n</I> &lt;= 5), (1 &lt;= <I>m</I> &lt;=
+				 12), where week 5 means ``the last <I>d</I> day in
+				 month <I>m</I>'' which may occur in either the
+				 fourth or the fifth week).  Week 1 is the
+				 first week in which the <I>d</I>'th day occurs.  Day
+				 zero is Sunday.
+
+				 The <I>time</I> has the same format as <I>offset</I> except
+				 that no leading sign (`-') or (`+') is al-
+				 lowed.  The default, if <I>time</I> is not given, is
+				 <B>02:00:00</B>.
+
+			If no <I>rule</I> is present in the TZ specification, the
+			rules specified by the <B><A HREF="tzfile.html">tzfile(5)</A></B>-format  file
+			<I>posixrules</I> in the system time conversion information
+			directory are used, with the standard and summer time
+			offsets from UTC replaced by those specified by the
+			<I>offset</I> values in TZ.
+
+     For compatibility with System V Release 3.1, a semicolon (`;') may be
+     used to separate the <I>rule</I> from the rest of the specification.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     /etc/localtime		     local time zone file
+
+     /usr/share/zoneinfo	     time zone directory
+     /usr/share/zoneinfo/posixrules  rules for POSIX-style TZ's
+     /usr/share/zoneinfo/GMT  for    UTC leap seconds
+
+     If the file <I>/usr/share/zoneinfo/GMT</I> does not exist, UTC leap seconds are
+     loaded from <I>/usr/share/zoneinfo/posixrules</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="date.html">date(1)</A></B>,  <B><A HREF="gettimeofday.html">gettimeofday(2)</A></B>,  <B><A HREF="ctime.html">ctime(3)</A></B>,  <B><A HREF="getenv.html">getenv(3)</A></B>,	<B><A HREF="time.html">time(3)</A></B>,  <B><A HREF="tzfile.html">tzfile(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>tzset</B>() and <B>tzsetwall</B>() functions first appeared in 4.4BSD.
+
+BSD			       November 17, 1993			     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

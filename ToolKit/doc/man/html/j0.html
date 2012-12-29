@@ -1,0 +1,95 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="J0.html">J0(3)</A></B>		       FreeBSD Library Functions Manual 		 <B><A HREF="J0.html">J0(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>j0</B>, <B>j0f</B>, <B>j1</B>, <B>j1f</B>, <B>jn</B>, <B>jnf</B>, <B>y0</B>, <B>y0f</B>, <B>y1</B>, <B>y1f</B>, <B>yn</B>, <B>ynf</B> - Bessel functions
+     of first and second kind
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>j0</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>j0f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>j1</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>j1f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>jn</B>(<I>int</I> <I>n</I>, <I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>jnf</B>(<I>int</I> <I>n</I>, <I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>y0</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>y0f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>y1</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>y1f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>yn</B>(<I>int</I> <I>n</I>, <I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>ynf</B>(<I>int</I> <I>n</I>, <I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The functions <B>j0</B>(), <B>j0f</B>(), <B>j1</B>() and <B>j1f</B>() compute the <I>Bessel</I> <I>function</I> <I>of</I>
+     <I>the</I> <I>first</I> <I>kind</I> <I>of</I> <I>the</I> <I>order</I> 0 and the <I>order</I> 1, respectively, for the real
+     value <I>x</I>; the functions <B>jn</B>() and <B>jnf</B>() compute the <I>Bessel</I> <I>function</I> <I>of</I> <I>the</I>
+     <I>first</I> <I>kind</I> <I>of</I> <I>the</I> <I>integer</I> <I>order</I> <I>n</I> for the real value <I>x</I>.
+
+     The functions <B>y0</B>(), <B>y0f</B>(), <B>y1</B>(), and <B>y1f</B>() compute the linearly indepen-
+     dent <I>Bessel</I> <I>function</I> <I>of</I> <I>the</I> <I>second</I> <I>kind</I> <I>of</I> <I>the</I> <I>order</I> 0 and the <I>order</I> 1,
+     respectively, for the positive <I>real</I> value <I>x</I>; the functions <B>yn</B>() and <B>ynf</B>()
+     compute the <I>Bessel</I> <I>function</I> <I>of</I> <I>the</I> <I>second</I> <I>kind</I> <I>for</I> <I>the</I> <I>integer</I> <I>order</I> <I>n</I>
+     for the positive <I>real</I> value <I>x</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If these functions are successful, the computed value is returned. On the
+     VAX and Tahoe architectures, for the Bessel functions of the second kind,
+     a negative or zero <I>x</I> value results in an error; the global variable <I>errno</I>
+     is set to EDOM and a reserve operand fault is generated.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     This set of functions appeared in Version 7 AT&amp;T UNIX.
+
+4th Berkeley Distribution	April 19, 1991				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

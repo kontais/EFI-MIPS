@@ -1,0 +1,121 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+
+<B>ZLIB(3)</B> 						  <B>ZLIB(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+       zlib - compression/decompression library
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       [see <I>include/bsd/zlib.h</I> for full description]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  <I>zlib</I>  library  is  a general purpose data compression
+       library.  The code is thread safe.  It provides	in-memory
+       compression   and   decompression   functions,	including
+       integrity checks of the uncompressed data.   This  version
+       of  the	library  supports  only  one  compression  method
+       (deflation) but other algorithms will be added  later  and
+       will have the same stream interface.
+
+       Compression  can  be  done in a single step if the buffers
+       are  large  enough  (for  example  if  an  input  file  is
+       mmap'ed), or can be done by repeated calls of the compres-
+       sion function.  In the latter case, the	application  must
+       provide	more  input  and/or consume the output (providing
+       more output space) before each call.
+
+       The library also supports reading  and  writing	files  in
+       <I>gzip</I>  (.gz)  format  with  an interface similar to that of
+       stdio.
+
+       The library does  not  install  any  signal  handler.  The
+       decoder	checks the consistency of the compressed data, so
+       the library should never crash even in case  of	corrupted
+       input.
+
+       All functions of the compression library are documented in
+       the file <I>zlib.h.</I>  The distribution source  includes  exam-
+       ples  of  use  of  the  library	the  files  <I>example.c</I> and
+       <I>minigzip.c</I>.
+
+       A Java implementation of <I>zlib</I> is  available  in	the  Java
+       Development Kit 1.1
+
+	      http://www.javasoft.com/prod-
+	      ucts/JDK/1.1/docs/api/Package-java.util.zip.html
+
+       A Perl interface to <I>zlib</I>, written by Paul Marquess  (pmar-
+       quess@bfsec.bt.co.uk)  is available at CPAN (Comprehensive
+       Perl Archive Network) sites, such as:
+
+	      ftp://ftp.cis.ufl.edu/pub/perl/CPAN/modules/by-mod-
+	      ule/Compress/Compress-Zlib*
+
+       A  Python  interface  to  <I>zlib</I>  written	by  A.M. Kuchling
+       &lt;amk@magnet.com&gt; is available  from  the  Python  Software
+       Association sites, such as:
+
+	      ftp://ftp.python.org/pub/python/contrib/Encoding/zlib*.tar.gz
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       Questions about zlib should be sent to:
+
+	      zlib@quest.jpl.nasa.gov or, if this fails,  to  the
+	      author  addresses  given below.  The zlib home page
+	      is:
+
+	      http://www.cdrom.com/pub/infozip/zlib/
+
+       The data format used by the zlib library is  described  by
+       RFC (Request for Comments) 1950 to 1952 in the files:
+
+	      ftp://ds.internic.net/rfc/rfc1950.txt (zlib format)
+	      rfc1951.txt (deflate format)
+	      rfc1952.txt (gzip format)
+
+       These documents are also available in other formats from:
+
+	      ftp://ftp.uu.net/graphics/png/documents/zlib/zdoc-
+	      index.html
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Version	1.1.3  Copyright  (C)  1995-1998 Jean-loup Gailly
+       (jloup@gzip.org)  and   Mark   Adler   (madler@alumni.cal-
+       tech.edu).
+
+       This  software is provided "as-is," without any express or
+       implied warranty.  In no event will the	authors  be  held
+       liable  for any damages arising from the use of this soft-
+       ware.  See the  distribution  directory	with  respect  to
+       requirements governing redistribution.  The deflate format
+       used by <I>zlib</I> was defined by Phil Katz.	The  deflate  and
+       <I>zlib</I>  specifications  were  written  by	L. Peter Deutsch.
+       Thanks to all the people who reported  problems	and  sug-
+       gested  various improvements in <I>zlib</I>; who are too numerous
+       to cite here.
+
+       UNIX manual page  by  R.  P.  C.  Rodgers,  U.S.  National
+       Library of Medicine (rodgers@nlm.nih.gov).
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

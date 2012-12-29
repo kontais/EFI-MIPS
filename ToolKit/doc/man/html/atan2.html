@@ -1,0 +1,92 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ATAN2.html">ATAN2(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="ATAN2.html">ATAN2(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>atan2</B>, <B>atan2f</B> - arc tangent functions of two variables
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>atan2</B>(<I>double</I> <I>y</I>, <I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>atan2f</B>(<I>float</I> <I>y</I>, <I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>atan2</B>() and the <B>atan2f</B>() functions compute the principal value of the
+     arc tangent of <I>y/x</I>, using the signs of both arguments to determine the
+     quadrant of the return value.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>atan2</B>() and the <B>atan2f</B>() functions, if successful, return the arc
+     tangent of <I>y/x</I> in the range [-pi, +pi] radians.  If both <I>x</I> and <I>y</I> are ze-
+     ro, the global variable <I>errno</I> is set to EDOM. On the VAX:
+
+     <B>atan2</B>(<I>y</I>, <I>x</I>):=	  <B>atan</B>(<I>y/x</I>)	       if <I>x</I> &gt; 0,
+			  sign(<I>y</I>)*(pi - <B>atan</B>(|<I>y/x</I>|))	     if <I>x</I> &lt; 0,
+			  0		       if x = y = 0, or
+			  sign(<I>y</I>)*pi/2	       if <I>x</I> = 0 <I>y</I>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     The function <B>atan2</B>() defines "if x &gt; 0," <B>atan2</B>(<I>0</I>, <I>0</I>) = 0 on a VAX despite
+     that previously <B>atan2</B>(<I>0</I>, <I>0</I>) may have generated an error message.  The
+     reasons for assigning a value to <B>atan2</B>(<I>0</I>, <I>0</I>) are these:
+
+	   1.	Programs that test arguments to avoid computing <B>atan2</B>(<I>0</I>, <I>0</I>)
+		must be indifferent to its value.  Programs that require it to
+		be invalid are vulnerable to diverse reactions to that inva-
+		lidity on diverse computer systems.
+
+	   2.	The <B>atan2</B>() function is used mostly to convert from rectangu-
+		lar (x,y) to polar (r,theta) coordinates that must satisfy x =
+		r*cos theta and y = r*sin theta.  These equations are satis-
+		fied when (x=0,y=0) is mapped to (r=0,theta=0) on a VAX.  In
+		general, conversions to polar coordinates should be computed
+		thus:
+
+		      r    := hypot(x,y);  ... := sqrt(x*x+y*y)
+		      theta	:= atan2(y,x).
+
+	   3.	The foregoing formulas need not be altered to cope in a rea-
+		sonable way with signed zeros and infinities on a machine that
+		conforms to IEEE 754; the versions of <B><A HREF="hypot.html">hypot(3)</A></B> and <B>atan2</B>()
+		provided for such a machine are designed to handle all cases.
+		That is why <B>atan2</B>(<I>+-0</I>, <I>-0</I>) = +-pi for instance.  In general
+		the formulas above are equivalent to these:
+
+		      r := sqrt(x*x+y*y); if r = 0 then x := copysign(1,x);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="acos.html">acos(3)</A></B>,  <B><A HREF="asin.html">asin(3)</A></B>,  <B><A HREF="atan.html">atan(3)</A></B>,  <B><A HREF="cos.html">cos(3)</A></B>,  <B><A HREF="cosh.html">cosh(3)</A></B>,  <B><A HREF="math.html">math(3)</A></B>,	<B><A HREF="sin.html">sin(3)</A></B>,
+     <B><A HREF="sinh.html">sinh(3)</A></B>,  <B><A HREF="tan.html">tan(3)</A></B>,	<B><A HREF="tanh.html">tanh(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>atan2</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

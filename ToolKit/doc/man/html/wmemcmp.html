@@ -1,0 +1,48 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WMEMCMP(3)</B>	       FreeBSD Library Functions Manual 	     <B>WMEMCMP(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wmemcmp</B> - compare wchar_t string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>int</I>
+     <B>wmemcmp</B>(<I>const</I> <I>void</I> <I>*b1</I>, <I>const</I> <I>void</I> <I>*b2</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wmemcmp</B>() function compares wchar_t string <I>b1</I> against wchar_t string <I>b2</I>.
+     Both strings are assumed to be <I>len</I> wchar_t's long.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wmemcmp</B>() function returns zero if the two strings are identical, oth-
+     erwise returns the difference between the first two differing wchar_ts.  Zero-length
+     strings are always identical.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>bcmp(3)</B>,  <B>strcasecmp(3)</B>,  <B>strcmp(3)</B>,  <B>strcoll(3)</B>,	<B>strxfrm(3)</B>
+
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

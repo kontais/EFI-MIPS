@@ -1,0 +1,98 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>GETWC(3)</b> 	       FreeBSD Library Functions Manual 	       <b>GETWC(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>fgetwc</b>, <b>getwc</b>, <b>getwchar</b> - get next wide character from input stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wide.h&gt;</b>
+
+     <i>wint_t</i>
+     <b>fgetwc</b>(<i>FILE</i> <i>*stream</i>)
+
+     <i>wint_t</i>
+     <b>getwc</b>(<i>FILE</i> <i>*stream</i>)
+
+     <i>wint_t</i>
+     <b>getwchar</b>()
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>fgetwc</b>() function obtains the next input wide character (if present) from
+     the stream pointed at by <i>stream</i>, or the next wide character pushed back on the
+     stream via <b>ungetwc(3)</b>.
+
+     The <b>getwc</b>() function acts essentially identically to <b>fgetwc</b>(), but is a
+     macro that expands in-line.
+
+     The <b>getwchar</b>() function is equivalent to: getwc with the argument stdin.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     If successful, these routines return the next requested object from the
+     <i>stream</i>. If the stream is at end-of-file or a read error occurs, the rou-
+      tines return WEOF. The routines <b>feof(3)</b> and <b>ferror(3)</b> must be used to dis-
+     tinguish between end-of-file and error.  If an error occurs, the global
+     variable <i>errno</i> is set to indicate the error.  The end-of-file condition
+     is remembered, even on a terminal, and all subsequent attempts to read
+     will return EOF until the condition is cleared with <b>clearerr(3)</b>.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>ferror(3)</b>,  <b>wfopen(3)</b>,  <b>fread(3)</b>,  <b>putwc(3)</b>,  <b>ungetwc(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>fgetwc</b>(), <b>getwc</b>() and <b>getwchar</b>() functions conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

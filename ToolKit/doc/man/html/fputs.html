@@ -1,0 +1,65 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FPUTS.html">FPUTS(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FPUTS.html">FPUTS(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fputs</B>, <B>puts</B> - output a line to a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fputs</B>(<I>const</I> <I>char</I> <I>*str</I>, <I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>puts</B>(<I>const</I> <I>char</I> <I>*str</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The function <B>fputs</B>() writes the string pointed to by <I>str</I> to the stream
+     pointed to by <I>stream</I>.
+
+     The function <B>puts</B>() writes the string <I>str</I>, and a terminating newline
+     character, to the stream <I>stdout</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>fputs</B>() function returns 0 on success and EOF on error; <B>puts</B>() re-
+     turns a nonnegative integer on success and EOF on error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EBADF]  The <I>stream</I> supplied is not a writable stream.
+
+     The functions <B>fputs</B>() and <B>puts</B>() may also fail and set <I>errno</I> for any of
+     the errors specified for the routines <B><A HREF="write.html">write(2)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ferror.html">ferror(3)</A></B>,  <B><A HREF="putc.html">putc(3)</A></B>,  <B><A HREF="stdio.html">stdio(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>fputs</B>() and <B>puts</B>() conform to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>WRMDIR(2)</b>		  FreeBSD System Calls Manual		      <b>WRMDIR(2)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>wrmdir</b> - remove a directory file, wide character version
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>int</i>
+     <b>wrmdir</b>(<i>const</i> <i>wchar_t</i> <i>*path</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     <b>wrmdir</b>() removes a directory file whose name is given by <i>path (wide character)</i>. 
+    The directory must not have any entries other than `.' and `..'.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     A 0 is returned if the remove succeeds; otherwise a -1 is returned and an
+     error code is stored in the global location <i>errno</i>.
+
+
+</pre>
+
+<h2>ERRORS</h2>
+
+<pre>
+     The named file is removed unless:
+
+     [ENOTDIR]	     A component of the path is not a directory.
+
+     [ENAMETOOLONG]  A component of a pathname exceeded 255 characters, or an
+		     entire path name exceeded 1023 characters.
+
+     [ENOENT]	     The named directory does not exist.
+
+     [ELOOP]	     Too many symbolic links were encountered in translating
+		     the pathname.
+
+     [ENOTEMPTY]     The named directory contains files other than `.' and
+		     `..' in it.
+
+     [EACCES]	     Search permission is denied for a component of the path
+		     prefix.
+
+     [EACCES]	     Write permission is denied on the directory containing
+		     the link to be removed.
+
+     [EPERM]	     The directory containing the directory to be removed is
+		     marked sticky, and neither the containing directory nor
+		     the directory to be removed are owned by the effective
+		     user ID.
+
+     [EBUSY]	     The directory to be removed is the mount point for a
+		     mounted file system.
+
+     [EIO]	     An I/O error occurred while deleting the directory entry
+		     or deallocating the inode.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>wmkdir(2)</b>,	<b>unlink(2)</b>
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SYSCTL.html">SYSCTL(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="SYSCTL.html">SYSCTL(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>sysctl</B>, <B>sysctlbyname</B> - get or set system information
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/sysctl.h&gt;</B>
+
+     <I>int</I>
+     <B>sysctl</B>(<I>int</I> <I>*name</I>, <I>u</I><B>_</B><I>int</I> <I>namelen</I>, <I>void</I> <I>*oldp</I>, <I>size</I><B>_</B><I>t</I> <I>*oldlenp</I>, <I>void</I> <I>*newp</I>,
+	     <I>size</I><B>_</B><I>t</I> <I>newlen</I>)
+
+     <I>int</I>
+     <B>sysctlbyname</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>void</I> <I>*oldp</I>, <I>size</I><B>_</B><I>t</I> <I>*oldlenp</I>, <I>void</I> <I>*newp</I>,
+	     <I>size</I><B>_</B><I>t</I> <I>newlen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>sysctl</B>() function retrieves system information and allows processes
+     with appropriate privileges to set system information.  The information
+     available from <B>sysctl</B>() consists of integers, strings, and tables.  In-
+     formation may be retrieved and set from the command interface using the
+     <B><A HREF="sysctl.html">sysctl(8)</A></B> utility.
+
+     Unless explicitly noted below, <B>sysctl</B>() returns a consistent snapshot of
+     the data requested.  Consistency is obtained by locking the destination
+     buffer into memory so that the data may be copied out without blocking.
+     Calls to <B>sysctl</B>() are serialized to avoid deadlock.
+
+     The state is described using a ``Management Information Base'' (MIB)
+     style name, listed in <I>name</I>, which is a <I>namelen</I> length array of integers.
+
+     The <B>sysctlbyname</B>() function accepts an ascii representation of the name
+     and internally looks up the integer name vector.  Apart from that, it be-
+     haves the same as the standard <B>sysctl</B>() function.
+
+     The information is copied into the buffer specified by <I>oldp</I>. The size of
+     the buffer is given by the location specified by <I>oldlenp</I> before the call,
+     and that location gives the amount of data copied after a successful call
+     and after a call that returns with the error code ENOMEM.	If the amount
+     of data available is greater than the size of the buffer supplied, the
+     call supplies as much data as fits in the buffer provided and returns
+     with the error code ENOMEM.  If the old value is not desired, <I>oldp</I> and
+     <I>oldlenp</I> should be set to NULL.
+
+     The size of the available data can be determined by calling <B>sysctl</B>() with
+     a NULL parameter for <I>oldp</I>. The size of the available data will be re-
+     turned in the location pointed to by <I>oldlenp</I>. For some operations, the
+     amount of space may change often.	For these operations, the system at-
+     tempts to round up so that the returned size is large enough for a call
+     to return the data shortly thereafter.
+
+     To set a new value, <I>newp</I> is set to point to a buffer of length <I>newlen</I>
+     from which the requested value is to be taken.  If a new value is not to
+     be set, <I>newp</I> should be set to NULL and <I>newlen</I> set to 0.
+
+     The top level names are defined with a CTL_ prefix in <I>&lt;sys/sysctl.h&gt;</I>, and
+     are as follows.  The next and subsequent levels down are found in the in-
+     clude files listed here, and described in separate sections below.
+
+	   <I>Name</I> 	     <I>Next</I> <I>level</I> <I>names</I>	       <I>Description</I>
+	   CTL_DEBUG	     sys/sysctl.h	       Debugging
+
+	   CTL_VFS	     sys/mount.h	       Filesystem
+	   CTL_HW	     sys/sysctl.h	       Generic CPU, I/O
+	   CTL_KERN	     sys/sysctl.h	       High kernel limits
+	   CTL_MACHDEP	     sys/sysctl.h	       Machine dependent
+	   CTL_NET	     sys/socket.h	       Networking
+	   CTL_USER	     sys/sysctl.h	       User-level
+	   CTL_VM	     vm/vm_param.h	       Virtual memory
+
+     For example, the following retrieves the maximum number of processes al-
+     lowed in the system:
+
+	   int mib[2], maxproc;
+	   size_t len;
+
+	   mib[0] = CTL_KERN;
+	   mib[1] = KERN_MAXPROC;
+	   len = sizeof(maxproc);
+	   sysctl(mib, 2, &amp;maxproc, &amp;len, NULL, 0);
+
+     To retrieve the standard search path for the system utilities:
+
+	   int mib[2];
+	   size_t len;
+	   char *p;
+
+	   mib[0] = CTL_USER;
+	   mib[1] = USER_CS_PATH;
+	   sysctl(mib, 2, NULL, &amp;len, NULL, 0);
+	   p = malloc(len);
+	   sysctl(mib, 2, p, &amp;len, NULL, 0);
+
+
+</PRE>
+<H2>CTL_DEBUG</H2><PRE>
+     The debugging variables vary from system to system.  A debugging variable
+     may be added or deleted without need to recompile <B>sysctl</B>() to know about
+     it.  Each time it runs, <B>sysctl</B>() gets the list of debugging variables
+     from the kernel and displays their current values.  The system defines
+     twenty (<I>struct</I> <I>ctldebug</I>) variables named <B>debug0</B> through <B>debug19</B>. They are
+     declared as separate variables so that they can be individually initial-
+     ized at the location of their associated variable.  The loader prevents
+     multiple use of the same variable by issuing errors if a variable is ini-
+     tialized in more than one place.  For example, to export the variable
+     <B>dospecialcheck</B> as a debugging variable, the following declaration would
+     be used:
+	   int dospecialcheck = 1;
+	   struct ctldebug debug5 = { "dospecialcheck", &amp;dospecialcheck };
+
+
+</PRE>
+<H2>CTL_VFS</H2><PRE>
+     A distinguished second level name, VFS_GENERIC, is used to get general
+     information about all filesystems.  One of its third level identifiers is
+     VFS_MAXTYPENUM that gives the highest valid filesystem type number.  Its
+     other third level identifier is VFS_CONF that returns configuration in-
+     formation about the filesystem type given as a fourth level identifier
+     (see <B><A HREF="getvfsbyname.html">getvfsbyname(3)</A></B> as an example of its use).  The remaining second
+     level identifiers are the filesystem type number returned by a <B><A HREF="statfs.html">statfs(2)</A></B>
+     call or from VFS_CONF.  The third level identifiers available for each
+     filesystem are given in the header file that defines the mount argument
+     structure for that filesystem.
+
+
+</PRE>
+<H2>CTL_HW</H2><PRE>
+     The string and integer information available for the CTL_HW level is de-
+     tailed below.  The changeable column shows whether a process with appro-
+     priate privilege may change the value.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	      <I>Type</I>	    <I>Changeable</I>
+
+	   HW_MACHINE		      string	    no
+	   HW_MODEL		      string	    no
+	   HW_NCPU		      integer	    no
+	   HW_BYTEORDER 	      integer	    no
+	   HW_PHYSMEM		      integer	    no
+	   HW_USERMEM		      integer	    no
+	   HW_PAGESIZE		      integer	    no
+	   HW_FLOATINGPOINT	      integer	    no
+	   HW_MACHINE_ARCH	      string	    no
+
+     HW_MACHINE
+	     The machine class.
+
+     HW_MODEL
+	     The machine model
+
+     HW_NCPU
+	     The number of cpus.
+
+     HW_BYTEORDER
+	     The byteorder (4,321, or 1,234).
+
+     HW_PHYSMEM
+	     The bytes of physical memory.
+
+     HW_USERMEM
+	     The bytes of non-kernel memory.
+
+     HW_PAGESIZE
+	     The software page size.
+
+     HW_FLOATINGPOINT
+	     Nonzero if the floating point support is in hardware.
+
+     HW_MACHINE_ARCH
+	     The machine dependent architecture type.
+
+
+</PRE>
+<H2>CTL_KERN</H2><PRE>
+     The string and integer information available for the CTL_KERN level is
+     detailed below.  The changeable column shows whether a process with ap-
+     propriate privilege may change the value.	The types of data currently
+     available are process information, system vnodes, the open file entries,
+     routing table entries, virtual memory statistics, load average history,
+     and clock rate information.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	      <I>Type</I>		     <I>Changeable</I>
+	   KERN_ARGMAX		      integer		     no
+	   KERN_BOOTFILE	      string		     yes
+	   KERN_BOOTTIME	      struct timeval	     no
+	   KERN_CLOCKRATE	      struct clockinfo	     no
+	   KERN_FILE		      struct file	     no
+	   KERN_HOSTID		      integer		     yes
+	   KERN_HOSTNAME	      string		     yes
+	   KERN_JOB_CONTROL	      integer		     no
+	   KERN_MAXFILES	      integer		     yes
+	   KERN_MAXFILESPERPROC       integer		     yes
+	   KERN_MAXPROC 	      integer		     no
+	   KERN_MAXPROCPERUID	      integer		     yes
+	   KERN_MAXVNODES	      integer		     yes
+	   KERN_NGROUPS 	      integer		     no
+	   KERN_NISDOMAINNAME	      string		     yes
+	   KERN_OSRELDATE	      integer		     no
+	   KERN_OSRELEASE	      string		     no
+	   KERN_OSREV		      integer		     no
+
+	   KERN_OSTYPE		      string		     no
+	   KERN_POSIX1		      integer		     no
+	   KERN_PROC		      struct proc	     no
+	   KERN_PROF		      node		     not applicable
+	   KERN_SAVED_IDS	      integer		     no
+	   KERN_SECURELVL	      integer		     raise only
+	   KERN_UPDATEINTERVAL	      integer		     no
+	   KERN_VERSION 	      string		     no
+	   KERN_VNODE		      struct vnode	     no
+
+     KERN_ARGMAX
+	     The maximum bytes of argument to <B><A HREF="execve.html">execve(2)</A></B>.
+
+     KERN_BOOTFILE
+	     The full pathname of the file from which the kernel was loaded.
+
+     KERN_BOOTTIME
+	     A <I>struct</I> <I>timeval</I> structure is returned.  This structure contains
+	     the time that the system was booted.
+
+     KERN_CLOCKRATE
+	     A <I>struct</I> <I>clockinfo</I> structure is returned.	This structure con-
+	     tains the clock, statistics clock and profiling clock frequen-
+	     cies, the number of micro-seconds per hz tick and the skew rate.
+
+     KERN_FILE
+	     Return the entire file table.  The returned data consists of a
+	     single <I>struct</I> <I>filehead</I> followed by an array of <I>struct</I> <I>file</I>, whose
+	     size depends on the current number of such objects in the system.
+
+     KERN_HOSTID
+	     Get or set the host id.
+
+     KERN_HOSTNAME
+	     Get or set the hostname.
+
+     KERN_JOB_CONTROL
+	     Return 1 if job control is available on this system, otherwise 0.
+
+     KERN_MAXFILES
+	     The maximum number of files that may be open in the system.
+
+     KERN_MAXFILESPERPROC
+	     The maximum number of files that may be open for a single pro-
+	     cess.  This limit only applies to processes with an effective uid
+	     of nonzero at the time of the open request.  Files that have al-
+	     ready been opened are not affected if the limit or the effective
+	     uid is changed.
+
+     KERN_MAXPROC
+	     The maximum number of concurrent processes the system will allow.
+
+     KERN_MAXPROCPERUID
+	     The maximum number of concurrent processes the system will allow
+	     for a single effective uid.  This limit only applies to processes
+	     with an effective uid of nonzero at the time of a fork request.
+	     Processes that have already been started are not affected if the
+	     limit is changed.
+
+     KERN_MAXVNODES
+	     The maximum number of vnodes available on the system.
+
+     KERN_NGROUPS
+	     The maximum number of supplemental groups.
+
+     KERN_NISDOMAINNAME
+
+	     The name of the current YP/NIS domain.
+
+     KERN_OSRELDATE
+	     The system release date in YYYYMM format (January 1996 is encoded
+	     as 199601).
+
+     KERN_OSRELEASE
+	     The system release string.
+
+     KERN_OSREV
+	     The system revision string.
+
+     KERN_OSTYPE
+	     The system type string.
+
+     KERN_POSIX1
+	     The version of ISO/IEC 9945 (POSIX 1003.1) with which the system
+	     attempts to comply.
+
+     KERN_PROC
+	     Return the entire process table, or a subset of it.  An array of
+	     <I>struct</I> <I>kinfo</I><B>_</B><I>proc</I> structures is returned, whose size depends on
+	     the current number of such objects in the system.	The third and
+	     fourth level names are as follows:
+
+		   <I>Third</I> <I>level</I> <I>name</I>	     <I>Fourth</I> <I>level</I> <I>is:</I>
+		   KERN_PROC_ALL	     None
+		   KERN_PROC_PID	     A process ID
+		   KERN_PROC_PGRP	     A process group
+		   KERN_PROC_TTY	     A tty device
+		   KERN_PROC_UID	     A user ID
+		   KERN_PROC_RUID	     A real user ID
+
+     KERN_PROF
+	     Return profiling information about the kernel.  If the kernel is
+	     not compiled for profiling, attempts to retrieve any of the
+	     KERN_PROF values will fail with EOPNOTSUPP.  The third level
+	     names for the string and integer profiling information is de-
+	     tailed below.  The changeable column shows whether a process with
+	     appropriate privilege may change the value.
+
+		   <I>Third</I> <I>level</I> <I>name</I>	 <I>Type</I>			<I>Changeable</I>
+		   GPROF_STATE		 integer		yes
+		   GPROF_COUNT		 u_short[]		yes
+		   GPROF_FROMS		 u_short[]		yes
+		   GPROF_TOS		 struct tostruct	yes
+		   GPROF_GMONPARAM	 struct gmonparam	no
+
+	     The variables are as follows:
+
+	     GPROF_STATE
+		     Returns GMON_PROF_ON or GMON_PROF_OFF to show that pro-
+		     filing is running or stopped.
+
+	     GPROF_COUNT
+		     Array of statistical program counter counts.
+
+	     GPROF_FROMS
+		     Array indexed by program counter of call-from points.
+
+	     GPROF_TOS
+		     Array of <I>struct</I> <I>tostruct</I> describing destination of calls
+		     and their counts.
+
+	     GPROF_GMONPARAM
+		     Structure giving the sizes of the above arrays.
+
+     KERN_SAVED_IDS
+	     Returns 1 if saved set-group and saved set-user ID is available.
+
+     KERN_SECURELVL
+	     The system security level.  This level may be raised by processes
+	     with appropriate privilege.  It may not be lowered.
+
+     KERN_VERSION
+	     The system version string.
+
+     KERN_VNODE
+	     Return the entire vnode table.  Note, the vnode table is not nec-
+	     essarily a consistent snapshot of the system.  The returned data
+	     consists of an array whose size depends on the current number of
+	     such objects in the system.  Each element of the array contains
+	     the kernel address of a vnode <I>struct</I> <I>vnode</I> <I>*</I> followed by the vn-
+	     ode itself <I>struct</I> <I>vnode</I>.
+
+     KERN_UPDATEINTERVAL
+	     The interval between <B><A HREF="sync.html">sync(2)</A></B> calls in the <B><A HREF="update.html">update(4)</A></B> process.
+
+
+</PRE>
+<H2>CTL_MACHDEP</H2><PRE>
+     The set of variables defined is architecture dependent.  The following
+     variables are defined for the i386 architecture.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	<I>Type</I>		      <I>Changeable</I>
+	   CPU_CONSDEV		dev_t		      no
+	   CPU_ADJKERNTZ	int		      yes
+	   CPU_DISRTCSET	int		      yes
+	   CPU_BOOTINFO 	struct bootinfo       no
+	   CPU_WALLCLOCK	int		      yes
+
+
+</PRE>
+<H2>CTL_NET</H2><PRE>
+     The string and integer information available for the CTL_NET level is de-
+     tailed below.  The changeable column shows whether a process with appro-
+     priate privilege may change the value.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	      <I>Type</I>		     <I>Changeable</I>
+	   PF_ROUTE		      routing messages	     no
+	   PF_INET		      internet values	     yes
+
+     PF_ROUTE
+	     Return the entire routing table or a subset of it.  The data is
+	     returned as a sequence of routing messages (see <B><A HREF="route.html">route(4)</A></B> for the
+	     header file, format and meaning).	The length of each message is
+	     contained in the message header.
+
+	     The third level name is a protocol number, which is currently al-
+	     ways 0.  The fourth level name is an address family, which may be
+	     set to 0 to select all address families.  The fifth and sixth
+	     level names are as follows:
+
+		   <I>Fifth</I> <I>level</I> <I>name</I>	     <I>Sixth</I> <I>level</I> <I>is:</I>
+		   NET_RT_FLAGS 	     rtflags
+		   NET_RT_DUMP		     None
+		   NET_RT_IFLIST	     None
+
+     PF_INET
+	     Get or set various global information about the internet proto-
+	     cols.  The third level name is the protocol.  The fourth level
+	     name is the variable name.  The currently defined protocols and
+
+	     names are:
+
+	     <I>Protocol</I>	   <I>Variable</I>	 <I>Type</I>	   <I>Changeable</I>
+	     icmp	   bmcastecho	 integer   yes
+	     icmp	   maskrepl	 integer   yes
+	     ip 	   forwarding	 integer   yes
+	     ip 	   redirect	 integer   yes
+	     ip 	   ttl		 integer   yes
+	     udp	   checksum	 integer   yes
+
+	     The variables are as follows:
+
+	     icmp.bmcastecho
+		     Returns 1 if an ICMP echo request to a broadcast or mul-
+		     ticast address is to be answered.
+
+	     icmp.maskrepl
+		     Returns 1 if ICMP network mask requests are to be an-
+		     swered.
+
+	     ip.forwarding
+		     Returns 1 when IP forwarding is enabled for the host,
+		     meaning that the host is acting as a router.
+
+	     ip.redirect
+		     Returns 1 when ICMP redirects may be sent by the host.
+		     This option is ignored unless the host is routing IP
+		     packets, and should normally be enabled on all systems.
+
+	     ip.ttl  The maximum time-to-live (hop count) value for an IP
+		     packet sourced by the system.  This value applies to nor-
+		     mal transport protocols, not to ICMP.
+
+	     udp.checksum
+		     Returns 1 when UDP checksums are being computed and
+		     checked.  Disabling UDP checksums is strongly discour-
+		     aged.
+
+
+</PRE>
+<H2>CTL_USER</H2><PRE>
+     The string and integer information available for the CTL_USER level is
+     detailed below.  The changeable column shows whether a process with ap-
+     propriate privilege may change the value.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	       <I>Type</I>	     <I>Changeable</I>
+	   USER_BC_BASE_MAX	       integer	     no
+	   USER_BC_DIM_MAX	       integer	     no
+	   USER_BC_SCALE_MAX	       integer	     no
+	   USER_BC_STRING_MAX	       integer	     no
+	   USER_COLL_WEIGHTS_MAX       integer	     no
+	   USER_CS_PATH 	       string	     no
+	   USER_EXPR_NEST_MAX	       integer	     no
+	   USER_LINE_MAX	       integer	     no
+	   USER_POSIX2_CHAR_TERM       integer	     no
+	   USER_POSIX2_C_BIND	       integer	     no
+	   USER_POSIX2_C_DEV	       integer	     no
+	   USER_POSIX2_FORT_DEV        integer	     no
+	   USER_POSIX2_FORT_RUN        integer	     no
+	   USER_POSIX2_LOCALEDEF       integer	     no
+	   USER_POSIX2_SW_DEV	       integer	     no
+	   USER_POSIX2_UPE	       integer	     no
+	   USER_POSIX2_VERSION	       integer	     no
+	   USER_RE_DUP_MAX	       integer	     no
+	   USER_STREAM_MAX	       integer	     no
+	   USER_TZNAME_MAX	       integer	     no
+
+     USER_BC_BASE_MAX
+	     The maximum ibase/obase values in the <B><A HREF="bc.html">bc(1)</A></B> utility.
+
+     USER_BC_DIM_MAX
+	     The maximum array size in the <B><A HREF="bc.html">bc(1)</A></B> utility.
+
+     USER_BC_SCALE_MAX
+	     The maximum scale value in the <B><A HREF="bc.html">bc(1)</A></B> utility.
+
+     USER_BC_STRING_MAX
+	     The maximum string length in the <B><A HREF="bc.html">bc(1)</A></B> utility.
+
+     USER_COLL_WEIGHTS_MAX
+	     The maximum number of weights that can be assigned to any entry
+	     of the LC_COLLATE order keyword in the locale definition file.
+
+     USER_CS_PATH
+	     Return a value for the PATH environment variable that finds all
+	     the standard utilities.
+
+     USER_EXPR_NEST_MAX
+	     The maximum number of expressions that can be nested within
+	     parenthesis by the <B><A HREF="expr.html">expr(1)</A></B> utility.
+
+     USER_LINE_MAX
+	     The maximum length in bytes of a text-processing utility's input
+	     line.
+
+     USER_POSIX2_CHAR_TERM
+	     Return 1 if the system supports at least one terminal type capa-
+	     ble of all operations described in POSIX 1003.2, otherwise 0.
+
+     USER_POSIX2_C_BIND
+	     Return 1 if the system's C-language development facilities sup-
+	     port the C-Language Bindings Option, otherwise 0.
+
+     USER_POSIX2_C_DEV
+	     Return 1 if the system supports the C-Language Development Utili-
+	     ties Option, otherwise 0.
+
+     USER_POSIX2_FORT_DEV
+	     Return 1 if the system supports the FORTRAN Development Utilities
+	     Option, otherwise 0.
+
+     USER_POSIX2_FORT_RUN
+	     Return 1 if the system supports the FORTRAN Runtime Utilities Op-
+	     tion, otherwise 0.
+
+     USER_POSIX2_LOCALEDEF
+	     Return 1 if the system supports the creation of locales, other-
+	     wise 0.
+
+     USER_POSIX2_SW_DEV
+	     Return 1 if the system supports the Software Development Utili-
+	     ties Option, otherwise 0.
+
+     USER_POSIX2_UPE
+	     Return 1 if the system supports the User Portability Utilities
+	     Option, otherwise 0.
+
+     USER_POSIX2_VERSION
+	     The version of POSIX 1003.2 with which the system attempts to
+
+	     comply.
+
+     USER_RE_DUP_MAX
+	     The maximum number of repeated occurrences of a regular expres-
+	     sion permitted when using interval notation.
+
+     USER_STREAM_MAX
+	     The minimum maximum number of streams that a process may have
+	     open at any one time.
+
+     USER_TZNAME_MAX
+	     The minimum maximum number of types supported for the name of a
+	     timezone.
+
+
+</PRE>
+<H2>CTL_VM</H2><PRE>
+     The string and integer information available for the CTL_VM level is de-
+     tailed below.  The changeable column shows whether a process with appro-
+     priate privilege may change the value.
+
+	   <I>Second</I> <I>level</I> <I>name</I>	      <I>Type</I>		   <I>Changeable</I>
+	   VM_LOADAVG		      struct loadavg	   no
+	   VM_METER		      struct vmtotal	   no
+	   VM_PAGEOUT_ALGORITHM       integer		   yes
+	   VM_SWAPPING_ENABLED	      integer		   maybe
+	   VM_V_CACHE_MAX	      integer		   yes
+	   VM_V_CACHE_MIN	      integer		   yes
+	   VM_V_FREE_MIN	      integer		   yes
+	   VM_V_FREE_RESERVED	      integer		   yes
+	   VM_V_FREE_TARGET	      integer		   yes
+	   VM_V_INACTIVE_TARGET       integer		   yes
+	   VM_V_PAGEOUT_FREE_MIN      integer		   yes
+
+     VM_LOADAVG
+	     Return the load average history.  The returned data consists of a
+	     <I>struct</I> <I>loadavg</I>.
+
+     VM_METER
+	     Return the system wide virtual memory statistics.	The returned
+	     data consists of a <I>struct</I> <I>vmtotal</I>.
+
+     VM_PAGEOUT_ALGORITHM
+	     0 if the statistics-based page management algorithm is in use or
+	     1 if the near-LRU algorithm is in use.
+
+     VM_SWAPPING_ENABLED
+	     1 if process swapping is enabled or 0 if disabled.  This variable
+	     is permanently set to 0 if the kernel was built with swapping
+	     disabled.
+
+     VM_V_CACHE_MAX
+	     Maximum desired size of the cache queue.
+
+     VM_V_CACHE_MIN
+	     Minimum desired size of the cache queue.  If the cache queue size
+	     falls very far below this value, the pageout daemon is awakened.
+
+     VM_V_FREE_MIN
+	     Minimum amount of memory (cache memory plus free memory) required
+	     to be available before a process waiting on memory will be awak-
+	     ened.
+
+     VM_V_FREE_RESERVED
+	     Processes will awaken the pageout daemon and wait for memory if
+	     the number of free and cached pages drops below this value.
+
+     VM_V_FREE_TARGET
+	     The total amount of free memory (including cache memory) that the
+	     pageout daemon tries to maintain.
+
+     VM_V_INACTIVE_TARGET
+	     The desired number of inactive pages that the pageout daemon
+	     should achieve when it runs.  Inactive pages can be quickly in-
+	     serted into process address space when needed.
+
+     VM_V_PAGEOUT_FREE_MIN
+	     If the amount of free and cache memory falls below this value,
+	     the pageout daemon will enter "memory conserving mode" to avoid
+	     deadlock.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <B>sysctl</B>() and <B>sysctlbyname</B>() return 0 when successful.  Otherwise -1 is
+     returned and <I>errno</I> is set appropriately.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The following errors may be reported:
+
+     [EFAULT]	   The buffer <I>name</I>, <I>oldp</I>, <I>newp</I>, or length pointer <I>oldlenp</I> con-
+		   tains an invalid address.
+
+     [EINVAL]	   The <I>name</I> array is less than two or greater than CTL_MAX-
+		   NAME.
+
+     [EINVAL]	   A non-null <I>newp</I> is given and its specified length in <I>newlen</I>
+		   is too large or too small.
+
+     [ENOMEM]	   The length pointed to by <I>oldlenp</I> is too short to hold the
+		   requested value.
+
+     [ENOTDIR]	   The <I>name</I> array specifies an intermediate rather than termi-
+		   nal name.
+
+     [EOPNOTSUPP]  The <I>name</I> array specifies a value that is unknown.
+
+     [EPERM]	   An attempt is made to set a read-only value.
+
+     [EPERM]	   A process without appropriate privilege attempts to set a
+		   value.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     &lt;sys/sysctl.h&gt;	   definitions for top level identifiers, second level
+			   kernel and hardware identifiers, and user level
+			   identifiers
+     &lt;sys/socket.h&gt;	   definitions for second level network identifiers
+     &lt;sys/gmon.h&gt;	   definitions for third level profiling identifiers
+     &lt;vm/vm_param.h&gt;	   definitions for second level virtual memory identi-
+			   fiers
+     &lt;netinet/in.h&gt;	   definitions for third level Internet identifiers
+			   and fourth level IP identifiers
+     &lt;netinet/icmp_var.h&gt;  definitions for fourth level ICMP identifiers
+     &lt;netinet/udp_var.h&gt;   definitions for fourth level UDP identifiers
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="sysconf.html">sysconf(3)</A></B>,  <B><A HREF="sysctl.html">sysctl(8)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>sysctl</B>() function first appeared in 4.4BSD.
+
+BSD				  May 9, 1995				    10
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

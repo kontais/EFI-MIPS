@@ -1,0 +1,184 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="RESOLVER.html">RESOLVER(3)</A></B>	       FreeBSD Library Functions Manual 	   <B><A HREF="RESOLVER.html">RESOLVER(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>res_query</B>, <B>res_search</B>, <B>res_mkquery</B>, <B>res_send</B>, <B>res_init</B>, <B>dn_comp</B>,
+     <B>dn_expand</B> - resolver routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;netinet/in.h&gt;</B>
+     <B>#include</B> <B>&lt;arpa/nameser.h&gt;</B>
+     <B>#include</B> <B>&lt;resolv.h&gt;</B>
+
+     <I>int</I>
+     <B>res_query</B>(<I>const</I> <I>char</I> <I>*dname</I>, <I>int</I> <I>class</I>, <I>int</I> <I>type</I>, <I>u</I><B>_</B><I>char</I> <I>*answer</I>,
+	     <I>int</I> <I>anslen</I>)
+
+     <I>int</I>
+     <B>res_search</B>(<I>const</I> <I>char</I> <I>*dname</I>, <I>int</I> <I>class</I>, <I>int</I> <I>type</I>, <I>u</I><B>_</B><I>char</I> <I>*answer</I>,
+	     <I>int</I> <I>anslen</I>)
+
+     <I>int</I>
+     <B>res_mkquery</B>(<I>int</I> <I>op</I>, <I>const</I> <I>char</I> <I>*dname</I>, <I>int</I> <I>class</I>, <I>int</I> <I>type</I>,
+	     <I>const</I> <I>u</I><B>_</B><I>char</I> <I>*data</I>, <I>int</I> <I>datalen</I>, <I>const</I> <I>u</I><B>_</B><I>char</I> <I>*newrr</I><B>_</B><I>in</I>,
+	     <I>u</I><B>_</B><I>char</I> <I>*buf</I>, <I>int</I> <I>buflen</I>)
+
+     <I>int</I>
+     <B>res_send</B>(<I>const</I> <I>u</I><B>_</B><I>char</I> <I>*msg</I>, <I>int</I> <I>msglen</I>, <I>u</I><B>_</B><I>char</I> <I>*answer</I>, <I>int</I> <I>anslen</I>)
+
+     <I>int</I>
+     <B>res_init</B>()
+
+     <B>dn_comp</B>(<I>const</I> <I>char</I> <I>*exp</I><B>_</B><I>dn</I>, <I>u</I><B>_</B><I>char</I> <I>*comp</I><B>_</B><I>dn</I>, <I>int</I> <I>length</I>, <I>u</I><B>_</B><I>char</I> <I>**dnptrs</I>,
+	     <I>u</I><B>_</B><I>char</I> <I>**lastdnptr</I>)
+
+     <I>int</I>
+     <B>dn_expand</B>(<I>const</I> <I>u</I><B>_</B><I>char</I> <I>*msg</I>, <I>const</I> <I>u</I><B>_</B><I>char</I> <I>*eomorig</I>,
+	     <I>const</I> <I>u</I><B>_</B><I>char</I> <I>*comp</I><B>_</B><I>dn</I>, <I>char</I> <I>*exp</I><B>_</B><I>dn</I>, <I>int</I> <I>length</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These routines are used for making, sending and interpreting query and
+     reply messages with Internet domain name servers.
+
+     Global configuration and state information that is used by the resolver
+     routines is kept in the structure <B>_</B><I>res</I>. Most of the values have reason-
+     able defaults and can be ignored.	Options stored in <B>_</B><I>res.options</I> are de-
+     fined in <I>resolv.h</I> and are as follows.  Options are stored as a simple bit
+     mask containing the bitwise ``or'' of the options enabled.
+
+     RES_INIT	   True if the initial name server address and default domain
+		   name are initialized (i.e., <B>res_init</B>() has been called).
+
+     RES_DEBUG	   Print debugging messages.
+
+     RES_AAONLY    Accept authoritative answers only.  With this option,
+		   <B>res_send</B>() should continue until it finds an authoritative
+		   answer or finds an error.  Currently this is not implement-
+		   ed.
+
+     RES_USEVC	   Use TCP connections for queries instead of UDP datagrams.
+
+     RES_STAYOPEN  Used with RES_USEVC to keep the TCP connection open between
+		   queries.  This is useful only in programs that regularly do
+
+		   many queries.  UDP should be the normal mode used.
+
+     RES_IGNTC	   Unused currently (ignore truncation errors, i.e., don't
+		   retry with TCP).
+
+     RES_RECURSE   Set the recursion-desired bit in queries.  This is the de-
+		   fault.  (<B>res_send</B>() does not do iterative queries and ex-
+		   pects the name server to handle recursion.)
+
+     RES_DEFNAMES  If set, <B>res_search</B>() will append the default domain name to
+		   single-component names (those that do not contain a dot).
+		   This option is enabled by default.
+
+     RES_DNSRCH    If this option is set, <B>res_search</B>() will search for host
+		   names in the current domain and in parent domains; see
+		   <B><A HREF="hostname.html">hostname(7)</A></B>.  This is used by the standard host lookup rou-
+		   tine <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>.  This option is enabled by default.
+
+     RES_NOALIASES
+		   This option turns off the user level aliasing feature con-
+		   trolled by the ``HOSTALIASES'' environment variable.  Net-
+		   work daemons should set this option.
+
+     The <B>res_init</B>() routine reads the configuration file (if any; see
+     <B><A HREF="resolver.html">resolver(5)</A></B>)  to get the default domain name, search list and the Inter-
+     net address of the local name server(s).  If no server is configured, the
+     host running the resolver is tried.  The current domain name is defined
+     by the hostname if not specified in the configuration file; it can be
+     overridden by the environment variable LOCALDOMAIN. This environment
+     variable may contain several blank-separated tokens if you wish to over-
+     ride the <I>search</I> <I>list</I> on a per-process basis.  This is similar to the
+     <I>search</I> command in the configuration file.	Another environment variable (
+     ``RES_OPTIONS'' can be set to override certain internal resolver options
+     which are otherwise set by changing fields in the <B>_</B><I>res</I> structure or are
+     inherited from the configuration file's <I>options</I> command.  The syntax of
+     the ``RES_OPTIONS'' environment variable is explained in <B><A HREF="resolver.html">resolver(5)</A></B>.
+     Initialization normally occurs on the first call to one of the following
+     routines.
+
+     The <B>res_query</B>() function provides an interface to the server query mecha-
+     nism.  It constructs a query, sends it to the local server, awaits a re-
+     sponse, and makes preliminary checks on the reply.  The query requests
+     information of the specified <I>type</I> and <I>class</I> for the specified fully-qual-
+     ified domain name <I>dname</I>. The reply message is left in the <I>answer</I> buffer
+     with length <I>anslen</I> supplied by the caller.
+
+     The <B>res_search</B>() routine makes a query and awaits a response like
+     <B>res_query</B>(), but in addition, it implements the default and search rules
+     controlled by the RES_DEFNAMES and RES_DNSRCH options.  It returns the
+     first successful reply.
+
+     The remaining routines are lower-level routines used by <B>res_query</B>().  The
+     <B>res_mkquery</B>() function constructs a standard query message and places it
+     in <I>buf</I>. It returns the size of the query, or -1 if the query is larger
+     than <I>buflen</I>. The query type <I>op</I> is usually QUERY, but can be any of the
+     query types defined in &lt;<I>arpa/nameser.h</I>&gt;. The domain name for the query is
+     given by <I>dname</I>. <I>Newrr</I> is currently unused but is intended for making up-
+     date messages.
+
+     The <B>res_send</B>() routine sends a pre-formatted query and returns an answer.
+     It will call <B>res_init</B>() if RES_INIT is not set, send the query to the lo-
+     cal name server, and handle timeouts and retries.	The length of the re-
+     ply message is returned, or -1 if there were errors.
+
+     The <B>dn_comp</B>() function compresses the domain name <I>exp</I><B>_</B><I>dn</I> and stores it in
+     <I>comp</I><B>_</B><I>dn</I>. The size of the compressed name is returned or -1 if there were
+     errors.  The size of the array pointed to by <I>comp</I><B>_</B><I>dn</I> is given by <I>length</I>.
+     The compression uses an array of pointers <I>dnptrs</I> to previously-compressed
+     names in the current message.  The first pointer points to to the begin-
+     ning of the message and the list ends with NULL. The limit to the array
+     is specified by <I>lastdnptr</I>. A side effect of <B>dn_comp</B>() is to update the
+     list of pointers for labels inserted into the message as the name is com-
+     pressed.  If <I>dnptr</I> is NULL, names are not compressed. If <I>lastdnptr</I> is
+     NULL, the list of labels is not updated.
+
+     The <B>dn_expand</B>() entry expands the compressed domain name <I>comp</I><B>_</B><I>dn</I> to a
+     full domain name The compressed name is contained in a query or reply
+     message; <I>msg</I> is a pointer to the beginning of the message.  The uncom-
+     pressed name is placed in the buffer indicated by <I>exp</I><B>_</B><I>dn</I> which is of size
+     <I>length</I>. The size of compressed name is returned or -1 if there was an er-
+     ror.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     /etc/resolv.conf The configuration file see <B><A HREF="resolver.html">resolver(5)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>,	<B><A HREF="resolver.html">resolver(5)</A></B>,  <B><A HREF="hostname.html">hostname(7)</A></B>,  <B><A HREF="named.html">named(8)</A></B>
+
+     <I>RFC1032</I>, <I>RFC1033</I>, <I>RFC1034</I>, <I>RFC1035</I>, <I>RFC974</I>
+
+     <I>Name</I> <I>Server</I> <I>Operations</I> <I>Guide</I> <I>for</I> <I>BIND</I>.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>res_query</B> function appeared in 4.3BSD.
+
+4.3 Berkeley Distribution	 June 4, 1993				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

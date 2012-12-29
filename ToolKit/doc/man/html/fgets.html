@@ -1,0 +1,86 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FGETS.html">FGETS(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FGETS.html">FGETS(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fgets</B>, <B>gets</B> - get a line from a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>fgets</B>(<I>char</I> <I>*str</I>, <I>int</I> <I>size</I>, <I>FILE</I> <I>*stream</I>)
+
+     <I>char</I> <I>*</I>
+     <B>gets</B>(<I>char</I> <I>*str</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fgets</B>() function reads at most one less than the number of characters
+     specified by <I>size</I> from the given <I>stream</I> and stores them in the string
+     <I>str</I>. Reading stops when a newline character is found, at end-of-file or
+     error.  The newline, if any, is retained.	If any characters are read and
+     there is no error, a `\0' character is appended to end the string.
+
+     The <B>gets</B>() function is equivalent to <B>fgets</B>() with an infinite <I>size</I> and a
+     <I>stream</I> of <I>stdin</I>, except that the newline character (if any) is not stored
+     in the string.  It is the caller's responsibility to ensure that the in-
+     put line, if any, is sufficiently short to fit in the string.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>fgets</B>() and <B>gets</B>() return a pointer to the
+     string.  If end-of-file occurs before any characters are read, they re-
+     turn NULL and the buffer contents is unchanged.  If an error occurs, they
+     return NULL and the buffer contents is indeterminate.  The <B>fgets</B>() and
+     <B>gets</B>() functions do not distinguish between end-of-file and error, and
+     callers must use <B><A HREF="ferror.html">feof(3)</A></B> and <B><A HREF="ferror.html">ferror(3)</A></B> to determine which occurred.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EBADF]  The given <I>stream</I> is not a readable stream.
+
+     The function <B>fgets</B>() may also fail and set <I>errno</I> for any of the errors
+     specified for the routines <B><A HREF="fflush.html">fflush(3)</A></B>,  <B><A HREF="stat.html">fstat(2)</A></B>,  <B><A HREF="read.html">read(2)</A></B>,  or <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+     The function <B>gets</B>() may also fail and set <I>errno</I> for any of the errors
+     specified for the routine <B><A HREF="getc.html">getchar(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ferror.html">feof(3)</A></B>,  <B><A HREF="ferror.html">ferror(3)</A></B>,  <B><A HREF="fgetln.html">fgetln(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>fgets</B>() and <B>gets</B>() conform to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Since it is usually impossible to ensure that the next input line is less
+     than some arbitrary length, and because overflowing the input buffer is
+     almost invariably a security violation, programs should <I>NEVER</I> use <B>gets</B>().
+     The <B>gets</B>() function exists purely to conform to ISO 9899: 1990 (``ISO
+     C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

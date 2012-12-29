@@ -1,0 +1,44 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>TOWUPPER(3)</B>	       FreeBSD Library Functions Manual 	    <B>TOWUPPER(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>towupper</B> - lower case to upper case letter conversion
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>wint_t</I>
+     <B>towupper</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>towupper</B>() function converts a lower-case letter to the corresponding
+     upper-case letter.  If the argument is a lower-case letter, the <B>towupper</B>()
+     function returns the corresponding upper-case letter if there is one;
+     otherwise the argument is returned unchanged.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>iswalnum(3)</B>,  <B>iswalpha(3)</B>,  <B>iswcntrl(3)</B>,  <B>iswdigit(3)</B>,
+     <B>iswgraph(3)</B>,  <B>iswlower(3)</B>,  <B>iswprint(3)</B>,  <B>iswpunct(3)</B>,  <B>iswspace(3)</B>,
+     <B>iswupper(3)</B>,  <B>iswxdigit(3)</B>,	<B>stdio(3)</B>,  <B>towlower(3)</B>,  <B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

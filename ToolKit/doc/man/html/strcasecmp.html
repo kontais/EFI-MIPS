@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRCASECMP.html">STRCASECMP(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="STRCASECMP.html">STRCASECMP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strcasecmp</B>, <B>strncasecmp</B> - compare strings, ignoring case
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>int</I>
+     <B>strcasecmp</B>(<I>const</I> <I>char</I> <I>*s1</I>, <I>const</I> <I>char</I> <I>*s2</I>)
+
+     <I>int</I>
+     <B>strncasecmp</B>(<I>const</I> <I>char</I> <I>*s1</I>, <I>const</I> <I>char</I> <I>*s2</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strcasecmp</B>() and <B>strncasecmp</B>() functions compare the null-terminated
+     strings <I>s1</I> and <I>s2</I> and return an integer greater than, equal to, or less
+     than 0, according as <I>s1</I> is lexicographically greater than, equal to, or
+     less than <I>s2</I> after translation of each corresponding character to lower-
+     case.  The strings themselves are not modified.  The comparison is done
+     using unsigned characters, so that `\200' is greater than `\0'.
+
+     The <B>strncasecmp</B>() compares at most <I>len</I> characters.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bcmp.html">bcmp(3)</A></B>,  <B><A HREF="memcmp.html">memcmp(3)</A></B>,  <B><A HREF="strcmp.html">strcmp(3)</A></B>,  <B><A HREF="strcoll.html">strcoll(3)</A></B>,  <B><A HREF="strxfrm.html">strxfrm(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>strcasecmp</B>() and <B>strncasecmp</B>() functions first appeared in 4.4BSD.
+
+BSD				 June 9, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

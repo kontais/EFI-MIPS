@@ -1,0 +1,233 @@
+EFI-MIPS-0.0.0.tar.gz   移植完成 "EfiBind.h"
+EFI-MIPS-0.0.1.tar.gz   移植完成 "EfiTypes.h"
+EFI-MIPS-0.0.2.tar.gz   移植完成 "EfiCommon.h"
+EFI-MIPS-0.0.3.tar.gz   移植完成 "TianoCommon.h"
+EFI-MIPS-0.0.4.tar.gz   基本头文件移植完成 "Tiano.h"
+EFI-MIPS-0.0.5.tar.gz   对Make变量移植，CommonTools.env还未移植
+EFI-MIPS-0.0.7.tar.gz   Make文件移植结束，需移植TOOLCHAIN_MSCV -> TOOLCHAIN_GCC(已完成)
+                        TOOLCHAIN_IA32 -> TOOLCHAIN_MIPS32(未完成)
+EFI-MIPS-0.0.8.tar.gz   TOOLCHAIN_IA32 -> TOOLCHAIN_MIPS32(完成)
+                        添加EfiElfLoader模块，添加ElfMips.h文件
+EFI-MIPS-0.0.14.tar.gz  EdkGuidLib.a
+                        EfiCommonLib.a
+                        ElfLoader.a 还未移植
+EFI-MIPS-0.0.15.tar.gz  EdkGuidLib.a  GUID初始化警告消除
+                        EfiCommonLib.a  准备MIPS的zeromem,setmem,memcpy优化
+                        ElfLoader.a 还不能工作
+遗留问题：
+PIC和no-PIC代码链接可不可以正常工作。
+
+EFI-MIPS-0.0.16.tar.gz  EfiCommonLib.a  MIPS32的zeromem汇编优化完成
+                        ElfLoader.a 还不能工作
+EFI-MIPS-0.0.17.tar.gz  增加说明文档
+EFI-MIPS-0.0.18.tar.gz  MemSet完成
+EFI-MIPS-0.0.19.tar.gz  MemCpy移植1/4
+EFI-MIPS-0.0.20.tar.gz  MemCpy完成
+EFI-MIPS-0.0.21.tar.gz  SecLinuxPeiLoadFile移值
+EFI-MIPS-0.0.22.tar.gz  SecLinuxPeiLoadFile移值
+EFI-MIPS-0.0.23.tar.gz  SystemLib Protocol实现系统库函数接口
+                        no-PIC程序通过接口调用系统函数，如printf
+EFI-MIPS-0.0.24.tar.gz  sys/cachectrl.h _flush_cache
+EFI-MIPS-0.0.25.tar.gz  SystemLib调试完成，no-PIC的不定参数printf
+                        通过接口调用系统vprintf
+EFI-MIPS-0.0.26.tar.gz  ElfLoader模块GetImageInfo测试完成
+EFI-MIPS-0.0.27.tar.gz  Relocate具体每个TYPE还未完成
+EFI-MIPS-0.0.28.tar.gz  o32的Rel定位类型定位完毕，未验证
+EFI-MIPS-0.0.29.tar.gz  n32的Rela定位类型定位完毕，未验证
+EFI-MIPS-0.0.32.tar.gz  o32的Rel定位类型程序验证完毕
+EFI-MIPS-0.0.33.tar.gz  添加文件
+                        Framework/Include/BootMode.h
+                        Framework/Include/PeiHob.h
+                        Framework/Include/EfiImageFormat.h
+                        Framework/Include/EfiFirmwareFileSystem.h
+                        Framework/Include/EfiFirmwareVolumeHeader.h
+EFI-MIPS-0.0.34.tar.gz  添加文件
+                        Framework/Ppi/CpuIo/CpuIo.h
+                        Framework/Ppi/CpuIo/CpuIo.c
+                        Framework/Ppi/PciCfg/PciCfg.h
+                        Framework/Ppi/PciCfg/PciCfg.c
+                        Framework/Include/PeiApi.h
+                        Foundation/Include/Pei/PeiBind.h
+                        Foundation/Include/Pei/PeiDebug.h
+                        Foundation/Include/Pei/Pei.h
+EFI-MIPS-0.0.35.tar.gz  添加文件
+                        Sample/Platform/Linux32/Protocol/LinuxThunk/LinuxThunk.c
+                        Sample/Platform/Linux32/Protocol/LinuxThunk/LinuxThunk.h
+EFI-MIPS-0.0.36.tar.gz  添加文件
+                        Sample/Include/EfiLinux.h
+                        Sample/Include/Efi2Linux.h
+                        Foundation/Include/EfiFlashMap.h
+                        Sample/Platform/Linux32/Include/FlashLayout.h
+EFI-MIPS-0.0.37.tar.gz  添加文件
+                        Foundation/Library/Pei/Include/PeiHobLib.h
+                        Foundation/Library/Pei/Include/PeiLib.h
+EFI-MIPS-0.0.38.tar.gz  添加文件
+                        Foundation/Efi/Protocol/Decompress/Decompress.c
+                        Foundation/Efi/Protocol/Decompress/Decompress.h
+                        Foundation/Protocol/TianoDecompress/Decompress.c
+                        Foundation/Protocol/TianoDecompress/Decompress.h
+                        Foundation/Framework/Ppi/FindFv.c
+                        Foundation/Framework/Ppi/FindFv.h
+                        Foundation/Library/Pei/PeiLib/PeiLib.c
+                        Foundation/Framework/Guid/FirmwareFileSystem.c
+                        Foundation/Framework/Guid/FirmwareFileSystem.h
+                        Foundation/Framework/Guid/MemoryAllocationHob.c
+                        Foundation/Framework/Guid/MemoryAllocationHob.h
+                        Foundation/Library/Pei/PeiLib/PeiLib.c
+EFI-MIPS-0.0.39.tar.gz  添加文件
+                        Foundation/Library/Pei/PeiLib/Decompress.c
+EFI-MIPS-0.0.40.tar.gz  验证module加载执行完成
+EFI-MIPS-0.0.41.tar.gz  开始移植Tools
+EFI-MIPS-0.0.42.tar.gz  Common的Makefile移植完成
+EFI-MIPS-0.0.43.tar.gz  Common.a编译完成，未消除告警
+EFI-MIPS-0.0.44.tar.gz  CustomizedCompress完成
+                        GenCRC32Section未完成
+EFI-MIPS-0.0.45.tar.gz  GenCRC32Section完成
+EFI-MIPS-0.0.46.tar.gz  GenSection完成
+EFI-MIPS-0.0.47.tar.gz  GenDepex完成
+EFI-MIPS-0.0.48.tar.gz  GenFfsFile未完成
+EFI-MIPS-0.0.49.tar.gz  GenFfsFile, 完成_spawnv接口定义
+EFI-MIPS-0.0.50.tar.gz  GenFfsFile完成
+EFI-MIPS-0.0.51.tar.gz  GenFvImage未完成
+EFI-MIPS-0.0.52.tar.gz  GenFvImage未完成,获取文件大小函数未实现
+EFI-MIPS-0.0.53.tar.gz  GenFvImage完成
+EFI-MIPS-0.0.54.tar.gz  FwImage完成
+EFI-MIPS-0.0.55.tar.gz  ProcessDsc未完成
+EFI-MIPS-0.0.56.tar.gz  ProcessDsc完成
+EFI-MIPS-0.0.57.tar.gz  GuidChk未完成
+EFI-MIPS-0.0.58.tar.gz  GuidChk完成
+EFI-MIPS-0.0.59.tar.gz  MakeDeps完成
+EFI-MIPS-0.0.60.tar.gz  SetStamp完成
+EFI-MIPS-0.0.61.tar.gz  pccts-1.33mr22(antlr,dlg)完成
+EFI-MIPS-0.0.62.tar.gz  VfrCompile未完成
+EFI-MIPS-0.0.63.tar.gz  antlr,dlg完成，VfrCompile未完成
+EFI-MIPS-0.0.64.tar.gz  VfrCompile完成
+EFI-MIPS-0.0.65.tar.gz  StrGather完成
+EFI-MIPS-0.0.66.tar.gz  EFI工具移植完成，未验证(GenBootsector未移植)
+EFI-MIPS-0.0.67.tar.gz  ProcessDsc功能实现及验证，未完成
+EFI-MIPS-0.0.68.tar.gz  ProcessDsc功能实现及验证，未完成
+EFI-MIPS-0.0.69.tar.gz  Dsc功能实现及验证，未完成
+EFI-MIPS-0.0.70.tar.gz  NVSTORAGE.inf开始
+EFI-MIPS-0.0.71.tar.gz   ParseInf.c修正
+EFI-MIPS-0.0.72.tar.gz   PeiElfLoader位置修正
+EFI-MIPS-0.0.73.tar.gz   MakeDep修正
+EFI-MIPS-0.0.74.tar.gz   FrameworkGuidLib
+EFI-MIPS-0.0.75.tar.gz   Foundatin/Guid
+EFI-MIPS-0.0.76.tar.gz   Dxe/Hob
+EFI-MIPS-0.0.77.tar.gz   SecMain
+EFI-MIPS-0.0.78.tar.gz   SecMain加载Module完成
+EFI-MIPS-0.0.79.tar.gz   删除系统相关链接选项CommonTool.env
+EFI-MIPS-0.0.80.tar.gz   Dxe/Library
+EFI-MIPS-0.0.81.tar.gz   EfiDriverLib
+EFI-MIPS-0.0.82.tar.gz   Library/Dxe
+EFI-MIPS-0.0.83.tar.gz   EdkLibAll.dsc完成
+EFI-MIPS-0.0.84.tar.gz   WinNtLib,WinNtThunk,WinNtIo -> Linux
+EFI-MIPS-0.0.85.tar.gz   NetLib
+EFI-MIPS-0.0.86.tar.gz   PeiMain
+EFI-MIPS-0.0.87.tar.gz   PeiMain.elf内没有UND符号完成
+EFI-MIPS-0.0.88.tar.gz   MonoStatusCode,一些库未加，所有有UND符号
+EFI-MIPS-0.0.89.tar.gz   FVRECOVER.fv生成
+EFI-MIPS-0.0.90.tar.gz   修改GenDepex对GUID的处理
+EFI-MIPS-0.0.91.tar.gz   GCC不支持嵌套库(.a文件里包含.a文件)，删除嵌套的库的生成
+EFI-MIPS-0.0.92.tar.gz   DxeIpl未完成
+EFI-MIPS-0.0.93.tar.gz   DxeIpl完成
+EFI-MIPS-0.0.94.tar.gz   DxeMain.inf完成
+EFI-MIPS-0.0.95.tar.gz   CpuIo
+EFI-MIPS-0.0.96.tar.gz   StrGather修正
+EFI-MIPS-0.0.97.tar.gz   Sample/Cpu/LinuxThunk/Cpu
+EFI-MIPS-0.0.98.tar.gz   Metronome/Timer
+EFI-MIPS-0.0.99.tar.gz   RealTimeClock/Reset
+EFI-MIPS-0.0.100.tar.gz   Runtime/MonotonicCounter/StatusCode/Linux32Fwh/FtwLite
+EFI-MIPS-0.0.101.tar.gz   StrGather,StringDb引用的fprintf函数
+EFI-MIPS-0.0.102.tar.gz   PlatformBds/VfrCompile
+EFI-MIPS-0.0.103.tar.gz   Security/Capsule/DebugPort/DebugSupport
+EFI-MIPS-0.0.104.tar.gz   ConPlatform/ConSplitter/GraphicsConsole
+EFI-MIPS-0.0.105.tar.gz   Terminal/DataHub/DataHubStdErr/DevPath/DiskIo/Ebc
+                          NullMemoryTest/HiiDatabase/Logo/Partition/PciBus 
+EFI-MIPS-0.0.106.tar.gz   SetupBrowser/Shell/English/LinuxBlockIo
+EFI-MIPS-0.0.107.tar.gz   LinuxConsole/LinuxSerialIo
+EFI-MIPS-0.0.108.tar.gz   LinuxSimpleFileSystem, LinuxBusDriver未完成
+EFI-MIPS-0.0.109.tar.gz   LinuxBusDriver完成
+EFI-MIPS-0.0.110.tar.gz   LinuxThunk/Linux/Uga/MiscSubclassDriver
+EFI-MIPS-0.0.111.tar.gz   IdeBus/Usb/Network，Linux32.dsc完成,Shell,Fat没有添加
+EFI-MIPS-0.0.112.tar.gz   Sample/Bus/Isa
+EFI-MIPS-0.0.113.tar.gz   PcCompatible/PciBusNoEnumeration
+                          IdeController/Ehci/EhciRouting/VgaMiniPort
+
+EFI-MIPS-0.0.114.tar.gz   ConsoleLib/CpuIo/Cpu/VgaClass
+EFI-MIPS-0.0.115.tar.gz   SecMain开始
+EFI-MIPS-0.0.116.tar.gz   LinuxThunk, UgaX11, SecMain完成
+EFI-MIPS-0.0.117.tar.gz   FuLoong2F开始
+EFI-MIPS-0.0.118.tar.gz   Start.s
+EFI-MIPS-0.0.119.tar.gz   FuLoong2F/Fuloong2E完成
+EFI-MIPS-0.0.120.tar.gz   SecMain, SecSwitchStack
+EFI-MIPS-0.0.121.tar.gz   PeiMain, InstallPpi, PEI_DEBUG未完成
+EFI-MIPS-0.0.122.tar.gz   找到DivU64x32错误的原因，原因C_ARCH_FLAGS的-march=loongson2e使除法使用特有指令
+                          在Linux下运行提示为非法指令
+EFI-MIPS-0.0.123.tar.gz   Debug版本，找到Switch错的原因，因为R_MIPS_32处理错误
+EFI-MIPS-0.0.124.tar.gz   ElfRelocate.c Rel R_MIPS_32修正完成
+EFI-MIPS-0.0.125.tar.gz   PeiLoadImage完成
+EFI-MIPS-0.0.125-ElfLoader-print.tar.gz   ElfLoader模块可打印调试，PeiLoadFile里的ImageRead代码拷贝没有CacheFlush
+EFI-MIPS-0.0.126.tar.gz   去掉ElfLoader调试信息
+EFI-MIPS-0.0.127.tar.gz   添加LinuxFlushCache Ppi
+EFI-MIPS-0.0.128.tar.gz   使用PeiImageRead.s代替DxeIpl的ImageRead,用b代替j，使其为PIC
+EFI-MIPS-0.0.129.tar.gz   添加DxeIplLib来生成PIC代码，使用-G 0 -mno-abicall -fpic参数，确保
+                          编译没有告警，库内同一文件中函数不相互引用，根本是要保证没有gp的使用
+                          库中可以有多个文件，文件间的函数可以引用。
+EFI-MIPS-0.0.130.tar.gz   DxeIpl OK
+EFI-MIPS-0.0.131.tar.gz   删除LinuxflushCache Ppi, 使用PeiFlushInstructionCache GUID
+EFI-MIPS-0.0.132.tar.gz   CoreLoadPeImage未完成，下一版决定使用EFI_PHYSICAL_ADDRESS
+EFI-MIPS-0.0.133-ElfLoader-print.tar.gz   CoreLoadPeImage完成，Metronome PIC问题，ElfLoader debug print
+EFI-MIPS-0.0.134.tar.gz   Remove ElfLoader debug print
+EFI-MIPS-0.0.135.tar.gz   LinuxThunk,LinuxStuff同GUID,不同名字，我改了LinuxThunk GUID，导致找不到而错误
+EFI-MIPS-0.0.136.tar.gz   GetEnvironmentVariable, LinuxThunk不能直接引用linux库，因为Driver直接引用LinuxThunk
+                          导致Driver直接引用linux库，需要通过函数接口转换
+
+EFI-MIPS-0.1.0.tar.gz     修正LinuxBusDriver Bug,修改LinuxThunk中全部函数为接口方式调用
+
+             Linux下模拟成功，将版本升级为 0.1.0
+
+EFI-MIPS-0.1.1.tar.gz     Add EfiShell Code
+EFI-MIPS-0.2.0.tar.gz     EfiShell OK
+EFI-MIPS-0.2.1.tar.gz     Elf.h -> IndustryStandard
+                          Add Elf64 to Elf.h
+                          Add EFI_IMAGE_ELF_HEADER_UNION
+EFI-MIPS-0.2.2.tar.gz     Add YeeLoong Platform
+EFI-MIPS-0.2.3.tar.gz     Add PMON for SEC Debug
+EFI-MIPS-0.2.4.tar.gz     Move bonito -> Bonito
+EFI-MIPS-0.2.5.tar.gz     Porting SecMain.c SecMain.h
+EFI-MIPS-0.2.6.tar.gz     YeeLoong SecMain.c OK
+EFI-MIPS-0.2.7.tar.gz     Add ElfToBin(未完成)
+EFI-MIPS-0.2.8.tar.gz     ElfToBin完成,不过找到objcopy的参数可以解决.bss的问题
+EFI-MIPS-0.2.9.tar.gz     生成BootFv+FvRecover+NvStorage -> YeeLoong.bin
+EFI-MIPS-0.2.10.tar.gz    Chang SecMain to EFI_FFS_VOLUME_TOP_FILE_GUID
+EFI-MIPS-0.2.11.tar.gz    GenFv Rebase, GenFfs checksum
+EFI-MIPS-0.2.12.tar.gz    GenFv UpdateResetVector未完成，需要重新修改ElfLoader
+EFI-MIPS-0.2.13.tar.gz    ElfLink,test/tRelType
+EFI-MIPS-0.2.14.tar.gz    ElfLoader加载到内存添加一个ELF头，主要使用EntryPoint
+EFI-MIPS-0.2.15.tar.gz    DestinationAddress重定位完成
+EFI-MIPS-0.3.0.tar.gz     生成PMON下可以执行的YeeLoong.bin文件
+EFI-MIPS-0.3.1.tar.gz     PeiCore,PPI
+EFI-MIPS-0.3.2.tar.gz     PeiCore完成
+EFI-MIPS-0.3.3.tar.gz     设置重定位到ROM中的Elf头e_type为ET_NONE
+                          注：MonoStatusCode会重加载和重定位到内存，如果不设置e_type，则会重定位异常
+                              目前PEIM只能在ROM中运行，不能重定位
+EFI-MIPS-0.3.4.tar.gz     DxeIpl加载成功，调用失败
+EFI-MIPS-0.3.5.tar.gz     DxeIpl加载成功
+EFI-MIPS-0.4.0.tar.gz     DxeCore加载完成，没有Arch Protocol
+EFI-MIPS-0.4.1.tar.gz     将本地SVN同步到sourceforge
+EFI-MIPS-0.4.2.tar.gz     GenFvImage: 不像IA32,在ZeroVector里有Checksum, MIPS使用了所有ZeroVector空间，
+                          所以MIPS在UpdateResetVector后需要更新FV Header Checksum
+                          生成EFI Tools里加入-g参数，以便使用gdb调试
+EFI-MIPS-0.4.3.tar.gz     SecMain.h: 设置系统内存为64MB
+EFI-MIPS-0.4.5.tar.gz     Arch Protocol可执行，但都是针对IA32的
+EFI-MIPS-0.4.7.tar.gz     CPU Arch Protocol OK
+EFI-MIPS-0.4.8.tar.gz     Mips32 Count/Compare Timer OK
+
+...
+
+EFI-MIPS-1.1.0.tar.gz     Add Bonito.
+                          Add Cs5536.
+                          Add PciRootBridge.
+                          Enable IDE Controller.
+                          Add Ext2 FileSystem read support.

@@ -1,0 +1,62 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ERF.html">ERF(3)</A></B>		       FreeBSD Library Functions Manual 		<B><A HREF="ERF.html">ERF(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>erf</B>, <B>erff</B>, <B>erfc</B>, <B>erfcf</B> - error function operators
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>erf</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>erff</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>erfc</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>erfcf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions calculate the error function of <I>x</I>.
+
+     The <B>erf</B>() and the <B>erff</B>() functions calculate the error function of x;
+     where
+
+	   erf(x) = 2/sqrt(pi)*integral from 0 to x of exp(-t*t) dt.
+
+     The <B>erfc</B>() and the <B>erfcf</B>() functions calculate the complementary error
+     function of <I>x</I>; that is <B>erfc</B>() subtracts the result of the error function
+     <B>erf</B>(<I>x</I>) from 1.0.  This is useful, since for large <I>x</I> places disappear.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>erf</B>() and <B>erfc</B>() functions appeared in 4.3BSD.
+
+4.3 Berkeley Distribution	April 20, 1991				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

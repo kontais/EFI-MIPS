@@ -1,0 +1,96 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>FPUTWS(3)</b>	       FreeBSD Library Functions Manual 	      <b>FPUTWS(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>fputws</b>, <b>putws</b> - output a line to a stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>int</i>
+     <b>fputws</b>(<i>const</i> <i>wchar_t</i> <i>*str</i>, <i>FILE</i> <i>*stream</i>)
+
+     <i>int</i>
+     <b>puts</b>(<i>const</i> <i>wchar_t</i> <i>*str</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The function <b>fputws</b>() writes the wide character string pointed to by <i>str</i> 
+     to the stream pointed to by <i>stream</i>.
+
+     The function <b>putws</b>() writes the wide character string <i>str</i>, and a terminating
+     newline character, to the stream <i>stdout</i>.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     The <b>fputws</b>() function returns 0 on success and WEOF on error; <b>putws</b>() re-
+     turns a nonnegative integer on success and EOF on error.
+
+
+</pre>
+
+<h2>ERRORS</h2>
+
+<pre>
+     [EBADF]  The <i>stream</i> supplied is not a writable stream.
+
+     The functions <b>fputws</b>() and <b>putws</b>() may also fail and set <i>errno</i> for any of
+     the errors specified for the routines <b>write(2)</b>.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>ferror(3)</b>,  <b>putwc(3)</b>,  <b>stdio(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The functions <b>fputws</b>() and <b>putws</b>() conform to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

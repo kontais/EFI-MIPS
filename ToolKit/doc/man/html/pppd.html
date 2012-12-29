@@ -1,0 +1,1540 @@
+<HTML>
+<BODY>
+</PRE>
+<H2>NAME</H2><PRE>
+        <B>pppd.efi</B> - Point-to-Pont Protocol EFI Driver
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+        <B>load pppd.efi</B>
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+        <B>Pppd.efi</B> is an EFI port of the FreeBSD pppd daemon. The
+        complete FreeBSD man page <B>PPPD(8)</B> is listed below for
+        reference.  However, the following features are different
+        or not supported by <B>pppd.efi</B>.
+<BLOCKQUOTE><UL>
+<LI>Pppd will accept runtime arguments specified as a Unicode
+command line string pointed to by the <I>LoadOptions</I> field
+of its <I>LoadedImage</I> protocol handle.  It will also look
+for options in the standard file locations specified in
+the manual page.  If the driver is loaded with the shell
+<I>load</I> command (as opposed to being loaded explicitly
+by a custom program), options must be specified in the
+standard file locations.
+<LI>Only a few of the dozens of possible options have been
+tested.
+<LI>Serial ports are specified as tty00:, tty01:, etc.  The
+numbering is dictated by the discovery order of the
+underlying EFI Serial Protocol driver.  For legacy
+platforms, this is typically in COM1:, COM2: order.
+<LI>The original option for specifying IP addresses used
+a colon (:) separator.  Due to the way tty devices are
+specified, this has been changed to a vertical bar (|).
+<LI>When <B>pppd</B> is used with Microsoft Windows PPP clients,
+the <B>novj</B> option must be specified.
+<LI>The usable baud rate is determined by the EFI timer tick
+resolution of the platform.  This is EFI implementation
+specific.  When the <B>tcpipv4.efi</B> driver is loaded, it
+reports the Hz value for the current platform which is
+the timer tick resolution measured as ticks per second.
+The following table provides a rough guideline of HZ
+to usable baud rate:
+
+       18 Hz     2800 Baud
+       30 Hz     4800 Baud
+       60 Hz     9600 Baud
+      120 Hz    19200 Baud
+      240 Hz    38400 Baud
+      360 Hz    57600 Baud
+
+<LI>The following options have been added:
+
+<B>noclient-wait</B>
+      By default, <B>pppd</B> will wait for a connection attempt
+      before returning to the program that loaded it,
+      returning an error code indicating the status of
+      the attempt.  Specifying <B>noclient-wait</B> will cause
+      the driver to return as soon as it has initialized.
+      In either case, a non-zero value indicates an error.
+
+<B>modem-str</B> <I>string</I>
+      This option provides a mechanism for the user to
+      specify one or more strings that will be sent to the
+      modem each time the modem interface is initialized.
+      Each string must be preceded with the <B>modem-str</B>
+      option identifier.  Each string is sent to the modem
+      un-interpreted and unmodified and must therefore be
+      self contained.
+
+<B>auth-user</B> <I>string</I>
+      This option provides an alternative to reading the
+      user name from the chap/pap secrets file.  It would
+      typically used in conjunction with the <B>auth-secret</B>
+      option.
+
+<B>auth-secret</B> <I>string</I>
+      This option provides an alternative to reading the
+      secret from the chap/pap secrets file.  It would
+      typically used in conjunction with the <B>auth-user</B>
+      option.
+</UL></BLOCKQUOTE>
+
+        <B>pppd.efi</B> requires that a <B>tcpipv4.efi</B> driver supporting PPP
+        be loaded before it is.  If the TCP/IP driver supports PPP,
+        it will display:
+
+        <I>Interface attached to ppp0</I>
+
+        before exiting.
+
+        <B>Pppd.efi</B> will configure the ppp0 interface and configure
+        routes when a connection has been established.  There is
+        no need to use <B><A HREF="ifconfig.html">ifconfig(8)</A></B> or <B><A HREF="route.html">route(8)</A></B> to configure ppp0.
+
+Original FreeBSD man page for pppd:
+</PRE><HR>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+
+<PRE>
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+       pppd - Point to Point Protocol daemon
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>pppd</B> [ <I>tty</I><B>_</B><I>name</I> ] [ <I>speed</I> ] [ <I>options</I> ]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The  Point-to-Point  Protocol  (PPP) provides a method for
+       transmitting datagrams over serial  point-to-point  links.
+       PPP is composed of three parts: a method for encapsulating
+       datagrams over serial links, an	extensible  Link  Control
+       Protocol  (LCP), and a family of Network Control Protocols
+       (NCP) for establishing and configuring different  network-
+       layer protocols.
+
+       The encapsulation scheme is provided by driver code in the
+       kernel.	Pppd provides the basic LCP, authentication  sup-
+       port,  and  an  NCP  for  establishing and configuring the
+       Internet Protocol (IP) (called the  IP  Control	Protocol,
+       IPCP).
+
+
+</PRE>
+<H2>FREQUENTLY USED OPTIONS</H2><PRE>
+       <I>&lt;tty</I><B>_</B><I>name&gt;</I>
+	      Communicate  over  the  named  device.   The string
+	      "/dev/" is prepended if necessary.   If  no  device
+	      name  is given, or if the name of the terminal con-
+	      nected to the standard input is  given,  pppd  will
+	      use  that terminal, and will not fork to put itself
+	      in the background.  This option  is  privileged  if
+	      the <I>noauth</I> option is used.
+
+       <I>&lt;speed&gt;</I>
+	      Set  the	baud  rate to &lt;speed&gt; (a decimal number).
+	      On systems such as 4.4BSD and NetBSD, any speed can
+	      be specified, providing that it is supported by the
+	      serial device driver.  Other systems  (e.g.  SunOS,
+	      Linux) allow only a limited set of speeds.
+
+       <B>active-filter</B> <I>filter-expression</I>
+	      Specifies  a  packet  filter  to be applied to data
+	      packets  to  determine  which  packets  are  to  be
+	      regarded	as link activity, and therefore reset the
+	      idle timer, or cause the link to be brought  up  in
+	      demand-dialling  mode.   This  option  is useful in
+	      conjunction with the <B>idle</B> option if there are pack-
+	      ets  being sent or received regularly over the link
+	      (for example, routing  information  packets)  which
+	      would  otherwise prevent the link from ever appear-
+	      ing to be idle.  The <I>filter-expression</I> syntax is as
+	      described  for  <B>tcpdump(1)</B>,  except that qualifiers
+	      which are inappropriate for a  PPP  link,  such  as
+	      <B>ether</B>  and  <B>arp</B>,	are not permitted.  Generally the
+	      filter expression should	be  enclosed  in  single-
+	      quotes to prevent whitespace in the expression from
+
+								1
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      being interpreted by the shell.  This  option  only
+	      available if both the kernel and pppd were compiled
+	      with PPP_FILTER defined.
+
+       <B>asyncmap</B> <I>&lt;map&gt;</I>
+	      Set the async character map  to  &lt;map&gt;.	This  map
+	      describes  which	control characters cannot be suc-
+	      cessfully received over the serial line.	Pppd will
+	      ask  the	peer to send these characters as a 2-byte
+	      escape sequence.	The argument is a 32 bit hex num-
+	      ber  with  each  bit  representing  a  character to
+	      escape.  Bit 0 (00000001) represents the	character
+	      0x00;  bit  31  (80000000) represents the character
+	      0x1f or  ^_.   If  multiple  <I>asyncmap</I>  options  are
+	      given,   the  values  are  ORed  together.   If  no
+	      <I>asyncmap</I> option is given, no  async  character  map
+	      will  be	negotiated for the receive direction; the
+	      peer should then escape <I>all</I> control characters.  To
+	      escape   transmitted  characters,  use  the  <I>escape</I>
+	      option.
+
+       <B>auth</B>   Require the  peer  to  authenticate  itself  before
+	      allowing network packets to be sent or received.
+
+       <B>call</B> <I>name</I>
+	      Read  options  from  the	file /etc/ppp/peers/<I>name</I>.
+	      This file may contain privileged options,  such  as
+	      <I>noauth</I>, even if pppd is not being run by root.  The
+	      <I>name</I> string may not begin with / or include .. as a
+	      pathname component.  The format of the options file
+	      is described below.
+
+       <B>connect</B> <I>script</I>
+	      Use the executable or shell  command  specified  by
+	      <I>script</I>  to  set  up  the	serial line.  This script
+	      would typically use the <B>chat(8)</B> program to dial the
+	      modem  and  start  the  remote  ppp  session.  This
+	      option is privileged if the <I>noauth</I> option is  used.
+
+       <B>connect-max-attempts</B> <I>&lt;n&gt;</I>
+	      Attempt  dial-out  connection  to  remote system no
+	      more than specified number of times (default =  1).
+	      If  the  connection  is  not  made, pppd will exit.
+	      Requires that <B>persist</B> has been specified.
+
+       <B>crtscts</B>
+	      Use hardware flow control (i.e. RTS/CTS) to control
+	      the  flow  of  data on the serial port.  If neither
+	      the <I>crtscts</I> nor the <I>nocrtscts</I> option is given,  the
+	      hardware	flow  control setting for the serial port
+	      is left unchanged.
+
+       <B>defaultroute</B>
+	      Add a default route to the system  routing  tables,
+
+								2
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      using  the  peer as the gateway, when IPCP negotia-
+	      tion is  successfully  completed.   This	entry  is
+	      removed  when  the  PPP connection is broken.  This
+	      option is privileged if the  <I>nodefaultroute</I>  option
+	      has been specified.
+
+       <B>disconnect</B> <I>script</I>
+	      Run  the	executable  or shell command specified by
+	      <I>script</I> after pppd has terminated	the  link.   This
+	      script  could,  for  example, issue commands to the
+	      modem to cause it to hang up if hardware modem con-
+	      trol  signals  were  not available.  The disconnect
+	      script is not run if the modem has already hung up.
+	      This  option  is privileged if the <I>noauth</I> option is
+	      used.
+
+       <B>escape</B> <I>xx,yy,...</I>
+	      Specifies that certain characters should be escaped
+	      on  transmission	(regardless  of  whether the peer
+	      requests them to be escaped with its async  control
+	      character  map).	 The characters to be escaped are
+	      specified as a list of  hex  numbers  separated  by
+	      commas.	Note  that  almost  any  character can be
+	      specified  for  the  <I>escape</I>  option,   unlike   the
+	      <I>asyncmap</I>	option	which only allows control charac-
+	      ters to be specified.  The characters which may not
+	      be escaped are those with hex values 0x20 - 0x3f or
+	      0x5e.
+
+       <B>file</B> <I>name</I>
+	      Read  options  from  file  <I>name</I>  (the   format   is
+	      described below).  The file must be readable by the
+	      user who has invoked pppd.
+
+       <B>lock</B>   Specifies that pppd should create a UUCP-style lock
+	      file  for  the  serial  device  to ensure exclusive
+	      access to the device.
+
+       <B>mru</B> <I>n</I>  Set the MRU [Maximum Receive Unit] value to <I>n</I>. Pppd
+	      will ask the peer to send packets of no more than <I>n</I>
+	      bytes.  The minimum MRU value is 128.  The  default
+	      MRU  value  is 1500.  A value of 296 is recommended
+	      for slow links (40 bytes for TCP/IP  header  +  256
+	      bytes of data).
+
+       <B>mtu</B> <I>n</I>  Set  the	MTU  [Maximum  Transmit Unit] value to <I>n</I>.
+	      Unless the peer requests a smaller  value  via  MRU
+	      negotiation, pppd will request that the kernel net-
+	      working code send data packets of no  more  than	<I>n</I>
+	      bytes through the PPP network interface.
+
+       <B>passive</B>
+	      Enables the "passive" option in the LCP.	With this
+	      option, pppd will attempt to initiate a connection;
+
+								3
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      if  no  reply  is received from the peer, pppd will
+	      then just wait passively for  a  valid  LCP  packet
+	      from  the  peer,	instead  of  exiting, as it would
+	      without this option.
+
+
+</PRE>
+<H2>OPTIONS</H2><PRE>
+       <I>&lt;local</I><B>_</B><I>IP</I><B>_</B><I>address&gt;</I><B>|</B><I>&lt;remote</I><B>_</B><I>IP</I><B>_</B><I>address&gt;</I>
+	      Set the local and/or remote interface IP addresses.
+	      Either one may be omitted.  The IP addresses can be
+	      specified with a host name or in decimal dot  nota-
+	      tion   (e.g.  150.234.56.78).   The  default  local
+	      address is the (first) IP  address  of  the  system
+	      (unless  the  <I>noipdefault</I>  option  is  given).  The
+	      remote address will be obtained from  the  peer  if
+	      not  specified  in  any  option.	 Thus,	in simple
+	      cases, this option is not  required.   If  a  local
+	      and/or  remote  IP  address  is specified with this
+	      option, pppd will not accept a different value from
+	      the  peer in the IPCP negotiation, unless the <I>ipcp-</I>
+	      <I>accept-local</I> and/or <I>ipcp-accept-remote</I> options  are
+	      given, respectively.
+
+       <B>bsdcomp</B> <I>nr,nt</I>
+	      Request  that  the  peer	compress  packets that it
+	      sends, using the BSD-Compress scheme, with a  maxi-
+	      mum  code  size  of  <I>nr</I> bits, and agree to compress
+	      packets sent to the peer with a maximum  code  size
+	      of <I>nt</I> bits.  If <I>nt</I> is not specified, it defaults to
+	      the value given for <I>nr</I>.  Values in the range  9  to
+	      15  may  be  used for <I>nr</I> and <I>nt</I>; larger values give
+	      better compression but consume more  kernel  memory
+	      for  compression	dictionaries.	Alternatively,	a
+	      value of 0 for <I>nr</I> or <I>nt</I> disables compression in the
+	      corresponding  direction.  Use <I>nobsdcomp</I> or <I>bsdcomp</I>
+	      <I>0</I> to disable BSD-Compress compression entirely.
+
+       <B>chap-interval</B> <I>n</I>
+	      If this option is given, pppd will rechallenge  the
+	      peer every <I>n</I> seconds.
+
+       <B>chap-max-challenge</B> <I>n</I>
+	      Set  the maximum number of CHAP challenge transmis-
+	      sions to <I>n</I> (default 10).
+
+       <B>chap-restart</B> <I>n</I>
+	      Set the CHAP restart interval (retransmission time-
+	      out for challenges) to <I>n</I> seconds (default 3).
+
+       <B>debug</B>  Enables  connection  debugging facilities.  If this
+	      option is given, pppd will log the contents of  all
+	      control  packets	sent  or  received  in a readable
+	      form.  The packets are logged through  syslog  with
+	      facility	<I>daemon</I> and level <I>debug</I>.  This information
+	      can  be  directed  to  a	 file	by   setting   up
+
+								4
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      /etc/syslog.conf	   appropriately     (see    sys-
+	      <B>log.conf(5)</B>).
+
+       <B>default-asyncmap</B>
+	      Disable asyncmap negotiation, forcing  all  control
+	      characters  to be escaped for both the transmit and
+	      the receive direction.
+
+       <B>default-mru</B>
+	      Disable MRU  [Maximum  Receive  Unit]  negotiation.
+	      With  this  option,  pppd  will use the default MRU
+	      value of 1500  bytes  for  both  the  transmit  and
+	      receive direction.
+
+       <B>deflate</B> <I>nr,nt</I>
+	      Request  that  the  peer	compress  packets that it
+	      sends, using the Deflate	scheme,  with  a  maximum
+	      window  size  of <I>2**nr</I> bytes, and agree to compress
+	      packets sent to the peer with a maximum window size
+	      of  <I>2**nt</I>  bytes.   If  <I>nt</I>  is  not  specified,  it
+	      defaults to the value given for <I>nr</I>.  Values in  the
+	      range  8	to  15	may be used for <I>nr</I> and <I>nt</I>; larger
+	      values give better  compression  but  consume  more
+	      kernel memory for compression dictionaries.  Alter-
+	      natively, a value of 0 for <I>nr</I> or <I>nt</I>  disables  com-
+	      pression in the corresponding direction.	Use <I>node-</I>
+	      <I>flate</I> or <I>deflate</I> <I>0</I> to disable  Deflate  compression
+	      entirely.  (Note: pppd requests Deflate compression
+	      in preference to BSD-Compress if the  peer  can  do
+	      either.)
+
+       <B>demand</B> Initiate	the  link  only on demand, i.e. when data
+	      traffic is present.  With this option,  the  remote
+	      IP  address  must  be  specified by the user on the
+	      command line or in an options file.  Pppd will ini-
+	      tially configure the interface and enable it for IP
+	      traffic without connecting to the peer.  When traf-
+	      fic is available, pppd will connect to the peer and
+	      perform  negotiation,  authentication,  etc.   When
+	      this  is completed, pppd will commence passing data
+	      packets (i.e., IP packets) across the link.
+
+	      The <I>demand</I> option implies the <I>persist</I>  option.   If
+	      this  behaviour  is  not desired, use the <I>nopersist</I>
+	      option after the <I>demand</I> option.  The <I>idle</I> and <I>hold-</I>
+	      <I>off</I>  options are also useful in conjuction with the
+	      <I>demand</I> option.
+
+       <B>domain</B> <I>d</I>
+	      Append the domain name <I>d</I> to the local host name for
+	      authentication  purposes.  For example, if gethost-
+	      name() returns the  name	porsche,  but  the  fully
+	      qualified  domain  name is porsche.Quotron.COM, you
+	      could specify <I>domain</I> <I>Quotron.COM</I>.  Pppd would  then
+
+								5
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      use  the	name  <I>porsche.Quotron.COM</I>  for looking up
+	      secrets in the secrets file,  and  as  the  default
+	      name to send to the peer when authenticating itself
+	      to the peer.  This option is privileged.
+
+       <B>holdoff</B> <I>n</I>
+	      Specifies how many seconds to wait before re-initi-
+	      ating  the  link	after it terminates.  This option
+	      only has any effect if the <I>persist</I> or <I>demand</I> option
+	      is  used.  The holdoff period is not applied if the
+	      link was terminated because it was idle.
+
+       <B>idle</B> <I>n</I> Specifies that pppd should disconnect if	the  link
+	      is  idle	for  <I>n</I> seconds.  The link is idle when no
+	      data packets (i.e. IP packets) are  being  sent  or
+	      received.   Note:  it  is not advisable to use this
+	      option with the <I>persist</I> option without  the  <I>demand</I>
+	      option.  If the <B>active-filter</B> option is given, data
+	      packets which are rejected by the specified  activ-
+	      ity filter also count as the link being idle.
+
+       <B>ipcp-accept-local</B>
+	      With  this option, pppd will accept the peer's idea
+	      of our local IP  address,  even  if  the	local  IP
+	      address was specified in an option.
+
+       <B>ipcp-accept-remote</B>
+	      With  this option, pppd will accept the peer's idea
+	      of its (remote) IP address, even if the  remote  IP
+	      address was specified in an option.
+
+       <B>ipcp-max-configure</B> <I>n</I>
+	      Set  the	maximum  number of IPCP configure-request
+	      transmissions to <I>n</I> (default 10).
+
+       <B>ipcp-max-failure</B> <I>n</I>
+	      Set  the	maximum  number  of  IPCP  configure-NAKs
+	      returned	before starting to send configure-Rejects
+	      instead to <I>n</I> (default 10).
+
+       <B>ipcp-max-terminate</B> <I>n</I>
+	      Set the maximum number  of  IPCP	terminate-request
+	      transmissions to <I>n</I> (default 3).
+
+       <B>ipcp-restart</B> <I>n</I>
+	      Set the IPCP restart interval (retransmission time-
+	      out) to <I>n</I> seconds (default 3).
+
+       <B>ipparam</B> <I>string</I>
+	      Provides an extra parameter to the  ip-up  and  ip-
+	      down  scripts.  If this option is given, the <I>string</I>
+	      supplied is given as the	6th  parameter	to  those
+	      scripts.
+
+								6
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>ipx</B>    Enable the IPXCP and IPX protocols.  This option is
+	      presently only supported under Linux, and  only  if
+	      your kernel has been configured to include IPX sup-
+	      port.
+
+       <B>ipx-network</B> <I>n</I>
+	      Set the IPX network number in the  IPXCP	configure
+	      request frame to <I>n</I>, a hexadecimal number (without a
+	      leading 0x).  There is no valid default.	 If  this
+	      option  is  not  specified,  the	network number is
+	      obtained from the peer.  If the peer does not  have
+	      the  network  number,  the IPX protocol will not be
+	      started.
+
+       <B>ipx-node</B> <I>n</I><B>:</B><I>m</I>
+	      Set the IPX node numbers. The two node numbers  are
+	      separated  from  each other with a colon character.
+	      The first number <I>n</I> is the local  node  number.  The
+	      second  number  <I>m</I>  is  the peer's node number. Each
+	      node number is a hexadecimal  number,  at  most  10
+	      digits  long.  The  node numbers on the ipx-network
+	      must be unique. There is no valid default. If  this
+	      option  is  not specified then the node numbers are
+	      obtained from the peer.
+
+       <B>ipx-router-name</B> <I>&lt;string&gt;</I>
+	      Set the name of the router. This is a string and is
+	      sent to the peer as information data.
+
+       <B>ipx-routing</B> <I>n</I>
+	      Set  the	routing  protocol  to be received by this
+	      option. More than one instance of  <I>ipx-routing</I>  may
+	      be  specified.  The '<I>none</I>' option (0) may be speci-
+	      fied as the only instance of ipx-routing. The  val-
+	      ues  may	be  <I>0</I>  for <I>NONE</I>, <I>2</I> for <I>RIP/SAP</I>, and <I>4</I> for
+	      <I>NLSP</I>.
+
+       <B>ipxcp-accept-local</B>
+	      Accept the peer's NAK for the node number specified
+	      in the ipx-node option. If a node number was speci-
+	      fied, and non-zero, the default is to  insist  that
+	      the  value be used. If you include this option then
+	      you will permit the peer to override the	entry  of
+	      the node number.
+
+       <B>ipxcp-accept-network</B>
+	      Accept the peer's NAK for the network number speci-
+	      fied in the ipx-network option. If a network number
+	      was  specified,  and  non-zero,  the  default is to
+	      insist that the value be used. If you include  this
+	      option  then  you  will permit the peer to override
+	      the entry of the node number.
+
+								7
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>ipxcp-accept-remote</B>
+	      Use the peer's network number specified in the con-
+	      figure  request  frame. If a node number was speci-
+	      fied for the peer and this option  was  not  speci-
+	      fied,  the  peer	will  be  forced to use the value
+	      which you have specified.
+
+       <B>ipxcp-max-configure</B> <I>n</I>
+	      Set the maximum number of IPXCP  configure  request
+	      frames which the system will send to <I>n</I>. The default
+	      is 10.
+
+       <B>ipxcp-max-failure</B> <I>n</I>
+	      Set the maximum number of IPXCP  NAK  frames  which
+	      the  local  system  will send before it rejects the
+	      options. The default value is 3.
+
+       <B>ipxcp-max-terminate</B> <I>n</I>
+	      Set the maximum nuber of	IPXCP  terminate  request
+	      frames  before  the local system considers that the
+	      peer is not listening to them. The default value is
+	      3.
+
+       <B>kdebug</B> <I>n</I>
+	      Enable  debugging  code  in  the	kernel-level  PPP
+	      driver.  The argument <I>n</I> is a number  which  is  the
+	      sum  of  the  following values: 1 to enable general
+	      debug messages, 2 to request that the  contents  of
+	      received	packets be printed, and 4 to request that
+	      the contents of transmitted packets be printed.  On
+	      most  systems,  messages	printed by the kernel are
+	      logged by <B>syslog(1)</B> to a file as	directed  in  the
+	      /etc/syslog.conf configuration file.
+
+       <B>lcp-echo-failure</B> <I>n</I>
+	      If this option is given, pppd will presume the peer
+	      to be dead if <I>n</I> LCP echo-requests are sent  without
+	      receiving a valid LCP echo-reply.  If this happens,
+	      pppd will terminate the connection.   Use  of  this
+	      option  requires a non-zero value for the <I>lcp-echo-</I>
+	      <I>interval</I> parameter.  This option	can  be  used  to
+	      enable pppd to terminate after the physical connec-
+	      tion has been broken (e.g., the modem has hung  up)
+	      in situations where no hardware modem control lines
+	      are available.
+
+       <B>lcp-echo-interval</B> <I>n</I>
+	      If this option is given,	pppd  will  send  an  LCP
+	      echo-request  frame  to  the  peer every <I>n</I> seconds.
+	      Normally the  peer  should  respond  to  the  echo-
+	      request  by sending an echo-reply.  This option can
+	      be used with the <I>lcp-echo-failure</I> option to  detect
+	      that the peer is no longer connected.
+
+								8
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>lcp-max-configure</B> <I>n</I>
+	      Set  the	maximum  number  of LCP configure-request
+	      transmissions to <I>n</I> (default 10).
+
+       <B>lcp-max-failure</B> <I>n</I>
+	      Set  the	maximum  number  of  LCP   configure-NAKs
+	      returned	before starting to send configure-Rejects
+	      instead to <I>n</I> (default 10).
+
+       <B>lcp-max-terminate</B> <I>n</I>
+	      Set the maximum  number  of  LCP	terminate-request
+	      transmissions to <I>n</I> (default 3).
+
+       <B>lcp-restart</B> <I>n</I>
+	      Set  the LCP restart interval (retransmission time-
+	      out) to <I>n</I> seconds (default 3).
+
+       <B>local</B>  Don't use  the  modem  control  lines.   With  this
+	      option,  pppd will ignore the state of the CD (Car-
+	      rier Detect) signal from the  modem  and	will  not
+	      change  the  state of the DTR (Data Terminal Ready)
+	      signal.
+
+       <B>login</B>  Use the system password database for authenticating
+	      the peer using PAP, and record the user in the sys-
+	      tem wtmp file.  Note that the  peer  must  have  an
+	      entry  in  the /etc/ppp/pap-secrets file as well as
+	      the system password database to be allowed  access.
+
+       <B>maxconnect</B> <I>n</I>
+	      Terminate the connection when it has been available
+	      for network traffic for <I>n</I> seconds (i.e.  <I>n</I>  seconds
+	      after the first network control protocol comes up).
+
+       <B>modem</B>  Use the modem control lines.  This  option  is  the
+	      default.	 With this option, pppd will wait for the
+	      CD (Carrier Detect) signal from  the  modem  to  be
+	      asserted	when  opening the serial device (unless a
+	      connect script is specified), and it will drop  the
+	      DTR  (Data  Terminal Ready) signal briefly when the
+	      connection is terminated and before  executing  the
+	      connect  script.	 On  Ultrix,  this option implies
+	      hardware flow control, as for the <I>crtscts</I> option.
+
+       <B>ms-dns</B> <I>&lt;addr&gt;</I>
+	      If pppd is acting as a server for Microsoft Windows
+	      clients,	this  option allows pppd to supply one or
+	      two DNS  (Domain	Name  Server)  addresses  to  the
+	      clients.	 The first instance of this option speci-
+	      fies the primary DNS address; the  second  instance
+	      (if  given)  specifies  the  secondary DNS address.
+	      (This option was present in some older versions  of
+	      pppd under the name <B>dns-addr</B>.)
+
+								9
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>ms-wins</B> <I>&lt;addr&gt;</I>
+	      If pppd is acting as a server for Microsoft Windows
+	      or "Samba" clients, this option allows pppd to sup-
+	      ply  one	or  two  WINS (Windows Internet Name Ser-
+	      vices) server addresses to the clients.  The  first
+	      instance	of this option specifies the primary WINS
+	      address; the second instance (if	given)	specifies
+	      the secondary WINS address.
+
+       <B>name</B> <I>name</I>
+	      Set the name of the local system for authentication
+	      purposes to <I>name</I>.  This  is  a  privileged  option.
+	      With  this  option,  pppd  will  use  lines  in the
+	      secrets files which have <I>name</I> as the  second  field
+	      when  looking for a secret to use in authenticating
+	      the peer.  In addition, unless overridden with  the
+	      <I>user</I>  option, <I>name</I> will be used as the name to send
+	      to the peer when authenticating the local system to
+	      the  peer.   (Note  that	pppd  does not append the
+	      domain name to <I>name</I>.)
+
+       <B>netmask</B> <I>n</I>
+	      Set the interface netmask to <I>n</I>, a 32 bit netmask in
+	      "decimal	dot"  notation	(e.g. 255.255.255.0).  If
+	      this option is given, the value specified  is  ORed
+	      with  the  default netmask.  The default netmask is
+	      chosen based on the negotiated remote  IP  address;
+	      it is the appropriate network mask for the class of
+	      the remote IP address, ORed with the  netmasks  for
+	      any  non	point-to-point	network interfaces in the
+	      system which are on the same network.
+
+       <B>noaccomp</B>
+	      Disable Address/Control compression in both  direc-
+	      tions (send and receive).
+
+       <B>noauth</B> Do  not  require	the  peer to authenticate itself.
+	      This option is privileged if  the  <I>auth</I>  option  is
+	      specified in /etc/ppp/options.
+
+       <B>nobsdcomp</B>
+	      Disables	BSD-Compress  compression;  <B>pppd</B> will not
+	      request or agree to compress packets using the BSD-
+	      Compress scheme.
+
+       <B>noccp</B>  Disable CCP (Compression Control Protocol) negotia-
+	      tion.  This option should only be required  if  the
+	      peer  is	buggy  and gets confused by requests from
+	      pppd for CCP negotiation.
+
+       <B>nocrtscts</B>
+	      Disable hardware flow control (i.e. RTS/CTS) on the
+	      serial  port.   If  neither  the	<I>crtscts</I>  nor  the
+	      <I>nocrtscts</I>  option  is  given,  the  hardware   flow
+
+							       10
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      control	setting  for  the  serial  port  is  left
+	      unchanged.
+
+       <B>nodefaultroute</B>
+	      Disable the <I>defaultroute</I> option.	The system admin-
+	      istrator	who wishes to prevent users from creating
+	      default routes with pppd can do so by placing  this
+	      option in the /etc/ppp/options file.
+
+       <B>nodeflate</B>
+	      Disables Deflate compression; pppd will not request
+	      or agree to  compress  packets  using  the  Deflate
+	      scheme.
+
+       <B>nodetach</B>
+	      Don't  detach from the controlling terminal.  With-
+	      out this option, if a serial device other than  the
+	      terminal	on  the standard input is specified, pppd
+	      will fork to become a background process.
+
+       <B>noip</B>   Disable  IPCP  negotiation  and  IP  communication.
+	      This  option should only be required if the peer is
+	      buggy and gets confused by requests from	pppd  for
+	      IPCP negotiation.
+
+       <B>noipdefault</B>
+	      Disables	the  default  behaviour  when no local IP
+	      address is specified, which  is  to  determine  (if
+	      possible)  the  local IP address from the hostname.
+	      With this option, the peer will have to supply  the
+	      local IP address during IPCP negotiation (unless it
+	      specified explicitly on the command line or  in  an
+	      options file).
+
+       <B>noipx</B>  Disable  the  IPXCP and IPX protocols.  This option
+	      should only be required if the peer  is  buggy  and
+	      gets confused by requests from pppd for IPXCP nego-
+	      tiation.
+
+       <B>nomagic</B>
+	      Disable  magic  number  negotiation.    With   this
+	      option,  pppd  cannot  detect  a	looped-back line.
+	      This option should only be needed if  the  peer  is
+	      buggy.
+
+       <B>nopcomp</B>
+	      Disable  protocol  field compression negotiation in
+	      both the receive and the transmit direction.
+
+       <B>nopersist</B>
+	      Exit once a connection has  been	made  and  termi-
+	      nated.   This  is the default unless the <I>persist</I> or
+	      <I>demand</I> option has been specified.
+
+							       11
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>nopredictor1</B>
+	      Do not accept or agree to Predictor-1 comprssion.
+
+       <B>noproxyarp</B>
+	      Disable the <I>proxyarp</I> option.  The  system  adminis-
+	      trator  who  wishes  to prevent users from creating
+	      proxy ARP entries with pppd can do  so  by  placing
+	      this option in the /etc/ppp/options file.
+
+       <B>novj</B>   Disable  Van  Jacobson style TCP/IP header compres-
+	      sion in both the transmit and  the  receive  direc-
+	      tion.
+
+       <B>novjccomp</B>
+	      Disable the connection-ID compression option in Van
+	      Jacobson style  TCP/IP  header  compression.   With
+	      this  option,  pppd will not omit the connection-ID
+	      byte from Van Jacobson compressed  TCP/IP  headers,
+	      nor ask the peer to do so.
+
+       <B>papcrypt</B>
+	      Indicates  that  all  secrets  in the /etc/ppp/pap-
+	      secrets file which are used for checking the  iden-
+	      tity  of	the  peer  are	encrypted,  and thus pppd
+	      should not accept a password which, before  encryp-
+	      tion,   is   identical   to  the	secret	from  the
+	      /etc/ppp/pap-secrets file.
+
+       <B>pap-max-authreq</B> <I>n</I>
+	      Set the maximum number of PAP  authenticate-request
+	      transmissions to <I>n</I> (default 10).
+
+       <B>pap-restart</B> <I>n</I>
+	      Set  the PAP restart interval (retransmission time-
+	      out) to <I>n</I> seconds (default 3).
+
+       <B>pap-timeout</B> <I>n</I>
+	      Set the maximum time that pppd will  wait  for  the
+	      peer  to	authenticate itself with PAP to <I>n</I> seconds
+	      (0 means no limit).
+
+       <B>pass-filter</B> <I>filter-expression</I>
+	      Specifies a packet filter to applied to data  pack-
+	      ets being sent or received to determine which pack-
+	      ets should be allowed to pass.  Packets  which  are
+	      rejected	by  the  filter  are  silently discarded.
+	      This option can be used to prevent specific network
+	      daemons  (such  as routed) using up link bandwidth,
+	      or to provide a  basic  firewall	capability.   The
+	      <I>filter-expression</I>  syntax  is as described for tcp-
+	      <B>dump(1)</B>, except that qualifiers which are  inappro-
+	      priate  for  a PPP link, such as <B>ether</B> and <B>arp</B>, are
+	      not permitted.   Generally  the  filter  expression
+	      should  be  enclosed  in	single-quotes  to prevent
+
+							       12
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      whitespace in the expression from being interpreted
+	      by  the  shell.	Note that it is possible to apply
+	      different  constraints  to  incoming  and  outgoing
+	      packets  using the <B>inbound</B> and <B>outbound</B> qualifiers.
+	      This  option  is	currently  only  available  under
+	      NetBSD,  and  then only if both the kernel and pppd
+	      were compiled with PPP_FILTER defined.
+
+       <B>persist</B>
+	      Do not  exit  after  a  connection  is  terminated;
+	      instead try to reopen the connection.
+
+       <B>predictor1</B>
+	      Request that the peer compress frames that it sends
+	      using Predictor-1 compression, and  agree  to  com-
+	      press   transmitted   frames  with  Predictor-1  if
+	      requested.  This option has no  effect  unless  the
+	      kernel driver supports Predictor-1 compression.
+
+       <B>proxyarp</B>
+	      Add  an entry to this system's ARP [Address Resolu-
+	      tion Protocol] table with the  IP  address  of  the
+	      peer and the Ethernet address of this system.  This
+	      will have the effect of making the peer  appear  to
+	      other systems to be on the local ethernet.
+
+       <B>remotename</B> <I>name</I>
+	      Set  the	assumed  name  of  the	remote system for
+	      authentication purposes to <I>name</I>.
+
+       <B>refuse-chap</B>
+	      With this option, pppd will not agree to	authenti-
+	      cate itself to the peer using CHAP.
+
+       <B>refuse-pap</B>
+	      With  this option, pppd will not agree to authenti-
+	      cate itself to the peer using PAP.
+
+       <B>require-chap</B>
+	      Require the peer to authenticate itself using  CHAP
+	      [Challenge   Handshake   Authentication	Protocol]
+	      authentication.
+
+       <B>require-pap</B>
+	      Require the peer to authenticate itself  using  PAP
+	      [Password  Authentication Protocol] authentication.
+
+       <B>silent</B> With this option, pppd will not transmit LCP  pack-
+	      ets  to  initiate  a  connection	until a valid LCP
+	      packet is received from the peer (as for the  `pas-
+	      sive' option with ancient versions of pppd).
+
+       <B>usehostname</B>
+	      Enforce  the  use of the hostname (with domain name
+
+							       13
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      appended, if given) as the name of the local system
+	      for  authentication  purposes  (overrides  the <I>name</I>
+	      option).
+
+       <B>user</B> <I>name</I>
+	      Sets the name used  for  authenticating  the  local
+	      system to the peer to <I>name</I>.
+
+       <B>vj-max-slots</B> <I>n</I>
+	      Sets  the  number of connection slots to be used by
+	      the Van  Jacobson  TCP/IP  header  compression  and
+	      decompression  code  to  <I>n</I>, which must be between 2
+	      and 16 (inclusive).
+
+       <B>welcome</B> <I>script</I>
+	      Run the executable or shell  command  specified  by
+	      <I>script</I> before initiating PPP negotiation, after the
+	      connect script (if any) has completed.  This option
+	      is privileged if the <I>noauth</I> option is used.
+
+       <B>xonxoff</B>
+	      Use  software  flow control (i.e. XON/XOFF) to con-
+	      trol the flow of data on the serial port.
+
+
+</PRE>
+<H2>OPTIONS FILES</H2><PRE>
+       Options can be taken from files as  well  as  the  command
+       line.  Pppd reads options from the files /etc/ppp/options,
+       ~/.ppprc  and  /etc/ppp/options.<I>ttyname</I>	(in  that  order)
+       before  processing  the	options on the command line.  (In
+       fact, the command-line options are  scanned  to	find  the
+       terminal  name  before  the options.<I>ttyname</I> file is read.)
+       In forming the name of the options.<I>ttyname</I> file, the  ini-
+       tial  /dev/  is	removed  from  the terminal name, and any
+       remaining / characters are replaced with dots.
+
+       An options file is parsed into a series of  words,  delim-
+       ited  by whitespace.  Whitespace can be included in a word
+       by enclosing the word in double-quotes (").   A	backslash
+       (\)  quotes  the following character.  A hash (#) starts a
+       comment, which continues until the end of the line.  There
+       is no restriction on using the <I>file</I> or <I>call</I> options within
+       an options file.
+
+
+</PRE>
+<H2>SECURITY</H2><PRE>
+       <I>pppd</I> provides system administrators with sufficient access
+       control	that  PPP  access to a server machine can be pro-
+       vided to legitimate users without fear of compromising the
+       security  of  the  server or the network it's on.  In part
+       this is provided by the /etc/ppp/options file,  where  the
+       administrator  can  place  options to restrict the ways in
+       which pppd can be used, and in part by the  PAP	and  CHAP
+       secrets	files,	where  the administrator can restrict the
+       set of IP addresses which individual users may use.
+
+							       14
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       The normal way that pppd should be set up is to	have  the
+       <I>auth</I>  option  in  the  /etc/ppp/options	file.	(This may
+       become the default in later releases.)  If users  wish  to
+       use  pppd  to  dial  out  to  a	peer which will refuse to
+       authenticate  itself  (such   as   an   internet   service
+       provider),  the	system	administrator  should  create  an
+       options file under /etc/ppp/peers  containing  the  <I>noauth</I>
+       option,	the  name of the serial port to use, and the <I>con-</I>
+       <I>nect</I> option (if	required),  plus  any  other  appropriate
+       options.   In  this  way, pppd can be set up to allow non-
+       privileged users to make unauthenticated connections  only
+       to trusted peers.
+
+       As  indicated  above,  some security-sensitive options are
+       privileged, which means that they may not be  used  by  an
+       ordinary  non-privileged  user running a setuid-root pppd,
+       either on the command line, in the user's  ~/.ppprc  file,
+       or  in an options file read using the <I>file</I> option.  Privi-
+       leged options may be used in /etc/ppp/options file  or  in
+       an  options  file  read using the <I>call</I> option.  If pppd is
+       being run by the root user, privileged options can be used
+       without restriction.
+
+
+</PRE>
+<H2>AUTHENTICATION</H2><PRE>
+       Authentication  is  the process whereby one peer convinces
+       the other of its identity.  This involves the  first  peer
+       sending	its name to the other, together with some kind of
+       secret information which could only come from the  genuine
+       authorized  user  of  that  name.  In such an exchange, we
+       will call the first peer the "client" and  the  other  the
+       "server".   The	client	has a name by which it identifies
+       itself to the server, and the server also has  a  name  by
+       which  it  identifies itself to the client.  Generally the
+       genuine client shares some secret (or password)	with  the
+       server,	and authenticates itself by proving that it knows
+       that secret.  Very often, the names used  for  authentica-
+       tion  correspond  to  the internet hostnames of the peers,
+       but this is not essential.
+
+       At present, pppd supports  two  authentication  protocols:
+       the  Password  Authentication Protocol (PAP) and the Chal-
+       lenge  Handshake  Authentication  Protocol  (CHAP).    PAP
+       involves the client sending its name and a cleartext pass-
+       word to the server to authenticate itself.   In	contrast,
+       the  server  initiates the CHAP authentication exchange by
+       sending a challenge to the client  (the	challenge  packet
+       includes the server's name).  The client must respond with
+       a response which includes  its  name  plus  a  hash  value
+       derived from the shared secret and the challenge, in order
+       to prove that it knows the secret.
+
+       The PPP protocol, being symmetrical, allows both peers  to
+       require	the  other to authenticate itself.  In that case,
+       two separate and independent authentication exchanges will
+
+							       15
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       occur.	The two exchanges could use different authentica-
+       tion protocols, and in principle, different names could be
+       used in the two exchanges.
+
+       The  default behaviour of pppd is to agree to authenticate
+       if requested, and to not require authentication	from  the
+       peer.  However, pppd will not agree to authenticate itself
+       with a particular protocol if  it  has  no  secrets  which
+       could be used to do so.
+
+       Pppd  stores  secrets for use in authentication in secrets
+       files (/etc/ppp/pap-secrets for PAP, /etc/ppp/chap-secrets
+       for  CHAP).  Both secrets files have the same format.  The
+       secrets files can contain  secrets  for	pppd  to  use  in
+       authenticating itself to other systems, as well as secrets
+       for pppd to  use  when  authenticating  other  systems  to
+       itself.
+
+       Each  line in a secrets file contains one secret.  A given
+       secret is specific to a particular combination  of  client
+       and server - it can only be used by that client to authen-
+       ticate itself to that server.  Thus each line in a secrets
+       file  has  at  least 3 fields: the name of the client, the
+       name of the server, and the secret.  These fields  may  be
+       followed  by a list of the IP addresses that the specified
+       client may use when connecting to the specified server.
+
+       A secrets file is parsed into words as for a options file,
+       so  the	client	name, server name and secrets fields must
+       each be one word, with any embedded spaces or  other  spe-
+       cial characters quoted or escaped.  Any following words on
+       the same line are taken to be  a  list  of  acceptable  IP
+       addresses   for	 that	client,   or   an   override  for
+       "local:remote" addresses (the same format used on the com-
+       mand line or in the options file) when on a line that con-
+       tains a specific client name (not a wildcard  nor  empty).
+       If  there  are  only  3 words on the line, or if the first
+       word is "-", then all IP  addresses  are  disallowed.   To
+       allow  any  address,  use  "*".	 A word starting with "!"
+       indicates that the specified address  is  <I>not</I>  acceptable.
+       An address may be followed by "/" and a number <I>n</I>, to indi-
+       cate a whole subnet, i.e. all  addresses  which	have  the
+       same value in the most significant <I>n</I> bits.  Note that case
+       is significant in the client and server names and  in  the
+       secret.
+
+       If  the secret starts with an `@', what follows is assumed
+       to be the name of a file from which to read the secret.	A
+       "*"  as	the client or server name matches any name.  When
+       selecting a secret, pppd takes the best match,  i.e.   the
+       match with the fewest wildcards.
+
+       Thus  a	secrets  file  contains  both  secrets for use in
+       authenticating other hosts, plus secrets which we use  for
+
+							       16
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       authenticating  ourselves to others.  When pppd is authen-
+       ticating the  peer  (checking  the  peer's  identity),  it
+       chooses	a  secret with the peer's name in the first field
+       and the name of the local system in the second field.  The
+       name  of  the  local system defaults to the hostname, with
+       the domain name appended if the	<I>domain</I>	option	is  used.
+       This  default  can  be  overridden  with  the <I>name</I> option,
+       except when the <I>usehostname</I> option is used.
+
+       When pppd is choosing a secret to  use  in  authenticating
+       itself  to  the	peer, it first determines what name it is
+       going to use to identify itself to the  peer.   This  name
+       can  be	specified  by  the user with the <I>user</I> option.  If
+       this option is not used, the name defaults to the name  of
+       the  local system, determined as described in the previous
+       paragraph.  Then pppd looks for a secret with this name in
+       the  first  field and the peer's name in the second field.
+       Pppd will know the name of the peer if CHAP authentication
+       is  being  used, because the peer will have sent it in the
+       challenge packet.  However, if PAP  is  being  used,  pppd
+       will  have  to  determine the peer's name from the options
+       specified by the user.  The user can  specify  the  peer's
+       name  directly  with the <I>remotename</I> option.  Otherwise, if
+       the remote IP address was specified by a name (rather than
+       in  numeric  form),  that  name will be used as the peer's
+       name.  Failing that, pppd will use the null string as  the
+       peer's name.
+
+       When  authenticating the peer with PAP, the supplied pass-
+       word is first compared with the secret  from  the  secrets
+       file.  If the password doesn't match the secret, the pass-
+       word is encrypted using crypt() and  checked  against  the
+       secret  again.	Thus  secrets for authenticating the peer
+       can be stored  in  encrypted  form  if  desired.   If  the
+       <I>papcrypt</I> option is given, the first (unencrypted) compari-
+       son is omitted, for better security.
+
+       Furthermore, if the <I>login</I> option was specified, the  user-
+       name  and  password  are  also  checked against the system
+       password database.  Thus, the system administrator can set
+       up  the	pap-secrets file to allow PPP access only to cer-
+       tain users, and to restrict the set of IP  addresses  that
+       each  user  can	use.   Typically,  when  using	the <I>login</I>
+       option, the secret in /etc/ppp/pap-secrets  would  be  "",
+       which  will match any password supplied by the peer.  This
+       avoids the need to have the same secret in two places.
+
+       Additional checks are performed when the <B>login</B>  option  is
+       used.   If the file /etc/ppp/ppp.deny exists, and the user
+       is listed in it, the authentication fails.   If	the  file
+       /etc/ppp/ppp.shells  exists  and  the  user's normal login
+       shell is not listed, the authentication fails.
+
+       Authentication must  be	satisfactorily	completed  before
+
+							       17
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       IPCP  (or  any  other  Network  Control	Protocol)  can be
+       started.  If the peer is required to authenticate  itself,
+       and  fails  to  do  so,	pppd will terminated the link (by
+       closing LCP).   If  IPCP  negotiates  an  unacceptable  IP
+       address	for  the  remote  host,  IPCP will be closed.  IP
+       packets can only be sent or received when IPCP is open.
+
+       In some cases it is desirable to allow  some  hosts  which
+       can't  authenticate themselves to connect and use one of a
+       restricted set of IP addresses, even when the  local  host
+       generally requires authentication.  If the peer refuses to
+       authenticate itself when requested,  pppd  takes  that  as
+       equivalent  to  authenticating  with  PAP  using the empty
+       string for the username and password.  Thus, by	adding	a
+       line  to  the  pap-secrets  file which specifies the empty
+       string for the client and  password,  it  is  possible  to
+       allow restricted access to hosts which refuse to authenti-
+       cate themselves.
+
+
+</PRE>
+<H2>ROUTING</H2><PRE>
+       When IPCP negotiation is completed successfully, pppd will
+       inform the kernel of the local and remote IP addresses for
+       the ppp interface.  This is sufficient to  create  a  host
+       route to the remote end of the link, which will enable the
+       peers to exchange IP packets.   Communication  with  other
+       machines  generally requires further modification to rout-
+       ing  tables  and/or  ARP  (Address  Resolution	Protocol)
+       tables.	 In  most  cases the <I>defaultroute</I> and/or <I>proxyarp</I>
+       options are sufficient for this, but in some cases further
+       intervention  is  required.  The /etc/ppp/ip-up script can
+       be used for this.
+
+       Sometimes it is desirable to add a default  route  through
+       the  remote  host,  as in the case of a machine whose only
+       connection to the Internet is through the  ppp  interface.
+       The  <I>defaultroute</I>  option  causes  pppd	to  create such a
+       default route when IPCP comes up, and delete it	when  the
+       link is terminated.
+
+       In  some cases it is desirable to use proxy ARP, for exam-
+       ple on a server machine connected to a LAN,  in	order  to
+       allow  other  hosts  to	communicate with the remote host.
+       The <I>proxyarp</I> option causes pppd	to  look  for  a  network
+       interface on the same subnet as the remote host (an inter-
+       face supporting broadcast and ARP, which is up and  not	a
+       point-to-point  or  loopback  interface).   If found, pppd
+       creates a permanent,  published	ARP  entry  with  the  IP
+       address of the remote host and the hardware address of the
+       network interface found.
+
+       When the <I>demand</I> option is used, the interface IP addresses
+       have already been set at the point when IPCP comes up.  If
+       pppd has not been able to  negotiate  the  same	addresses
+       that  it used to configure the interface (for example when
+
+							       18
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       the peer is an ISP that uses dynamic  IP  address  assign-
+       ment),  pppd  has  to change the interface IP addresses to
+       the negotiated addresses.  This may disrupt existing  con-
+       nections,  and  the use of demand dialling with peers that
+       do dynamic IP address assignment is not recommended.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+       The following examples assume  that  the  /etc/ppp/options
+       file   contains	 the  <I>auth</I>  option  (as  in  the  default
+       /etc/ppp/options file in the ppp distribution).
+
+       Probably the most common use of pppd is to dial out to  an
+       ISP.  This can be done with a command such as
+
+	      pppd call isp
+
+       where  the /etc/ppp/peers/isp file is set up by the system
+       administrator to contain something like this:
+
+	      ttyS0 19200 crtscts
+	      connect '/usr/sbin/chat -v -f /etc/ppp/chat-isp'
+	      noauth
+
+       In this example, we are using chat to dial the ISP's modem
+       and   go   through   any  logon	sequence  required.   The
+       /etc/ppp/chat-isp file contains the script used	by  chat;
+       it could for example contain something like this:
+
+	      ABORT "NO CARRIER"
+	      ABORT "NO DIALTONE"
+	      ABORT "ERROR"
+	      ABORT "NO ANSWER"
+	      ABORT "BUSY"
+	      ABORT "Username/Password Incorrect"
+	      "" "at"
+	      OK "at&amp;d0&amp;c1"
+	      OK "atdt2468135"
+	      "name:" "^Umyuserid"
+	      "word:" "\qmypassword"
+	      "ispts" "\q^Uppp"
+	      "~-^Uppp-~"
+
+       See the <B>chat(8)</B> man page for details of chat scripts.
+
+       Pppd can also be used to provide a dial-in ppp service for
+       users.  If the users already have login accounts, the sim-
+       plest  way  to  set up the ppp service is to let the users
+       log in to their accounts and run pppd  (installed  setuid-
+       root) with a command such as
+
+	      pppd proxyarp
+
+       To  allow  a  user  to use the PPP facilities, you need to
+       allocate an IP address for that user's machine and  create
+
+							       19
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       an  entry in /etc/ppp/pap-secrets or /etc/ppp/chap-secrets
+       (depending on which authentication method the  PPP  imple-
+       mentation  on  the  user's  machine supports), so that the
+       user's machine can authenticate itself.	For  example,  if
+       Joe  has  a machine called "joespc" which is to be allowed
+       to dial in to the machine called "server" and use  the  IP
+       address joespc.my.net, you would add an entry like this to
+       /etc/ppp/pap-secrets or /etc/ppp/chap-secrets:
+
+	      joespc	server	  "joe's secret" joespc.my.net
+
+       Alternatively, you can create a username called (for exam-
+       ple)  "ppp",  whose  login  shell  is  pppd and whose home
+       directory is /etc/ppp.  Options to be used  when  pppd  is
+       run this way can be put in /etc/ppp/.ppprc.
+
+       If  your  serial connection is any more complicated than a
+       piece of wire, you may need to arrange  for  some  control
+       characters to be escaped.  In particular, it is often use-
+       ful to escape XON  (^Q)	and  XOFF  (^S),  using  <I>asyncmap</I>
+       <I>a0000</I>.  If the path includes a telnet, you probably should
+       escape ^]  as  well  (<I>asyncmap</I>  <I>200a0000</I>).   If	the  path
+       includes  an  rlogin,  you  will need to use the <I>escape</I> <I>ff</I>
+       option on the end which	is  running  the  rlogin  client,
+       since  many  rlogin  implementations  are not transparent;
+       they will remove the sequence  [0xff,  0xff,  0x73,  0x73,
+       followed by any 8 bytes] from the stream.
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+       Messages  are  sent  to	the  syslog daemon using facility
+       LOG_DAEMON.  (This can be overriden  by	recompiling  pppd
+       with  the  macro LOG_PPP defined as the desired facility.)
+       In order to see the error and  debug  messages,	you  will
+       need to edit your /etc/syslog.conf file to direct the mes-
+       sages to the desired output device or file.
+
+       The <I>debug</I> option causes the contents of all control  pack-
+       ets  sent or received to be logged, that is, all LCP, PAP,
+       CHAP or IPCP packets.  This can be useful if the PPP nego-
+       tiation	does  not succeed or if authentication fails.  If
+       debugging is enabled at compile	time,  the  <I>debug</I>  option
+       also causes other debugging messages to be logged.
+
+       Debugging  can  also  be  enabled or disabled by sending a
+       SIGUSR1 signal to the pppd process.  This signal acts as a
+       toggle.
+
+
+</PRE>
+<H2>SCRIPTS</H2><PRE>
+       Pppd  invokes  scripts at various stages in its processing
+       which can be used to perform site-specific ancillary  pro-
+       cessing.   These  scripts  are  usually shell scripts, but
+       could be executable code files  instead.   Pppd	does  not
+       wait  for the scripts to finish.  The scripts are executed
+       as root (with the real and effective user-id set to 0), so
+
+							       20
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       that  they  can do things such as update routing tables or
+       run privileged daemons.	Be careful that the  contents  of
+       these  scripts  do  not compromise your system's security.
+       Pppd runs the scripts  with  standard  input,  output  and
+       error  redirected  to  /dev/null,  and with an environment
+       that is empty except for some environment  variables  that
+       give  information  about  the link.  The environment vari-
+       ables that pppd sets are:
+
+       <B>DEVICE</B> The name of the serial tty device being used.
+
+       <B>IFNAME</B> The name of the network interface being used.
+
+       <B>IPLOCAL</B>
+	      The IP address for the local end of the link.  This
+	      is only set when IPCP has come up.
+
+       <B>IPREMOTE</B>
+	      The  IP  address	for  the  remote end of the link.
+	      This is only set when IPCP has come up.
+
+       <B>PEERNAME</B>
+	      The authenticated name of the peer.  This  is  only
+	      set if the peer authenticates itself.
+
+       <B>SPEED</B>  The baud rate of the tty device.
+
+       <B>UID</B>    The real user-id of the user who invoked pppd.
+
+       Pppd  invokes the following scripts, if they exist.  It is
+       not an error if they don't exist.
+
+       <B>/etc/ppp/auth-up</B>
+	      A program or script which  is  executed  after  the
+	      remote  system  successfully  authenticates itself.
+	      It is executed with the parameters
+
+	      <I>interface-name</I> <I>peer-name</I> <I>user-name</I> <I>tty-device</I> <I>speed</I>
+
+	      Note  that  this script is not executed if the peer
+	      doesn't authenticate itself, for example	when  the
+	      <I>noauth</I> option is used.
+
+       <B>/etc/ppp/auth-down</B>
+	      A program or script which is executed when the link
+	      goes down, if /etc/ppp/auth-up was previously  exe-
+	      cuted.   It is executed in the same manner with the
+	      same parameters as /etc/ppp/auth-up.
+
+       <B>/etc/ppp/ip-up</B>
+	      A program or script which is executed when the link
+	      is  available  for sending and receiving IP packets
+	      (that is, IPCP has come up).  It is  executed  with
+	      the parameters
+
+							       21
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+	      <I>interface-name</I>  <I>tty-device</I>  <I>speed</I>  <I>local-IP-address</I>
+	      <I>remote-IP-address</I> <I>ipparam</I>
+
+       <B>/etc/ppp/ip-down</B>
+	      A program or script which is executed when the link
+	      is no longer available for sending and receiving IP
+	      packets.	This script can be used for  undoing  the
+	      effects	of  the  /etc/ppp/ip-up  script.   It  is
+	      invoked in the same manner and with the same param-
+	      eters as the ip-up script.
+
+       <B>/etc/ppp/ipx-up</B>
+	      A program or script which is executed when the link
+	      is available for sending and receiving IPX  packets
+	      (that  is, IPXCP has come up).  It is executed with
+	      the parameters
+
+	      <I>interface-name</I>  <I>tty-device</I>   <I>speed</I>   <I>network-number</I>
+	      <I>local-IPX-node-address</I>	  <I>remote-IPX-node-address</I>
+	      <I>local-IPX-routing-protocol</I>  <I>remote-IPX-routing-pro-</I>
+	      <I>tocol</I>  <I>local-IPX-router-name</I> <I>remote-IPX-router-name</I>
+	      <I>ipparam</I> <I>pppd-pid</I>
+
+	      The local-IPX-routing-protocol and remote-IPX-rout-
+	      ing-protocol field may be one of the following:
+
+	      NONE	to indicate that there is no routing pro-
+	      tocol
+	      RIP	to indicate that RIP/SAP should be used
+	      NLSP	to indicate that Novell  NLSP  should  be
+	      used
+	      RIP  NLSP   to  indicate that both RIP/SAP and NLSP
+	      should be used
+
+       <B>/etc/ppp/ipx-down</B>
+	      A program or script which is executed when the link
+	      is  no  longer  available for sending and receiving
+	      IPX packets.  This script can be used  for  undoing
+	      the  effects  of the /etc/ppp/ipx-up script.  It is
+	      invoked in the same manner and with the same param-
+	      eters as the ipx-up script.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+       <B>/var/run/ppp</B><I>n</I><B>.pid</B> (BSD or Linux), <B>/etc/ppp/ppp</B><I>n</I><B>.pid</B> (oth-
+	      ers)
+	      Process-ID for pppd process on ppp  interface  unit
+	      <I>n</I>.
+
+       <B>/etc/ppp/pap-secrets</B>
+	      Usernames,  passwords  and  IP  addresses  for  PAP
+	      authentication.  This file should be owned by  root
+	      and  not	readable  or  writable by any other user.
+	      Pppd will log a warning if this is not the case.
+
+							       22
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>/etc/ppp/chap-secrets</B>
+	      Names, secrets and IP addresses for CHAP	authenti-
+	      cation.	As  for  /etc/ppp/pap-secrets,	this file
+	      should  be  owned  by  root  and	not  readable  or
+	      writable	by any other user.  Pppd will log a warn-
+	      ing if this is not the case.
+
+       <B>/etc/ppp/options</B>
+	      System default options for pppd, read  before  user
+	      default options or command-line options.
+
+       <B>~/.ppprc</B>
+	      User	default      options,	  read	   before
+	      /etc/ppp/options.<I>ttyname</I>.
+
+       <B>/etc/ppp/options.</B><I>ttyname</I>
+	      System default options for the  serial  port  being
+	      used,  read after ~/.ppprc.  In forming the <I>ttyname</I>
+	      part of this filename, an initial /dev/ is stripped
+	      from the port name (if present), and any slashes in
+	      the remaining part are converted to dots.
+
+       <B>/etc/ppp/peers</B>
+	      A directory containing options files which may con-
+	      tain  privileged	options, even if pppd was invoked
+	      by a user other than root.  The system  administra-
+	      tor  can	create options files in this directory to
+	      permit non-privileged users  to  dial  out  without
+	      requiring  the  peer  to	authenticate, but only to
+	      certain trusted peers.
+
+       <B>/etc/ppp/ppp.deny</B>
+	      Lists users who may not use the system password PAP
+	      authentication.
+
+       <B>/etc/ppp/ppp.shells</B>
+	      Lists  user  shells  which  are approved for system
+	      password PAP authentication logins.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <I>chat(8),</I> <I>ppp(8)</I>
+
+       <B>RFC1144</B>
+	      Jacobson, V.  <I>Compressing</I> <I>TCP/IP</I> <I>headers</I>	<I>for</I>  <I>low-</I>
+	      <I>speed</I> <I>serial</I> <I>links.</I>  February 1990.
+
+       <B>RFC1321</B>
+	      Rivest,	R.   <I>The</I>  <I>MD5</I>  <I>Message-Digest</I>  <I>Algorithm.</I>
+	      April 1992.
+
+       <B>RFC1332</B>
+	      McGregor, G.  <I>PPP</I> <I>Internet</I> <I>Protocol</I> <I>Control</I>  <I>Proto-</I>
+	      <I>col</I> <I>(IPCP).</I>  May 1992.
+
+							       23
+
+<B>PPPD(8)</B> 						  <B>PPPD(8)</B>
+
+       <B>RFC1334</B>
+	      Lloyd, B.; Simpson, W.A.	<I>PPP</I> <I>authentication</I> <I>proto-</I>
+	      <I>cols.</I>  October 1992.
+
+       <B>RFC1661</B>
+	      Simpson, W.A.  <I>The</I> <I>Point-to-Point</I>  <I>Protocol</I>  <I>(PPP).</I>
+	      July 1994.
+
+       <B>RFC1662</B>
+	      Simpson,	W.A.   <I>PPP</I>  <I>in</I>	<I>HDLC-like</I>  <I>Framing.</I>  July
+	      1994.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+       The following signals have the specified effect when  sent
+       to pppd.
+
+       <B>SIGINT,</B> <B>SIGTERM</B>
+	      These  signals cause pppd to terminate the link (by
+	      closing LCP), restore the serial	device	settings,
+	      and exit.
+
+       <B>SIGHUP</B> This  signal  causes  pppd  to  terminate the link,
+	      restore the serial device settings, and  close  the
+	      serial device.  If the <I>persist</I> or <I>demand</I> option has
+	      been specified, pppd will try to reopen the  serial
+	      device  and  start  another  connection  (after the
+	      holdoff period).	Otherwise  pppd  will  exit.   If
+	      this  signal is received during the holdoff period,
+	      it causes pppd to end the  holdoff  period  immedi-
+	      ately.
+
+       <B>SIGUSR1</B>
+	      This  signal toggles the state of the <I>debug</I> option.
+
+       <B>SIGUSR2</B>
+	      This signal causes pppd to renegotiate compression.
+	      This  can  be useful to re-enable compression after
+	      it has been disabled as a result of a fatal  decom-
+	      pression error.  (Fatal decompression errors gener-
+	      ally indicate a bug in  one  or  other  implementa-
+	      tion.)
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+       Paul  Mackerras	(Paul.Mackerras@cs.anu.edu.au),  based on
+       earlier work by Drew Perkins,  Brad  Clements,  Karl  Fox,
+       Greg Christy, and Brad Parker.
+
+							       24
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,2 @@
+1. 使用ELF可重定位文件作为可重定位的efi文件
+2. 连接时ld参数, -r -d -e EntryPoint MainProgram.o lib.a

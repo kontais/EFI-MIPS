@@ -1,0 +1,65 @@
+
+                   IMPORTANT Information related to the gnu-efi package
+				and x86_64 efi support 
+                   ----------------------------------------------------
+		                        August 2003
+
+As of version elilo-3.0, the gnu-efi package is now split in two different packages:
+
+	-> gnu-efi-X.y: contains the EFI library, header, files, and crt0.
+
+	-> elilo-X.y  : contains the ELILO bootloader.
+	
+Note that X.y don't need to match for both packages. However elilo-3.x requires at
+least gnu-efi >= 3.0. When using a version of gcc >3.0 you MUST use at least gnu-efi-3.0a.
+
+Note that EFI support for x86_64 has been added as a patch to gnu-efi-3.0c.
+
+For x86_64, see the important notes under x86_64.
+
+IMPORTANT NOTE FOR IA-32:
+-------------------------
+	For IA-32, the Redhat 8.0 toolchain is known to produce
+	working binaries when used with gnu-efi-3.0a + loader
+	script patch which is included in the gnu-efi-3.0a-ia32.patch
+	in this package. The toolchain includes:
+
+	gcc: gcc version 3.2 20020903 (Red Hat Linux 8.0 3.2-7)
+	as: GNU assembler version 2.13.90.0.2 (i386-redhat-linux) using BFD version
+	2.13.90.0.2 20020802
+	ld: GNU ld version 2.13.90.0.2 20020802
+
+	The Redhat 9.0 toolchain does not work at the moment.
+
+The gnu-efi  package can be downloaded from:
+
+	ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi-X.y.tar.gz
+
+IMPORTANT NOTE FOR x86_64:
+-------------------------
+
+	EFI x86_64 elilo support requires the following libraries:
+
+	1. gnu-efi-3.0c library with x86_64 support.
+
+	2. The toolchain known to produce working x86_64 efi binary are:
+
+		gcc-4.1.1 or above
+		binutils-2.17.50.0.14 with Intel64 EFI support
+
+	Implementation:
+	--------------
+	Calls to EFI services in x86_64 require a wrapper to pass the arguments
+	in the appropriate manner. This is implemented with efi wrapper. 
+	For IA32 and IA64, the wrapper is a macro that merely calls the
+	EFI services directly. The elilo source has been modified to use the
+	efi wrapper implemented in gnu-efi-3.0c library. 
+	elilo for x86_64 and its dependent libraries are built and the final
+	ELF image is converted into PE-COFF image using the objcopy supported
+	by binutils-2.17.50.0.14 or above with Intel64 EFI support.
+
+	On UEFI 2.0 firmware, only Graphics Output Protocol (GOP) is supported. 
+	The x86_64 elilo first queries video information from GOP failing which
+	it queries for text mode support. The video information is passed to
+	Linux kernel via boot parameter. The GOP support requires
+	Linux kernel EFI framebuffer driver (kernel configuration option).

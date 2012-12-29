@@ -1,0 +1,156 @@
+Information about the simple chooser
+--------------------------------------
+Copyright (C) 2002-2003 Hewlett-Packard Co.
+Contributed by Stephane Eranian <eranian@hpl.hp.com>
+
+Last updated: 02/02/14
+
+Chooser name: simple
+Command line option: -C simple
+Config file option: chooser=simple, description, message
+
+The simple chooser is the default chooser. However it is possible
+to disable it at compile time, it is highly recommended to keep it
+in. Elilo must have at least one chooser compiled in.
+
+The simple chooser is very basic as its name indicates! It provides
+a simple one line text mode command prompt similar to what you get
+with Lilo/x86.  
+
+Any chooser becomes visible to the user ONLY when the interactive
+mode is entered.
+
+The simple chooser allows the user to select a kernel to boot.
+The user can use a label as specified in the elilo config file 
+or a kernel file name. File names can be specified with
+absolute names in the form dev_name:/path/to/my_kernel.
+
+1/ Activation
+
+   The chooser is activated from:
+
+   	- command line  with the -c simple
+	- the config file with the chooser=simple option
+
+2/ Supported options
+
+   The simple chooser supports the following options in the config file:
+
+   	message=filename  : display a message before the prompt. The filename
+			    must be an ASCII file
+
+	description=string: a description of the kernel image (ASCII)
+
+   All other options have their standard meaning. The chooser does not recognize 
+   the fX (X varies from 1-12) options
+
+2/ Builtin commands
+   
+The simple chooser has some builtin command which the user can
+get to by typing certain keys as the first character on the command line:
+
+    TAB: 	shows the list of defined labels and their descriptions.
+
+		If the user did not type anything, i.e., the line is empty,
+		pressing TAB will print the list of labels defined in the
+		elilo config file.
+
+		If the user already typed a name and if the name corresponds
+		to a specified label, the chooser will show how the label
+		is expanded and what the final command line to the kernel will
+		look like.
+
+		If the line is empty pressing TAB generates something similar to:
+		ELILO boot: 
+		linux-up linux nfsroot   (or any kernel file name: [dev_name:]/path/file)
+
+		Note that first label correspond to the default label used if the user
+		hits the enter key with an empty line. This label is not necessarily
+		the first one in the config file.
+
+		Now pressing TAB with a full label name:
+
+		ELILO boot: linux-up
+		desc   : my default UP kernel
+		cmdline: vmlinuz root=/dev/sdb2 console=ttyS0,115200n8 console=tty0 ro
+
+		The desc line shows whatever was specified in the "description" option 
+		for this particular image in the config  file.
+
+    =  :	shows the list of accessible devices
+
+    		this key force elilo to print the list of detected devices. Elilo will 
+		auto-detect the devices which are accessible to load a config file, the kernel, the
+		initrd from. Those devices typically represent disk partition, CDROM, floppy, or
+		a network path. The list of devices is highly system dependent.
+		It also depends on the filesystem support compiled into elilo.
+
+		The way the devices are named depends on the device naming scheme
+		selected. It also depends on whether the EDD30 support is activated.
+		For instance, pressing the ? could look as follows:
+
+		ELILO boot: 
+		scsi0 :   vfat : Acpi(PNP0A03,2)/Pci(1|0)/Scsi(Pun0,Lun0)/HD(Part1,Sig72040800)
+		scsi1 :   vfat : Acpi(PNP0A03,2)/Pci(1|0)/Scsi(Pun6,Lun0)/HD(Part1,Sig00000000)
+		scsi2 : ext2fs : Acpi(PNP0A03,2)/Pci(1|0)/Scsi(Pun0,Lun0)/HD(Part2,Sig72040800)
+		scsi3 : ext2fs : Acpi(PNP0A03,2)/Pci(1|0)/Scsi(Pun6,Lun0)/HD(Part2,Sig00000000)
+		net0 :  netfs : Acpi(PNP0A03,0)/Pci(5|0)/Mac(00D0B7A6FC25)
+		5 devices available for booting
+		boot device net0: netfs
+
+		Here the vfat (EFI partition type), ext2fs and network filesysten (not to be confused
+		with NFS) were compiled into elilo and were detected on the machine. The left handside
+		of the colon show the logical name associated with the device. For instance,
+		scsi0 corresponds to the first partition of SCSI disk ID 0 and is an EFI partition.
+		The net0 correspond to a network device, here the Ethernet adapter. The last line
+		show the device used to load elilo itself, in the case elilo was downloaded from the
+		network.
+
+		To get a kernel from scsi0, the user can simply type:
+
+			ELILO boot: scsi0:/usr/src/linux/vmlinux 
+
+		Note that even though elilo was not downloaded from the network, it is still possible
+		to get the kernel and initrd from a remote machine.
+
+    %  :	shows the list of defined variables
+
+    		Elilo has builtin variables which are used to dynamically customized the command line
+		parameters passed to the kernel. The list of variables depends on the support compiled
+		into elilo. Not all elilo subsystems use variables. Typically the network file system
+		does. Pressing '%' only prints the variables that are defined with their current values.
+		Some variables are only defined once the subsystem that creates them has been used.
+		In other words, if the network filesystem was not used to load elilo, then the variables
+		defined by it are not created.
+
+		If the network was actually used, pressing '%' could generate the following output:
+		ELILO boot:     
+		D = "mydomain.com
+		G = "192.168.3.1"
+		H = "test_machine"
+		I = "192.168.3.4"
+		M = "255.255.255.0"
+
+    &  :	shows the list default path
+
+    		The path is used as a prefix for all filenames specified as
+		relative.
+
+    ?  :	shows the list of supported command keys
+
+
+The simple chooser has also some builtin command line editing commands:
+
+ 	ESC	 : abort (leave elilo)
+
+	CTRL-D   : abort (leave elilo)
+
+	CTRL-C	 : kill line
+		   empty current line and prompt for new input
+
+	CTRL-H   : erase the previous character
+
+	CTRL-U	 : clear current line
+		   reset the buffer (does not display correctly if buffer spans more than one line)
+
+	Backspace: erase character

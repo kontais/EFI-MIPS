@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>MKLOCALE(1)</B>             Libc General Commands Manual            <B>MKLOCALE(1)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mklocale</B> - convert locale source definition
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>mklocale</B> <I>CTYPEInputfile</I> <I>COLLATEInputfile</I> <I>TIMEInputfile</I>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>mklocale</B> utility is a Win32 application.  <B>mklocale</B> converts locale
+     source definitions into a format usable by the locale-dependent func-
+     tions.  It's the convienient away of generation all locale needed re-
+     source files.  It calls mkctype, mkcollate, mktime respectively and gen-
+     erates 3 binary resource files: LC_CTYPE, LC_COLLATE, LC_TIME.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     <I>/etc/locale/&lt;language&gt;/LC</I><B>_</B><I>CTYPE</I>      </PRE>
+<PRE><I>     /etc/locale/&lt;language&gt;/LC</I><B>_</B><I>COLLATE</I></PRE>
+<PRE>     <I>/etc/locale/&lt;language&gt;/LC</I><B>_</B><I>TIME</I>
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>mkctype(1)</B>,  <B>mkcollate(1)</B>,  <B>mktime(1)</B>,
+
+BSD                             Aprial, 14 2000                              1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>TOWCTRANS(3)</b>	       FreeBSD Library Functions Manual 	    <b>TOWCTRANS(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>towctrans</b> - Transforms a wide character.
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wctype.h&gt;</b>
+
+<b>     </b>wint_t<b> 
+     towctrans(</b><em>wint_t c</em><em><b>, </b></em><em>wctrans_t category</em><b>)</b>
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     <strong>towctrans</strong> determines a mapping from one set of wide-character codes to another. 
+<font size="3">
+     The following pairs of calls have the same behavior in all locales (but an 
+     implementation can define additional mappings even in the &quot;C&quot; locale): 
+
+<b>     tolower( </b><i>c</i><b> )</b> same as&nbsp;&nbsp;&nbsp;<b>towctrans( </b><i>c</i><b>, wctrans(&quot;towlower&quot; ) )
+     towupper( </b><i>c</i><b> )</b> same as&nbsp; <b>towctrans( </b><i>c</i><b>, wctrans( &quot;toupper&quot; ) )
+</b></font>
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     If the LC_CTYPE category of the current locale does not define a mapping 
+     whose name matches the property string <i>property</i>, the function returns zero.
+     Otherwise, it returns a nonzero value suitable for use as the second argument
+     to a subsequent call to <strong>towctrans</strong>. 
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>wctrans(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>towctrans</b>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

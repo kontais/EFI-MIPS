@@ -1,0 +1,88 @@
+#/*++
+#
+# Copyright (c) 2005 - 2006, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution. The full text of the license may be found at         
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    EfiShellLib.inf
+#
+#  Abstract:
+#
+#    Component description file for the EFI utility library.
+#
+#--*/
+
+[defines]
+BASE_NAME       = EfiShellLib
+COMPONENT_TYPE  = LIBRARY
+
+[sources.common]
+  ShellDebug.c
+  DPath.c
+  Init.c
+  Lock.c
+  Str.c
+  IO.c
+  Mem.c
+  Misc.c
+  Data.c
+  RtData.c
+  ShellEnvInt.c
+  Handle.c
+  FileIO.c
+  ConsistMapping.c
+  CRC.c
+  Event.c
+  Perf.c
+  VarCheck.c
+
+[sources.Mips32]
+#  Mips32/math.c
+  Mips32/Math.s
+  Mips32/initplat.c
+
+[sources.ia32]
+  ia32/math.c
+  ia32/initplat.c
+
+[sources.ipf]
+  ipf/math.c
+  ipf/initplat.c
+  ipf/palproc.s
+  ipf/salpal.c
+
+[sources.EBC]
+  EBC/math.c
+  EBC/initplat.c
+  
+[sources.x64]
+  ipf/math.c
+  ia32/initplat.c
+
+[includes.common]
+  .
+  ../Inc
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/FrameWork
+  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+
+[libraries.common]
+  EdkFrameworkProtocolLib
+  EdkProtocolLib
+  EfiProtocolLib
+  EfiGuidLib
+  EdkGuidLib
+
+[nmake.common]

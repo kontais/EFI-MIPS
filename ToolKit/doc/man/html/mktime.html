@@ -1,0 +1,296 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>MKTIME(1)</B>               Libc General Commands Manual              <B>MKTIME(1)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mktime</B> - convert time source definition
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>mktime</B> <I>[-d]</I> <I>[Outputfile]</I> <I>Inputfile</I>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>mktime</B> utility is a Win32 application.  <B>mktime</B> converts a time source
+     definition into a format usable by the locale-dependent functions. It is
+     used to define the many ways in which locale-dependent functions output.
+
+     It reads <I>Inputfile</I> which is a LC_TIME source file and produces a
+     <I>OutputFile</I> which is a LC_TIME binary file suitable for placement in
+     /etc/locale/<I>language</I>/LC_TIME.
+
+     Options list: </PRE>
+<PRE>	<I>-d</I>: used for debugging.  </PRE>
+<PRE>	<I>Outputfile: its default value is </I>LC_TIME
+
+</PRE>
+<PRE>     The time source definition file is formated as belows:
+
+     The 1 - 12 valid lines are national representation of abbreviated month
+     names.
+
+     The 13 - 24 valid lines are national representation of full month names.
+
+     The 25 - 31 valid lines are national representation of abbreviated week-
+     day names.
+
+     The 32 - 38 valid lines are national representation of full weekday
+     names.
+
+     The 39 valid line is X_fmt string.
+
+     The 40 valid line is x_fmt string.
+
+     The 41 valid line is c_fmt string.
+
+     The 42 valid line is abbreviation morning string.
+
+     The 43 valid line is abbreviation afternoon string.
+
+     The 44 valid line is date_fmt string.
+
+</PRE>
+<PRE>     X_fmt string is used for national representation of the time.
+
+     x_fmt string is used for national representation of the date.
+
+     c_fmt string is used for national representation of time and date (the
+     format is similar with produced by <B>asctime(3)</B>.
+
+</PRE>
+<PRE>     The format characters in those format strings can be:</PRE>
+<PRE>
+          %a    is replaced by national representation of the abbreviated
+     weekday name, where the abbreviation is the first three charac-
+     ters.
+
+
+          %B    is replaced by national representation of the full month name.
+
+          %b    is replaced by national representation of the abbreviated
+     month name, where the abbreviation is the first three characters.
+
+          %C    is replaced by (year / 100) as decimal number; single digits
+     are preceded by a zero.
+
+          %D    is equivalent to ``%m/%d/%y''.
+
+          %d    is replaced by the day of the month as a decimal number
+     (01-31).
+
+          %e    is replaced by the day of month as a decimal number (1-31);
+     single digits are preceded by a blank.
+
+          %G    is replaced by a year as a decimal number with century.  This
+     year is the one that contains the greater part of the week (Mon-
+     day as the first day of the week).
+
+          %g    is replaced by the same year as in ``%G'', but as a decimal
+     number without century (00-99).
+
+          %H    is replaced by the hour (24-hour clock) as a decimal number
+     (00-23).
+
+          %h    the same as %b.
+
+          %I    is replaced by the hour (12-hour clock) as a decimal number
+     (01-12).
+
+          %j    is replaced by the day of the year as a decimal number
+     (001-366).
+
+          %k    is replaced by the hour (24-hour clock) as a decimal number
+     (0-23); single digits are preceded by a blank.
+
+          %l    is replaced by the hour (12-hour clock) as a decimal number
+     (1-12); single digits are preceded by a blank.
+
+          %M    is replaced by the minute as a decimal number (00-59).
+
+          %m    is replaced by the month as a decimal number (01-12).
+
+          %n    is replaced by a newline.
+
+          %S    is replaced by the second as a decimal number (00-60).
+
+          %s    is replaced by the number of seconds since the Epoch, UTC (
+     <B>mktime(3)</B>).
+
+          %T    is equivalent to ``%H:%M:%S''.
+
+          %t    is replaced by a tab.
+
+          %U    is replaced by the week number of the year (Sunday as the
+     first day of the week) as a decimal number (00-53).
+
+
+          %u    is replaced by the weekday (Monday as the first day of the
+     week) as a decimal number (1-7).
+
+          %V    is replaced by the week number of the year (Monday as the
+     first day of the week) as a decimal number (01-53).  If the week
+     containing January 1 has four or more days in the new year, then
+     it is week 1; otherwise it is the last week of the previous year,
+     and the next week is week 1.
+
+          %v    is equivalent to ``%e-%b-%Y''.
+
+          %W    is replaced by the week number of the year (Monday as the
+     first day of the week) as a decimal number (00-53).
+
+          %w    is replaced by the weekday (Sunday as the first day of the
+     week) as a decimal number (0-6).
+
+          %Y    is replaced by the year with century as a decimal number.
+
+          %y    is replaced by the year without century as a decimal number
+    (00-99).
+
+          %Z    is replaced by the time zone name.
+
+          %z    is replaced by the time zone offset from UTC; a leading plus
+     sign stands for east of UTC, a minus sign for west of UTC, hours
+     and minutes follow with two digits each and no delimiter between
+     them (common form for RFC 822 date headers).
+
+          %%    is replaced by `%'.
+
+</PRE>
+<PRE>     Below is an source file example:
+
+               #abbreviated month name
+
+               Jan
+
+               Feb</PRE>
+<PRE>               Mar</PRE>
+<PRE>               Apr</PRE>
+<PRE>               May
+
+               Jun</PRE>
+<PRE>               Jul
+
+               Aug
+
+               Sep
+
+               Oct
+
+               Nov
+
+               Dec
+
+</PRE>
+<PRE>               #full month name
+
+               January
+
+               February
+
+               March
+
+               April
+
+               May
+
+               June
+
+               July
+
+               August
+
+               September
+
+               October
+
+               November
+
+               December
+
+</PRE>
+<PRE>               #abbreviated weekday name
+
+               Sun
+
+               Mon
+
+               Tue
+
+               Wed
+
+               Thu</PRE>
+<PRE>               Fri</PRE>
+<PRE>               Sat
+
+</PRE>
+<PRE>	       #full weekday name</PRE>
+<PRE>
+               Monday
+
+               Tuesday
+
+               Wednesday
+
+               Thursday
+
+               Friday
+
+               Saturday
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # X_fmt
+
+               %H:%M:%S
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # x_fmt
+
+               %m/%d/%y
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # c_fmt
+
+               %a %b %e %X %Y
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # am
+
+               AM
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # pm
+
+               PM
+</PRE>
+<PRE>&nbsp;</PRE>
+<PRE>               # date_fmt
+
+               %a %b %e %X %Z %Y
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     <I>/etc/locale/&lt;language&gt;/LC</I><B>_</B><I>TIME</I>
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>mklocale(1)</B>,  <B>mkctype(1)</B>,  <B>mkcollate(1)</B>,
+
+
+BSD                             Aprial, 14 2000                              5
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

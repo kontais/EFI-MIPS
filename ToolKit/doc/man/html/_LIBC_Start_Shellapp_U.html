@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>_LIBC_Start_U</B>                       Libc    Manual                     <B>LIBC_Start_U</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>_LIBC_Start_U, _LIBC_Start_Shellapp_U</B> - EFI entry point for applications.
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>EFI_STATUS</I>
+     <B>_LIBC_Start_U</B>(<I>EFI_HANDLE</I> <I>ImgHandle</I>, <I>EFI_SYSTEM_TABLE</I> <I>*SysTable</I>)
+
+     <I>EFI_STATUS</I>
+     <B>_LIBC_Start_Shellapp_U</B>(<I>EFI_HANDLE</I> <I>ImgHandle</I>, <I>EFI_SYSTEM_TABLE</I> <I>*SysTable</I>)
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions are provided as EFI entry points and should not be called within an EFI
+     application.  Instead, functions that define these as the EFI entry point will supply an
+     entry point with the prototype
+
+     <I>int main(int argc, wchar_t **argv);</I>
+
+     that will be called from these functions. 
+
+     <B>_LIBC_Start_U</B>() is the entry point for EFI LIBC applications that do not require the EFI
+     Shell environment.  This is the preferred entry point for LIBC based applications written
+     with EFI Application ToolKit Version 0.80 or later.
+     
+     <B>_LIBC_Start_Shellapp_U</B>() is the entry point for EFI LIBC applications that depend on the
+     EFI Shell environment such as those written with EFI Application Toolkit Version 0.72 or
+     earlier.  This interface is being kept for backward compatibility only.  LIBC
+     applications developed with Toolkit Version 0.80 or later are encouraged to use
+     <B>_LIBC_Start_U</B>().  Programs using the <B>_LIBC_Start_Shellapp_U</B> entry point must also link
+     to <I>libefhshell.lib</I> as well as <I>libefi.lib</I>.
+
+     Both entry points initializes LIBC.  <B>_LIBC_Start_Shellapp_U</B>() will also initialize the
+     EFI Shell Interface Library and the EFI Library.  Next, they extract command line and
+     current working directory from the runtime environment and then call a user supplied
+     <B>main()</B> passing Unicode command line arguments.  On return from <B>main</B>(), <B>exit</B>() is called
+     to insure that LIBC is terminated properly.
+
+     Both entry points intialize global variables <B>_LIBC_EFIImageHandle</B> and
+     <B>_LIBC_EFISystemTable</B> which provide access to the application's image handle and EFI
+     system table respectively.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Return value of <B>main</B>().
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>_LIBC_Start_A</B>(), <B>_LIBC_Start_Shellapp_A</B>(), and <B>_LIBC_EfiExit</B>().
+
+</PRE>
+</BODY>
+</HTML>

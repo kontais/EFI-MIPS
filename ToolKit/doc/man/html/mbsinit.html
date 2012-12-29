@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>MBSINIT(3)</B>             Libc Functions Manual             <B>MBSINIT(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mbsinit</B> - initializes multibyte character shift state
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>int</I>
+     <B>mbsinit</B>(<i>const mbstate_t * pst</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     If ps is not a null pointer, the mbsinit function determines whether the
+     pointed-to mbstate_t object describes an initial conversion state.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>mbsinit</B>() function returns nonzero if ps is a null pointer or if the
+     pointed-to object describes an initial conversion state; otherwise, it
+     returns zero.
+     This function has not been actually implemented. So it will always return 0.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>btowc(3)</B>,  <B>wctob(3)</B>,  <B>mbrlen(3)</B>,  <B>mbrtowc(3)</B>,  <B>wcrtomb(3)</B>,
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>mbsinit</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+Libc                              April 7, 2000                               1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

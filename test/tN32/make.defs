@@ -1,0 +1,36 @@
+ELFABI = n32
+#ELFABI = 32
+
+MAKE            = make
+
+
+C_STD_INCLUDE       = -nostdinc -nostdlib -fno-builtin
+ASM_STD_INCLUDE     = $(C_STD_INCLUDE)
+
+###############################################################################
+C_STD_FLAGS         = -Wall -G0 -mno-abicalls -fno-pic -c -o $@ $(INC)
+ASM_STD_FLAGS       = -P -xassembler-with-cpp -D__ASSEMBLER__  $(C_STD_FLAGS)
+LINK_STD_FLAGS      = -o $@ 
+LIB_STD_FLAGS       =
+
+###############################################################################
+C_ARCH_FLAGS          = -march=loongson2e -mtune=loongson2e -mabi=$(ELFABI) -mips3 -EL -Wa,-mno-pdr -DEFI32
+ASM_ARCH_FLAGS        = $(C_ARCH_FLAGS)
+LINK_ARCH_FLAGS       = -EL
+LIB_ARCH_FLAGS        =
+
+###############################################################################
+CC                = gcc
+LINK              = ld
+LIB               = ar
+
+ASM               = gcc
+
+###############################################################################
+C_FLAGS           = $(C_STD_FLAGS) $(C_ARCH_FLAGS) $(C_PROJ_FLAGS) $(C_STD_INCLUDE)
+ASM_FLAGS         = $(ASM_STD_FLAGS) $(ASM_ARCH_FLAGS) $(ASM_PROJ_FLAGS) $(ASM_STD_INCLUDE)
+LINK_FLAGS_DLL    = $(LINK_STD_FLAGS) $(LINK_ARCH_FLAGS) $(LINK_PROJ_FLAGS) -r -d
+LINK_FLAGS_EXE    = $(LINK_STD_FLAGS) $(LINK_ARCH_FLAGS) $(LINK_PROJ_FLAGS) 
+LIB_FLAGS         = $(LIB_STD_FLAGS) $(LIB_ARCH_FLAGS) $(LIB_PROJ_FLAGS)
+
+###############################################################################

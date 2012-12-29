@@ -1,0 +1,83 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>ISWCTYPE(3)</b>	       FreeBSD Library Functions Manual 	    <b>ISWCTYPE(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>iswctype</b> - tests wide character for the specified property. 
+     For each valid property, there is an equivalent wide-character 
+     classification routine.
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wctype.h&gt;</b>
+
+     <i>int</i>
+<b>     iswctype</b>(<em>wint_t c, wctype_t desc</em>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     <strong>iswctype</strong> tests <em>c</em> for the property specified by the <em>desc</em> argument. 
+     For each valid value of <em>desc</em>, there is an equivalent wide-character 
+     classification routine.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     The <strong>iswctype</strong>() functions returns a nonzero value if <em>c</em> has the property
+     specified by <em>desc</em>, or 0 if it does not. The result of the test condition
+     is independent of locale.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>wctype(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>iswctype</b>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

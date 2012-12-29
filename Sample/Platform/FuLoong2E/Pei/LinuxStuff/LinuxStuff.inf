@@ -1,0 +1,56 @@
+#/*++
+#
+# Copyright (c) 2004, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    LinuxStuff.inf
+#
+#  Abstract:
+#
+#    Component description file for LinuxStuff module
+#
+#--*/
+
+[defines]
+BASE_NAME            = LinuxStuff
+FILE_GUID            = D3AAD8DC-3A48-46ac-B1C7-28A9D3CF6755
+COMPONENT_TYPE       = PE32_PEIM
+
+[sources.common]
+  LinuxStuff.c
+
+[includes.common]
+  $(EDK_SOURCE)/Sample/Platform/Linux32
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Foundation/Include/Pei
+  $(EDK_SOURCE)/Foundation/Library/Pei/Include
+  $(EDK_SOURCE)/Foundation/Core/Pei/Include
+
+[libraries.common]
+  PeiLib
+  EdkLinux32PpiLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+  
+[nmake.common]
+  IMAGE_ENTRY_POINT=PeimInitializeLinuxStuff
+  DPX_SOURCE=LinuxStuff.dxs

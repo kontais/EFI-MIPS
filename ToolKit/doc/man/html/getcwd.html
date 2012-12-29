@@ -1,0 +1,101 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETCWD.html">GETCWD(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="GETCWD.html">GETCWD(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getcwd</B>, <B>getwd</B> - get working directory pathname
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>getcwd</B>(<I>char</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+     <I>char</I> <I>*</I>
+     <B>getwd</B>(<I>char</I> <I>*buf</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>getcwd</B>() function copies the absolute pathname of the current working
+     directory into the memory referenced by <I>buf</I> and returns a pointer to <I>buf</I>.
+     The <I>size</I> argument is the size, in bytes, of the array referenced by <I>buf</I>.
+
+     If <I>buf</I> is NULL, space is allocated as necessary to store the pathname.
+     This space may later be <B><A HREF="malloc.html">free(3)</A></B>'d.
+
+     The function <B>getwd</B>() is a compatibility routine which calls <B>getcwd</B>() with
+     its <I>buf</I> argument and a size of MAXPATHLEN (as defined in the include file
+     &lt;<I>sys/param.h</I>&gt;). Obviously, <I>buf</I> should be at least MAXPATHLEN bytes in
+     length.
+
+     These routines have traditionally been used by programs to save the name
+     of a working directory for the purpose of returning to it.  A much faster
+     and less error-prone method of accomplishing this is to open the current
+     directory (`.') and use the <B><A HREF="fchdir.html">fchdir(2)</A></B> function to return.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, a pointer to the pathname is returned.  Oth-
+     erwise a NULL pointer is returned and the global variable <I>errno</I> is set to
+     indicate the error.  In addition, <B>getwd</B>() copies the error message asso-
+     ciated with <I>errno</I> into the memory referenced by <I>buf</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>getcwd</B>() function will fail if:
+
+     [EACCES]  Read or search permission was denied for a component of the
+	       pathname.
+
+     [EINVAL]  The <I>size</I> argument is zero.
+
+     [ENOENT]  A component of the pathname no longer exists.
+
+     [ENOMEM]  Insufficient memory is available.
+
+     [ERANGE]  The <I>size</I> argument is greater than zero but smaller than the
+	       length of the pathname plus 1.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="chdir.html">chdir(2)</A></B>,	<B><A HREF="fchdir.html">fchdir(2)</A></B>,  <B><A HREF="malloc.html">malloc(3)</A></B>,	<B><A HREF="strerror.html">strerror(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>getcwd</B>() function conforms to ISO 9899: 1990 (``ISO C''). The ability
+     to specify a NULL pointer and have <B>getcwd</B>() allocate memory as necessary
+     is an extension.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getwd</B>() function appeared in 4.0BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The <B>getwd</B>() function does not do sufficient error checking and is not
+     able to return very long, but valid, paths.  It is provided for compati-
+     bility.
+
+4.2 Berkeley Distribution      November 24, 1997			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

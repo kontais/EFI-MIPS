@@ -1,0 +1,151 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+
+<B><A HREF="MPOOL.html">MPOOL(3)</A></B>						 <B><A HREF="MPOOL.html">MPOOL(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+       mpool - shared memory buffer pool
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>#include</B> <B>&lt;db.h&gt;</B>
+       <B>#include</B> <B>&lt;mpool.h&gt;</B>
+
+       <B>MPOOL</B> <B>*</B>
+       <B>mpool_open</B> <B>(DBT</B> <B>*key,</B> <B>int</B> <B>fd,</B> <B>pgno_t</B> <B>pagesize,</B> <B>pgno_t</B> <B>maxcache);</B>
+
+       <B>void</B>
+       <B>mpool_filter</B> <B>(MPOOL</B> <B>*mp,</B> <B>void</B> <B>(*pgin)(void</B> <B>*,</B> <B>pgno_t,</B> <B>void</B> <B>*),</B>
+	    <B>void</B> <B>(*pgout)(void</B> <B>*,</B> <B>pgno_t,</B> <B>void</B> <B>*),</B> <B>void</B> <B>*pgcookie);</B>
+
+       <B>void</B> <B>*</B>
+       <B>mpool_new</B> <B>(MPOOL</B> <B>*mp,</B> <B>pgno_t</B> <B>*pgnoaddr);</B>
+
+       <B>void</B> <B>*</B>
+       <B>mpool_get</B> <B>(MPOOL</B> <B>*mp,</B> <B>pgno_t</B> <B>pgno,</B> <B>u_int</B> <B>flags);</B>
+
+       <B>int</B>
+       <B>mpool_put</B> <B>(MPOOL</B> <B>*mp,</B> <B>void</B> <B>*pgaddr,</B> <B>u_int</B> <B>flags);</B>
+
+       <B>int</B>
+       <B>mpool_sync</B> <B>(MPOOL</B> <B>*mp);</B>
+
+       <B>int</B>
+       <B>mpool_close</B> <B>(MPOOL</B> <B>*mp);</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       <I>Mpool</I>  is  the  library interface intended to provide page
+       oriented buffer management of files.  The buffers  may  be
+       shared between processes.
+
+       The  function  <I>mpool</I><B>_</B><I>open</I>  initializes a memory pool.  The
+       <I>key</I> argument is the byte string used to negotiate  between
+       multiple  processes wishing to share buffers.  If the file
+       buffers are mapped in shared memory, all  processes  using
+       the  same key will share the buffers.  If <I>key</I> is NULL, the
+       buffers are mapped into private memory.	The  <I>fd</I>  argument
+       is  a  file descriptor for the underlying file, which must
+       be seekable.  If  <I>key</I>  is  non-NULL  and  matches  a  file
+       already being mapped, the <I>fd</I> argument is ignored.
+
+       The  <I>pagesize</I> argument is the size, in bytes, of the pages
+       into which the file is broken up.  The  <I>maxcache</I>  argument
+       is the maximum number of pages from the underlying file to
+       cache at any one time.  This value is not relative to  the
+       number of processes which share a file's buffers, but will
+       be the largest value specified by  any  of  the	processes
+       sharing the file.
+
+       The  <I>mpool</I><B>_</B><I>filter</I> function is intended to make transparent
+       input and output processing of the pages possible.  If the
+
+			   June 4, 1993 			1
+
+<B><A HREF="MPOOL.html">MPOOL(3)</A></B>						 <B><A HREF="MPOOL.html">MPOOL(3)</A></B>
+
+       <I>pgin</I>  function  is  specified,  it  is  called each time a
+       buffer is read into the memory pool from the backing file.
+       If the <I>pgout</I> function is specified, it is called each time
+       a buffer is written into the backing file.  Both functions
+       are  called with the <I>pgcookie</I> pointer, the page number and
+       a pointer to the page to being read or written.
+
+       The function <I>mpool</I><B>_</B><I>new</I>  takes  an  MPOOL  pointer  and  an
+       address	as  arguments.	If a new page can be allocated, a
+       pointer to the page is returned and  the  page  number  is
+       stored  into  the  <I>pgnoaddr</I>  address.   Otherwise, NULL is
+       returned and errno is set.
+
+       The function <I>mpool</I><B>_</B><I>get</I> takes a MPOOL pointer  and  a  page
+       number as arguments.  If the page exists, a pointer to the
+       page is returned.  Otherwise, NULL is returned  and  errno
+       is set.	The flags parameter is not currently used.
+
+       The  function  <I>mpool</I><B>_</B><I>put</I>  unpins  the  page  referenced by
+       <I>pgaddr</I>.	<I>Pgaddr</I> must be an address previously returned  by
+       <I>mpool</I><B>_</B><I>get</I>  or  <I>mpool</I><B>_</B><I>new</I>.   The flag value is specified by
+       <I>or</I>'ing any of the following values:
+
+       MPOOL_DIRTY
+	      The page has been modified and needs to be  written
+	      to the backing file.
+
+       <I>Mpool</I><B>_</B><I>put</I>  returns 0 on success and -1 if an error occurs.
+
+       The function <I>mpool</I><B>_</B><I>sync</I> writes all modified pages  associ-
+       ated   with   the  MPOOL  pointer  to  the  backing  file.
+       <I>Mpool</I><B>_</B><I>sync</I> returns 0 on success and -1 if an error occurs.
+
+       The  <I>mpool</I><B>_</B><I>close</I>  function  free's up any allocated memory
+       associated with the memory pool	cookie.   Modified  pages
+       are  <B>not</B> written to the backing file.  <I>Mpool</I><B>_</B><I>close</I> returns
+       0 on success and -1 if an error occurs.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+       The <I>mpool</I><B>_</B><I>open</I> function may fail and set <I>errno</I> for any  of
+       the errors specified for the library routine <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+       The <I>mpool</I><B>_</B><I>get</I> function may fail and set <I>errno</I> for the fol-
+       lowing:
+
+       [EINVAL]       The requested record doesn't exist.
+
+       The <I>mpool</I><B>_</B><I>new</I> and <I>mpool</I><B>_</B><I>get</I> functions  may  fail  and  set
+       <I>errno</I> for any of the errors specified for the library rou-
+       tines <B><A HREF="read.html">read(2)</A></B><I>,</I> <B><A HREF="write.html">write(2)</A></B><I>,</I> and <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+       The <I>mpool</I><B>_</B><I>sync</I> function may fail and set <I>errno</I> for any  of
+       the errors specified for the library routine <B><A HREF="write.html">write(2)</A></B>.
+
+			   June 4, 1993 			2
+
+<B><A HREF="MPOOL.html">MPOOL(3)</A></B>						 <B><A HREF="MPOOL.html">MPOOL(3)</A></B>
+
+       The <I>mpool</I><B>_</B><I>close</I> function may fail and set <I>errno</I> for any of
+       the errors specified for the library routine <B><A HREF="malloc.html">free(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="dbopen.html">dbopen(3)</A></B>, <B><A HREF="btree.html">btree(3)</A></B>, <B><A HREF="hash.html">hash(3)</A></B>, <B><A HREF="recno.html">recno(3)</A></B>
+
+			   June 4, 1993 			3
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

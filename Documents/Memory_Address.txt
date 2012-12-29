@@ -1,0 +1,27 @@
+PMON load to 0x81000000，Use0x82000000 to 0x83000000 as heap.
+
+
+
+0x80800000   pmon heap base
+0x80c00000   pmon heap top
+0x80ffc000    Start.s生成ram加载时的初始stack  // 0x81000000
+
+0x81000000   FD (Sec, Pei, Dxe, Nv) 2M Byte
+0x81400000   4M
+0x81c00000   Sec Stack Top  // size = 0x20000
+0x82000000   
+0x83000000   System Mem Base  // size = 0x04000000
+
+PEI -> DXE
+  stack base 0x83000000 (MemoryBegin)
+  stack size 0x20000 (PEI_STACK_SIZE)
+  stack = base + size - 0x10 = 0x8301fff0
+
+SecMain.h
+
+
+
+
+sbrk.c
+char           *allocp1 = (char *)0x80800000;
+char           *heaptop = (char *)0x80c00000;

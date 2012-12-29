@@ -1,0 +1,106 @@
+
+Some explanations of what the devschemes are for:
+-------------------------------------------------
+Copyright (c) 2001-2003 Hewlett-Packard Co
+Contributed by Stephane Eranian <eranian@hpl.hp.com>
+
+
+	Whether or not EDD3.0 is enabled, EFI uses a device naming scheme which is
+	somewhat detailed. It tries to follow the hardware path from the System bus
+	down to the actual partition on the media. The following example shows
+	a typical block device path from a SCSI disk:
+
+  	blk2 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part1,Sig00000000).
+
+	Elilo allows the user to load files from any device. This means that it
+	must provide a way for the user to specify a file path which include
+	the device name. While it is theoritically possible to specify the 
+	path mentioned above, it is far from practical because the names
+	are too long. There is too much details which the user (especially of
+	a boot loader) does not care about.
+
+	So Elilo, just like the EFI shell, must have a way of assigning logical
+	names to device names (paths). The EFI shell uses the fsX notation wherever
+	it finds a block devices for which it has detected a valid EFI filesystem
+	(i.e. a Fat32+ filesystem). This assignment is done on the fly, and depending
+	on the status of the removable media (like CDROM or floppy) the mapping can
+	change.
+
+	Those fsX: names are a pure abstraction of the EFI shell and have nothing to 
+	do with the EFI specification. 
+
+	Now Elilo could try to emulate then, i.e. try to reproduce the way the EFI shell
+	assigns names. However the problem is that, AT THIS POINT, Elilo recognized more
+	device from which it can load files from than the Shell does. This comes from the
+	fact that it can load files from the network or from an Ext2fs, for instance. 
+	We plan on fixing those issues in the next releases of Elilo. Anyway, the problem
+	would still be to make sure that if we follow the same naming scheme, they match
+	at all times, i.e. fs0: maps to the same device in both the EFI shell and Elilo
+	which may be tricky as both EFI and Elilo continue to evolve. Also the Shell
+	naming schemes as some problems which removable devices which would not make it
+	easy from the bootloader.
+
+	Another possible solution would be to use the Linux kernel naming scheme, i.e., 
+	hda, hda1, fd0, sda... Of course, we would drop the /dev prefix in this case. 
+	While it would make it very convenient for users and easy to configure from 
+	a running system, it is even more difficult that the EFI Shell scheme. Again, 
+	to succeed, the loader scheme would have to match EXACTLY what the Linux kernel
+	does for all possible devices. This is a very complicated task as his any
+	naming problem. The recent discussions about the devfs support in the kernel is 
+	just yet another proof of the complexity.  Another issue here is that this would
+	create a dependency between the loader and the kernel because we would need the
+	way the naming is done in the kernel. Again, this is very complicated, just thinnking
+	about how the PCI buses are scanned looking from devices. 
+
+	So it looks like there is single solutions. Clearly, that is not easy and there are
+	multiple schemes possible. For now, we felt that it was better for Elilo to use its
+	own naming scheme independent from the EFI shell and the Linux kernel. While this introduces
+	yet another scheme, we believe its advantages outweight the software complexity associated
+	with the two schemes described above. 
+	
+	However, we recognize the need for flexibilty and that is exactly why, this version
+	of Elilo provide an internal interface which can used to develop custom naming schemes. 
+
+	The way the filepaths are translated by Elilo is very basic and based on a simple
+	string matching algorithm. A full pathname is specified as follows:
+
+		dev_name:/path/to/my/file.
+
+	The 'dev_name' is created by Elilo and can be anything relevant to the user. There is
+	an internal binding from the name to the actual EFI device handle and more precisely
+	the filsystem interface associated to it (the device handle is never exposed to the
+	boot loader).
+	
+	By default, Elilo uses an extremely simple scheme which is similar to the EFI shell.
+	if simply builds the device names as follows:
+
+		devXXX.
+
+	The XXX is just the number of the device. It is incremented by one each time recognized
+	filesystem is detected on that device. The clear advantage is simplicity. The downside
+	is that is creates a 'flat' namespace where every new device detected (like a floppy
+	is inserted) will show up anywhere in the set of devices and may push some fixed 
+	devices up or down. So it hard to rely on devXXX to always mean the same things. 
+
+	Now custom naming schemes can be added on top of this, which would partially or totally
+	replace this default scheme. Elilo is shipped with one such scheme called 'simple'.
+	It provides an example of how one can develop a new scheme. The main characteristic
+	of 'simple' is that it tries to group devices by controller (Messaging Device in 
+	EFI terminology). Hence, all the ATAPI devices show up as atapiXXX and the SCSI
+	device show up as SCSIXXX. This implicitely shields the SCSI (fixed most likely) devices
+	from the removable media coming from ATAPI (like floppy or CDROM). So it is slightly
+	better but far from perfect.
+
+	Here is an example of what it looks like on an actual system:
+
+           scsi0 :   vfat : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part1,Sig00000000)
+	   scsi1 :   vfat : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part1,Sig00000000)
+	  atapi0 :   vfat : Acpi(PNP0A03,0)/Pci(3|1)/Ata(Secondary,Master)/CDROM(Entry1)
+	   scsi2 : ext2fs : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part2,Sig00000000)
+	   scsi3 : ext2fs : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part2,Sig00000000)
+	    net0 :  netfs : Acpi(PNP0A03,0)/Pci(5|0)/Mac(00D0B7A6FC25)
+
+
+	The 'simple' scheme is not fully satifactory but developers are strongly encouraged 
+	to enhance it or better create new schemes.
+

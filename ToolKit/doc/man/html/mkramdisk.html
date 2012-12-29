@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B><A HREF="mkramdisk.html">MKRAMDISK)</A></B>		EFI Application Toolkit Manual			<B><A HREF="mkramdisk.html">MKRAMDISK</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mkramdisk</B> - create and map RAM disks
+     <B>ramdisk.efi</B> - default RAM disk driver
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>mkramdisk</B> [<B>-s size</B>] [<B>-d driver</B>] <I>drive</I><B>_</B><I>mapping</I> ....
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Mkramdisk</B> is used to load and configure one or more instances of a RAM disk
+     driver.  The optional <B>-s</B> and <B>-d</B> switches may be repeated and will apply to
+     subsequent <I>drive</I><B>_</B><I>mapping</I> instances.
+
+     The following options are available:
+
+     <B>-s</B>      Sets the size of the RAM disk in megabytes.  The default size is
+             32MB.
+
+     <B>-d</B>      Sets the name of the EFI RAM disk driver to be loaded.  The default
+             file is <B>ramdisk.efi</B>.  If an explicit or relative path is not
+             specified with the file name, <B>mkramdisk</B> will search the directories
+             in the <I>path</I> variable.
+
+     <I>drive</I><B>_</B><I>mapping</I>
+	     Specifies the EFI Shell file mapping for the disk.  The name should
+	     be specified without a trailing colon.  <B>Mkramdisk</B> will load and
+	     configure a drive for each mapping specified.  The driver and disk
+	     size will be set to the defaults or to the last options value
+	     specified.
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     In order to map drives, <B>mkramdisk</B> should be run from the EFI shell.  If run
+     from the boot manager, <B>mkramdisk</B> will load and configure the drive but the
+     EFI shell, when run, will provide its own mapping for the drive.  Likewise,
+     the EFI Shell "map -r" command will remap all drives including any loaded
+     RAM drives.
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     Messages indicating the driver(s) could not be loaded, started, or mapped.
+
+</BODY>
+</HTML>

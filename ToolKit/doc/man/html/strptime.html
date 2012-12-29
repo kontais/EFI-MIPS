@@ -1,0 +1,72 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRPTIME.html">STRPTIME(3)</A></B>	       FreeBSD Library Functions Manual 	   <B><A HREF="STRPTIME.html">STRPTIME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strptime</B> - parse date and time string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strptime</B>(<I>const</I> <I>char</I> <I>*buf</I>, <I>const</I> <I>char</I> <I>*format</I>, <I>struct</I> <I>tm</I> <I>*timeptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strptime</B>() function parses the string in the buffer <I>buf</I> according to
+     the string pointed to by <I>format</I>, and fills in the elements of the struc-
+     ture pointed to by <I>timeptr</I>. Thus, it can be considered the reverse opera-
+     tion of <B><A HREF="strftime.html">strftime(3)</A></B>.
+
+     The <I>format</I> string consists of zero or more conversion specifications and
+     ordinary characters.  All ordinary characters are matched exactly with
+     the buffer, where white space in the format string will match any amount
+     of white space in the buffer.  All conversion specifications are identi-
+     cal to those described in <B><A HREF="strftime.html">strftime(3)</A></B>.
+
+     Two-digit year values, including formats <I>%y</I> and <I>%D</I>, are now interpreted
+     as beginning at 1969 per POSIX requirements.  Years 69-00 are interpreted
+     in the 20th century (1969-2000), years 01-68 in the 21st century
+     (2001-2068).
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>strptime</B>() returns the pointer to the first
+     character in <I>buf</I> that has not been required to satisfy the specified con-
+     versions in <I>format</I>. It returns NULL if one of the conversions failed.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="date.html">date(1)</A></B>,  <B><A HREF="scanf.html">scanf(3)</A></B>,  <B><A HREF="strftime.html">strftime(3)</A></B>
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+     The <B>strptime</B>() function has been contributed by Powerdog Industries.
+
+     This man page was written by Joerg Wunsch.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>strptime</B>() function appeared in FreeBSD 3.0.
+
+BSD				  May 8, 1997				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

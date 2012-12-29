@@ -1,0 +1,63 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="UNGETC.html">UNGETC(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="UNGETC.html">UNGETC(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ungetc</B> - un-get character from input stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>ungetc</B>(<I>int</I> <I>c</I>, <I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>ungetc</B>() function pushes the character <I>c</I> (converted to an unsigned
+     char) back onto the input stream pointed to by <I>stream</I>. The pushed-backed
+     characters will be returned by subsequent reads on the stream (in reverse
+     order).  A successful intervening call, using the same stream, to one of
+     the file positioning functions (<B><A HREF="fseek.html">fseek(3)</A></B>,	<B><A HREF="fseek.html">fsetpos(3)</A></B>,  or <B><A HREF="fseek.html">rewind(3)</A></B>)
+     will discard the pushed back characters.
+
+     One character of push-back is guaranteed, but as long as there is suffi-
+     cient memory, an effectively infinite amount of pushback is allowed.
+
+     If a character is successfully pushed-back, the end-of-file indicator for
+     the stream is cleared.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>ungetc</B>() function returns the character pushed-back after the conver-
+     sion, or EOF if the operation fails.  If the value of the argument <I>c</I>
+     character equals EOF, the operation will fail and the stream will remain
+     unchanged.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="fseek.html">fseek(3)</A></B>,	<B><A HREF="getc.html">getc(3)</A></B>,  <B><A HREF="setbuf.html">setvbuf(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>ungetc</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

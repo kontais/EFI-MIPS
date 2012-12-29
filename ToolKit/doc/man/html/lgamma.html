@@ -1,0 +1,84 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="LGAMMA.html">LGAMMA(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="LGAMMA.html">LGAMMA(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>lgamma</B>, <B>lgammaf</B>, <B>gamma</B>, <B>gammaf</B> - log gamma functions, gamma functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>extern</I> <I>int</I> <I>signgam</I>;
+
+     <I>double</I>
+     <B>lgamma</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>lgammaf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>gamma</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>gammaf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION				 _</H2><PRE>
+     <B>lgamma</B>(<I>x</I>) and <B>lgammaf</B>(<I>x</I>) return ln|| (x)|.
+						       _
+     The external integer <I>signgam</I> returns the sign of | (x).
+				    _
+     <B>gamma</B>(<I>x</I>) and <B>gammaf</B>(<I>x</I>) return | (x), with no effect on <I>signgam</I>.
+
+
+</PRE>
+<H2>IDIOSYNCRASIES</H2><PRE>
+     D<B>_</B> not use the expression ``signgam*exp(lgamma(x))'' to compute g :=
+     | (x).  Instead use a program like this (in C):
+
+	   lg = lgamma(x); g = signgam*exp(lg);
+
+     Only after <B>lgamma</B>() or <B>lgammaf</B>() has returned can signgam be correct.
+
+     For arguments in its range, <B>gamma</B>() and <B>gammaf</B>() is preferred, as for
+     positive arguments it is accurate to within one unit in the last place.
+     Exponentiation of <B>lgamma</B>() will lose up to 10 significant bits.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <B>gamma</B>(), <B>gammaf</B>(), <B>lgamma</B>(), and <B>lgammaf</B>() return appropriate values un-
+     less an argument is out of range.	Overflow will occur for sufficiently
+     large positive values, and non-positive integers.	On the VAX, the re-
+     served operator is returned, and <I>errno</I> is set to ERANGE For large non-in-
+     teger negative values, <B>gamma</B>() will underflow.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>lgamma</B> function appeared in 4.3BSD. The <B>gamma</B> function appeared in
+     4.4BSD. The name <B>gamma</B>() was originally dedicated to the <B>lgamma</B>() func-
+     tion, so some old code may no longer be compatible.
+
+4.3 Berkeley Distribution      December 3, 1992 			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

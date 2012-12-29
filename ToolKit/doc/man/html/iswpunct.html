@@ -1,0 +1,55 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>ISWPUNCT(3)</B>	       FreeBSD Library Functions Manual 	    <B>ISWPUNCT(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>iswpunct</B> - punctuation character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>int</I>
+     <B>iswpunct</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>iswpunct</B>() function tests for any printing wide character except for space
+     (' ') or a character for which <B>isalnum(3)</B> is true.  In the ASCII charac-
+     ter set, this includes the following characters:
+
+     041 ``!''	   042 ``"''	 043 ``#''     044 ``$''     045 ``%''
+     046 ``&amp;''	   047 ``'''	 050 ``(''     051 ``)''     052 ``*''
+     053 ``+''	   054 ``,''	 055 ``-''     056 ``.''     057 ``/''
+     072 ``:''	   073 ``;''	 074 ``&lt;''     075 ``=''     076 ``&gt;''
+     077 ``?''	   100 ``@''	 133 ``[''     134 ``\''     135 ``]''
+     136 ``^''	   137 ``_''	 140 ```''     173 ``{''     174 ``|''
+     175 ``}''	   176 ``~''
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>iswpunct</B>() function returns zero if the wide character tests false and re-
+     turns non-zero if the wide character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctype(3)</B>,	<B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

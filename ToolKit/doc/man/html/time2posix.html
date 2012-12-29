@@ -1,0 +1,97 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TIME2POSIX.html">TIME2POSIX(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="TIME2POSIX.html">TIME2POSIX(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>time2posix</B>, <B>posix2time</B> - convert seconds since the Epoch
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>time</I><B>_</B><I>t</I>
+     <B>time2posix</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*t</I>)
+
+     <I>time</I><B>_</B><I>t</I>
+     <B>posix2time</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*t</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     IEEE Std1003.1-1988 (``POSIX'') legislates that a time_t value of
+     536457599 shall correspond to "Wed Dec 31 23:59:59 GMT 1986."  This ef-
+     fectively implies that POSIX time_t's cannot include leap seconds and,
+     therefore, that the system time must be adjusted as each leap occurs.
+
+     If the time package is configured with leap-second support enabled, how-
+     ever, no such adjustment is needed and time_t values continue to increase
+     over leap events (as a true `seconds since...' value).  This means that
+     these values will differ from those required by POSIX by the net number
+     of leap seconds inserted since the Epoch.
+
+     Typically this is not a problem as the type time_t is intended to be
+     (mostly) opaque--time_t values should only be obtained-from and passed-to
+     functions such as <B><A HREF="time.html">time(2)</A></B>,  <B><A HREF="ctime.html">localtime(3)</A></B>,	<B><A HREF="ctime.html">mktime(3)</A></B> and <B><A HREF="ctime.html">difftime(3)</A></B>.
+     However, gives an arithmetic expression for directly computing a time_t
+     value from a given date/time, and the same relationship is assumed by
+     some (usually older) applications.  Any programs creating/dissecting
+     time_t's using such a relationship will typically not handle intervals
+     over leap seconds correctly.
+
+     The <B>time2posix</B>() and <B>posix2time</B>() functions are provided to address this
+     time_t mismatch by converting between local time_t values and their POSIX
+     equivalents.  This is done by accounting for the number of time-base
+     changes that would have taken place on a POSIX system as leap seconds
+     were inserted or deleted.	These converted values can then be used in
+     lieu of correcting the older applications, or when communicating with
+     POSIX-compliant systems.
+
+     The <B>time2posix</B>() function is single-valued.  That is, every local time_t
+     corresponds to a single POSIX time_t.  The <B>posix2time</B>() function is less
+     well-behaved: for a positive leap second hit the result is not unique,
+     and for a negative leap second hit the corresponding POSIX time_t doesn't
+     exist so an adjacent value is returned.  Both of these are good indica-
+     tors of the inferiority of the POSIX representation.
+
+     The following table summarizes the relationship between time_t and its
+     conversion to, and back from, the POSIX representation over the leap sec-
+     ond inserted at the end of June, 1993.
+     DATE     TIME     T   X=time2posix(T) posix2time(X)
+     93/06/30 23:59:59 A+0 B+0		   A+0
+     93/06/30 23:59:60 A+1 B+1		   A+1 or A+2
+     93/07/01 00:00:00 A+2 B+1		   A+1 or A+2
+     93/07/01 00:00:01 A+3 B+2		   A+3
+
+     A leap second deletion would look like...
+
+     DATE     TIME     T   X=time2posix(T) posix2time(X)
+     ??/06/30 23:59:58 A+0 B+0		   A+0
+     ??/07/01 00:00:00 A+1 B+2		   A+1
+     ??/07/01 00:00:01 A+2 B+3		   A+2
+
+	      [Note: posix2time(B+1) =&gt; A+0 or A+1]
+
+     If leap-second support is not enabled, local time_t's and POSIX time_t's
+     are equivalent, and both <B>time2posix</B>() and <B>posix2time</B>() degenerate to the
+     identity function.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ctime.html">difftime(3)</A></B>,  <B><A HREF="ctime.html">localtime(3)</A></B>,  <B><A HREF="ctime.html">mktime(3)</A></B>,  <B><A HREF="time.html">time(3)</A></B>
+
+BSD				  May 1, 1996				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

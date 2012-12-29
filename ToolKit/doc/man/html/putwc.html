@@ -1,0 +1,93 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>PUTWC(3)</b> 	       FreeBSD Library Functions Manual 	       <b>PUTWC(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>fputwc</b>, <b>putwc</b>, <b>putwchar</b> - output a wide character to a stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>wint_t</i>
+     <b>fputwc</b>(<i>wint_t</i> <i>c</i>, <i>FILE</i> <i>*stream</i>)
+
+     <i>wint_t</i>
+     <b>putwc</b>(<i>wint_t</i> <i>c</i>, <i>FILE</i> <i>*stream</i>)
+
+     <i>wint_t</i>
+     <b>putwchar</b>(<i>wint_t</i> <i>c</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>fputwc</b>() function writes the wide character <i>c</i> (converted to an ``wchar_t'')
+     to the output stream pointed to by <i>stream</i>.
+
+     The <b>putwc</b>() macro acts essentially identically to <b>fputwc</b>(), but is a macro
+     that expands in-line. It may evaluate <i>stream</i> more than once, so arguments
+     given to <b>putwc</b>() should not be expressions with potential side effects.
+
+     The <b>putwchar</b>() macro is identical to <b>putwc</b>() with an output stream of
+     <i>stdout</i>.
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     The functions, <b>fputwc</b>(), <b>putwc</b>() and <b>putwchar</b>() return the wide character writ-
+     ten.  If an error occurs, the value WEOF is returned.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>ferror(3)</b>,  <b>wfopen(3)</b>,  <b>getwc(3)</b>,  <b>stdio(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The functions <b>fputwc</b>(), <b>putwc</b>(), and <b>putwchar</b>(), conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

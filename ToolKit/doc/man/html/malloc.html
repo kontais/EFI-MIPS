@@ -1,0 +1,323 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="MALLOC.html">MALLOC(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="MALLOC.html">MALLOC(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>malloc,</B> <B>calloc,</B> <B>realloc,</B> <B>free,</B> <B>reallocf</B> - general purpose memory alloca-
+     tion functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>void</I> <I>*</I>
+     <B>malloc</B>(<I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+     <I>void</I> <I>*</I>
+     <B>calloc</B>(<I>size</I><B>_</B><I>t</I> <I>number</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+     <I>void</I> <I>*</I>
+     <B>realloc</B>(<I>void</I> <I>*ptr</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+     <I>void</I> <I>*</I>
+     <B>reallocf</B>(<I>void</I> <I>*ptr</I>, <I>size</I><B>_</B><I>t</I> <I>size</I>)
+
+     <I>void</I>
+     <B>free</B>(<I>void</I> <I>*ptr</I>)
+
+     <I>char</I> <I>*</I> <I>malloc</I><B>_</B><I>options;</I>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>malloc</B>() function allocates <I>size</I> bytes of memory.  The allocated
+     space is suitably aligned (after possible pointer coercion) for storage
+     of any type of object.  If the space is at least <I>pagesize</I> bytes in length
+     (see getpagesize((3)),) the returned memory will be page boundary aligned
+     as well.  If <B>malloc</B>() fails, a NULL pointer is returned.
+
+     The <B>calloc</B>() function allocates space for <I>number</I> objects, each <I>size</I> bytes
+     in length.  The result is identical to calling <B>malloc</B>() with an argument
+     of ``number * size'', with the exception that the allocated memory is
+     initialized to nul bytes.
+
+     The <B>realloc</B>() function changes the size of the previously allocated memo-
+     ry referenced by <I>ptr</I> to <I>size</I> bytes.  The contents of the memory are un-
+     changed up to the lesser of the new and old sizes.  If the new size is
+     larger, the value of the newly allocated portion of the memory is unde-
+     fined.  If the requested memory cannot be allocated, NULL is returned and
+     the memory referenced by <I>ptr</I> is valid and unchanged.  If <I>ptr</I> is NULL, the
+     <B>realloc</B>() function behaves identically to <B>malloc</B>() for the specified
+     size.
+
+     The <B>reallocf</B>() function call is identical to the realloc function call,
+     except that it will free the passed pointer when the requested memory
+     cannot be allocated.  This is a FreeBSD specific API designed to ease the
+     problems with traditional coding styles for realloc causing memory leaks
+     in libraries.
+
+     The <B>free</B>() function causes the allocated memory referenced by <I>ptr</I> to be
+     made available for future allocations.  If <I>ptr</I> is NULL, no action occurs.
+
+
+</PRE>
+<H2>TUNING</H2><PRE>
+     Once, when the first call is made to one of these memory allocation rou-
+     tines, various flags will be set or reset, which affect the workings of
+     this allocation implementation.
+
+     The ``name'' of the file referenced by the symbolic link named
+     <I>/etc/malloc.conf</I>, the value of the environment variable MALLOC_OPTIONS,
+     and the string pointed to by the global variable <I>malloc</I><B>_</B><I>options</I> will be
+     interpreted, in that order, character by character as flags.
+
+     Most flags are single letters, where uppercase indicates that the behav-
+     ior is set, or on, and lowercase means that the behavior is not set, or
+     off.
+
+     A	     All warnings (except for the warning about unknown flags being
+	     set), and failure to allocate memory become fatal.  The process
+	     will call <B><A HREF="abort.html">abort(3)</A></B> in these cases.
+
+     J	     Each byte of new memory allocated by <B>malloc</B>(), <B>realloc</B>() or
+	     <B>reallocf</B>() as well as all memory returned by <B>free</B>(), <B>realloc</B>() or
+	     <B>reallocf</B>() will be initialized to 0xd0.  This options also sets
+	     the ``R'' option.	This is intended for debugging and will impact
+	     performance negatively.
+
+     H	     Pass a hint to the kernel about pages unused by the allocation
+	     functions.  This will help performance if the system is paging
+	     excessively.  This option is off by default.
+
+     R	     Causes the <B>realloc</B>() and <B>reallocf</B>() functions to always reallo-
+	     cate memory even if the initial allocation was sufficiently
+	     large.  This can substantially aid in compacting memory.
+
+     U	     Generate ``utrace'' entries for <B><A HREF="ktrace.html">ktrace(1)</A></B>,  for all operations.
+	     Consult the source for details on this option.
+
+     V	     Attempting to allocate zero bytes will return a NULL pointer in-
+	     stead of a valid pointer.	(The default behavior is to make a
+	     minimal allocation and return a pointer to it.)  This option is
+	     provided for System V compatibility.  This option is incompatible
+	     with the ``X'' option.
+
+     X	     Rather than return failure for any allocation function, display a
+	     diagnostic message on stderr and cause the program to drop core
+	     (using <B>abort</B>(<I>3</I>, <I>).</I>) This option should be set at compile time by
+	     including the following in the source code:
+
+		   extern char *malloc_options;
+		   malloc_options = "X";
+
+     Z	     This option implicitly sets the ``J'' and ``R'' options, and then
+	     zeros out the bytes that were requested.  This is intended for
+	     debugging and will impact performance negatively.
+
+     &lt;	     Reduce the size of the cache by a factor of two.  The default
+	     cache size is 16 pages.  This option can be specified multiple
+	     times.
+
+     &gt;	     Double the size of the cache by a factor of two.  The default
+	     cache size is 16 pages.  This option can be specified multiple
+	     times.
+
+     The ``J'' and ``Z'' options are intended for testing and debugging.  An
+     application which changes its behavior when these options are used is
+     flawed.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     To set a systemwide reduction of cache size, and to dump core whenever a
+     problem occurs:
+
+	   ln -s 'A&lt;' /etc/malloc.conf
+
+     To specify in the source that a program does no return value checking on
+     calls to these functions:
+
+	   extern char *malloc_options;
+	   malloc_options = "X";
+
+
+</PRE>
+<H2>ENVIRONMENT</H2><PRE>
+     The following environment variables affect the execution of the alloca-
+     tion functions:
+
+     MALLOC_OPTIONS
+	  If the environment variable MALLOC_OPTIONS is set, the characters it
+	  contains will be interpreted as flags to the allocation functions.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>malloc</B>() and <B>calloc</B>() functions return a pointer to the allocated
+     memory if successful; otherwise a NULL pointer is returned.
+
+     The <B>realloc</B>() and <B>reallocf</B>() functions return a pointer, possibly identi-
+     cal to <I>ptr</I>, to the allocated memory if successful; otherwise a NULL
+     pointer is returned, in which case the memory referenced by <I>ptr</I> is still
+     available and intact.
+
+     The <B>free</B>() function returns no value.
+
+
+</PRE>
+<H2>DEBUGGING MALLOC PROBLEMS</H2><PRE>
+     The major difference between this implementation and other allocation im-
+     plementations is that the free pages are not accessed unless allocated,
+     and are aggressively returned to the kernel for reuse.
+
+	   Most allocation implementations will store a data structure con-
+	   taining a linked list in the free chunks of memory, used to tie all
+	   the free memory together.  That can be suboptimal, as every time
+	   the free-list is traversed, the otherwise unused, and likely paged
+	   out, pages are faulted into primary memory.	On systems which are
+	   paging, this can result in a factor of five increase in the number
+	   of page-faults done by a process.
+
+     A side effect of this architecture is that many minor transgressions on
+     the interface which would traditionally not be detected are in fact de-
+     tected.  As a result, programs that have been running happily for years
+     may suddenly start to complain loudly, when linked with this allocation
+     implementation.
+
+     The first and most important thing to do is to set the ``A'' option.
+     This option forces a coredump (if possible) at the first sign of trouble,
+     rather than the normal policy of trying to continue if at all possible.
+
+     It is probably also a good idea to recompile the program with suitable
+     options and symbols for debugger support.
+
+     If the program starts to give unusual results, coredump or generally be-
+     have differently without emitting any of the messages listed in the next
+     section, it is likely because it depends on the storage being filled with
+     nul bytes.  Try running it with ``Z'' option set; if that improves the
+     situation, this diagnosis has been confirmed.  If the program still mis-
+     behaves, the likely problem is accessing memory outside the allocated
+     area, more likely after than before the allocated area.
+
+     Alternatively, if the symptoms are not easy to reproduce, setting the
+     ``J'' option may help provoke the problem.
+
+     In truly difficult cases, the ``U'' option, if supported by the kernel,
+     can provide a detailed trace of all calls made to these functions.
+
+     Unfortunately this implementation does not provide much detail about the
+     problems it detects, the performance impact for storing such information
+     would be prohibitive.  There are a number of allocation implementations
+     available on the 'Net which focus on detecting and pinpointing problems
+     by trading performance for extra sanity checks and detailed diagnostics.
+
+
+</PRE>
+<H2>DIAGNOSTIC MESSAGES</H2><PRE>
+     If <B>malloc</B>(), <B>calloc</B>(), <B>realloc</B>() or <B>free</B>() detect an error or warning
+     condition, a message will be printed to file descriptor STDERR_FILENO.
+     Errors will result in the process dumping core.  If the ``A'' option is
+     set, all warnings are treated as errors.
+
+     The following is a brief description of possible error messages and their
+     meanings:
+
+     (ES): mumble mumble mumble
+	     The allocation functions were compiled with ``EXTRA_SANITY'' de-
+	     fined, and an error was found during the additional error check-
+	     ing.  Consult the source code for further information.
+
+     allocation failed
+	     If the ``A'' option is specified it is a fatal error for an allo-
+	     cation function to fail.
+
+     <B><A HREF="mmap.html">mmap(2)</A></B> failed, check limits
+	     This most likely means that the system is dangerously overloaded
+	     or that the process' limits are incorrectly specified.
+
+     freelist is destroyed
+	     The internal free-list has been corrupted.
+
+     The following is a brief description of possible warning messages and
+     their meanings:
+
+     chunk/page is already free
+	     The process attempted to <B>free</B>() memory which had already been
+	     freed.
+
+     junk pointer ...
+	     A pointer specified to one of the allocation functions points
+	     outside the bounds of the memory of which they are aware.
+
+     malloc() has never been called
+	     No memory has been allocated, yet something is being freed or re-
+	     alloc'ed.
+
+     modified (chunk-/page-) pointer
+	     The pointer passed to <B>free</B>() or <B>realloc</B>() has been modified.
+
+     pointer to wrong page
+	     The pointer that <B>malloc</B>() or <B>calloc</B>() is trying to free does not
+	     reference a possible page.
+
+     recursive call
+	     A process has attempted to call an allocation function recursive-
+	     ly.  This is not permitted.  In particular, signal handlers
+	     should not attempt to allocate memory.
+
+     out of memory
+	     The ``X'' option was specified and an allocation of memory
+	     failed.
+
+     unknown char in MALLOC_OPTIONS
+	     An unknown option was specified.  Even with the ``A'' option set,
+	     this warning is still only a warning.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="brk.html">brk(2)</A></B>,  <B><A HREF="alloca.html">alloca(3)</A></B>,  <B><A HREF="getpagesize.html">getpagesize(3)</A></B>,  <B><A HREF="memory.html">memory(3)</A></B>
+     <I>/usr/share/doc/papers/malloc.ascii.gz</I>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>malloc</B>(), <B>calloc</B>(), <B>realloc</B>() and <B>free</B>() functions conform to ISO
+     9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The messages printed in case of problems provide no detail about the ac-
+     tual values.
+
+     It can be argued that returning a null pointer when asked to allocate ze-
+     ro bytes is a silly response to a silly question.
+
+     This implementation was authored by Poul-Henning Kamp.  Please report any
+     problems to him at &lt;phk@FreeBSD.org&gt;.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The present allocation implementation started out as a filesystem for a
+     drum attached to a 20bit binary challenged computer which was built with
+     discrete germanium transistors.  It has since graduated to handle primary
+     storage rather than secondary.  It first appeared in its new shape and
+     ability in FreeBSD 2.2.
+
+FreeBSD 2.0			August 27, 1996 			     5
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

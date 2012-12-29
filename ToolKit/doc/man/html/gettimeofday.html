@@ -1,0 +1,96 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETTIMEOFDAY.html">GETTIMEOFDAY(2)</A></B> 	  FreeBSD System Calls Manual	       <B><A HREF="GETTIMEOFDAY.html">GETTIMEOFDAY(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>gettimeofday</B>, <B>settimeofday</B> - get/set date and time
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/time.h&gt;</B>
+
+     <I>int</I>
+     <B>gettimeofday</B>(<I>struct</I> <I>timeval</I> <I>*tp</I>, <I>struct</I> <I>timezone</I> <I>*tzp</I>)
+
+     <I>int</I>
+     <B>settimeofday</B>(<I>const</I> <I>struct</I> <I>timeval</I> <I>*tp</I>, <I>const</I> <I>struct</I> <I>timezone</I> <I>*tzp</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Note:</B> <B>timezone</B> <B>is</B> <B>no</B> <B>longer</B> <B>used;</B> <B>this</B> <B>information</B> <B>is</B> <B>kept</B> <B>outside</B> <B>the</B>
+     <B>kernel.</B>
+
+     The system's notion of the current Greenwich time and the current time
+     zone is obtained with the <B>gettimeofday</B>() call, and set with the
+     <B>settimeofday</B>() call.  The time is expressed in seconds and microseconds
+     since midnight (0 hour), January 1, 1970.	The resolution of the system
+     clock is hardware dependent, and the time may be updated continuously or
+     in ``ticks.''  If <I>tp</I> or <I>tzp</I> is NULL, the associated time information will
+     not be returned or set.
+
+     The structures pointed to by <I>tp</I> and <I>tzp</I> are defined in &lt;<I>sys/time.h</I>&gt; as:
+
+     struct timeval {
+	     long    tv_sec;	     /* seconds since Jan. 1, 1970 */
+	     long    tv_usec;	     /* and microseconds */
+     };
+
+     struct timezone {
+	     int     tz_minuteswest; /* minutes west of Greenwich */
+	     int     tz_dsttime;     /* type of dst correction */
+     };
+
+     The <I>timezone</I> structure indicates the local time zone (measured in minutes
+     of time westward from Greenwich), and a flag that, if nonzero, indicates
+     that Daylight Saving time applies locally during the appropriate part of
+     the year.
+
+     Only the super-user may set the time of day or time zone.	If the system
+     is running in secure mode (see <B><A HREF="init.html">init(8)</A></B>),  the time may only be advanced.
+     This limitation is imposed to prevent a malicious super-user from setting
+     arbitrary time stamps on files.  The system time can still be adjusted
+     backwards using the <B><A HREF="adjtime.html">adjtime(2)</A></B> system call even when the system is se-
+     cure.
+
+
+</PRE>
+<H2>RETURN</H2><PRE>
+     A 0 return value indicates that the call succeeded.  A -1 return value
+     indicates an error occurred, and in this case an error code is stored in-
+     to the global variable <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The following error codes may be set in <I>errno</I>:
+
+     [EFAULT]  An argument address referenced invalid memory.
+
+     [EPERM]   A user other than the super-user attempted to set the time.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="date.html">date(1)</A></B>,  <B><A HREF="adjtime.html">adjtime(2)</A></B>,  <B><A HREF="ctime.html">ctime(3)</A></B>,  <B><A HREF="clocks.html">clocks(7)</A></B>,  <B><A HREF="timed.html">timed(8)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>gettimeofday</B>() function call appeared in 4.2BSD.
+
+4th Berkeley Distribution	 May 26, 1995				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

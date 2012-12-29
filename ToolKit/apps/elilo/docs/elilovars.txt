@@ -1,0 +1,53 @@
+Information related to variable support in ELILO
+------------------------------------------------
+(c) 2002-2003 Hewlett Packard Co
+    Contributed by Stephane Eranian <eranian@hpl.hp.com>
+
+    Last updated: 06/13/2002
+
+As of version 3.2, elilo has internal variables which can be programmed
+by any module inside the bootloader code. These variables are used
+to parametrize some of the arguments passed on the kernel command line.
+
+The value of a variable is a Unicode string. Variables names are composed
+of a single Unicode character, such as 'I' for instance. Variable names
+are case sensitive. Elilo has support for 52 variables: A-Z and a-z. 
+
+The '%' sign is used to name a variable. For instance, '%I' indicates 
+variable 'I'. If '%I'  is present on the command line to the kernel, 
+it will be replaced (string replacement) with the value (a string) of 'I'. 
+By default, the Elilo core does not assign any values to any variables. 
+It is up to each module to do so. When a variable is not used, its content 
+is the empty string "", which means that the '%d' notation, for instance, will 
+be replaced with the empty string.
+
+Let us look at an example:
+  Supposing that the following variables are defined:
+	'I'	-> "192.168.2.5"
+	'G'	-> "192.168.2.1"
+	'M'	-> "255.255.255.0"
+	'z'	-> ""
+
+  Then a command line of this form (provided as an append= option in elilo.conf):
+
+        root=/dev/nfs nfsroot=15.4.88.178:/mnt2 ip=%I:%z:%G:%N:jung:eth0:on
+
+  Would pass the following to the kernel:
+
+        root=/dev/nfs nfsroot=15.4.88.178:/mnt2 ip=192.168.2.5::192.168.2.1:255.255.255.0:jung:eth0:on
+
+Of course, the meaning of each variable is up to each individual module, the
+names used here are not necessarily representative of the actual names used
+by elilo.
+
+Some choosers, (such as simple) have support to print the list of
+defined variables. For instance, in simple (the default chooser) you
+can press '%' to see the list of defined variables.
+
+Variables can be useful when netbooting, for instance, to get the 
+dynamically assigned IP, netmask, and gateway addresses.
+
+In case the % character needs to be passed to the kernel, it is possible
+to "despecialize" a character using the & symbol in front of it.
+
+See netbooting.txt for more information on this.

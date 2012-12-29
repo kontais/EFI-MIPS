@@ -1,0 +1,124 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="RENAME.html">RENAME(2)</A></B>		  FreeBSD System Calls Manual		     <B><A HREF="RENAME.html">RENAME(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>rename</B> - change the name of a file
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>rename</B>(<I>const</I> <I>char</I> <I>*from</I>, <I>const</I> <I>char</I> <I>*to</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Rename</B>() causes the link named <I>from</I> to be renamed as <I>to</I>. If <I>to</I> exists, it
+     is first removed.	Both <I>from</I> and <I>to</I> must be of the same type (that is,
+     both directories or both non-directories), and must reside on the same
+     file system.
+
+     <B>Rename</B>() guarantees that an instance of <I>to</I> will always exist, even if the
+     system should crash in the middle of the operation.
+
+     If the final component of <I>from</I> is a symbolic link, the symbolic link is
+     renamed, not the file or directory to which it points.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A 0 value is returned if the operation succeeds, otherwise <B>rename</B>() re-
+     turns -1 and the global variable <I>errno</I> indicates the reason for the fail-
+     ure.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Rename</B>() will fail and neither of the argument files will be affected if:
+
+     [ENAMETOOLONG]
+		   A component of either pathname exceeded 255 characters, or
+		   the entire length of either path name exceeded 1023 charac-
+		   ters.
+
+     [ENOENT]	   A component of the <I>from</I> path does not exist, or a path pre-
+		   fix of <I>to</I> does not exist.
+
+     [EACCES]	   A component of either path prefix denies search permission.
+
+     [EACCES]	   The requested link requires writing in a directory with a
+		   mode that denies write permission.
+
+     [EPERM]	   The directory containing <I>from</I> is marked sticky, and neither
+		   the containing directory nor <I>from</I> are owned by the effec-
+		   tive user ID.
+
+     [EPERM]	   The <I>to</I> file exists, the directory containing <I>to</I> is marked
+		   sticky, and neither the containing directory nor <I>to</I> are
+		   owned by the effective user ID.
+
+     [ELOOP]	   Too many symbolic links were encountered in translating ei-
+		   ther pathname.
+
+     [ENOTDIR]	   A component of either path prefix is not a directory.
+
+     [ENOTDIR]	   <I>from</I> is a directory, but <I>to</I> is not a directory.
+
+     [EISDIR]	   <I>to</I> is a directory, but <I>from</I> is not a directory.
+
+     [EXDEV]	   The link named by <I>to</I> and the file named by <I>from</I> are on dif-
+		   ferent logical devices (file systems).  Note that this er-
+		   ror code will not be returned if the implementation permits
+
+		   cross-device links.
+
+     [ENOSPC]	   The directory in which the entry for the new name is being
+		   placed cannot be extended because there is no space left on
+		   the file system containing the directory.
+
+     [EDQUOT]	   The directory in which the entry for the new name is being
+		   placed cannot be extended because the user's quota of disk
+		   blocks on the file system containing the directory has been
+		   exhausted.
+
+     [EIO]	   An I/O error occurred while making or updating a directory
+		   entry.
+
+     [EROFS]	   The requested link requires writing in a directory on a
+		   read-only file system.
+
+     [EFAULT]	   <I>Path</I> points outside the process's allocated address space.
+
+     [EINVAL]	   <I>From</I> is a parent directory of <I>to</I>, or an attempt is made to
+		   rename `.' or `..'.
+
+     [ENOTEMPTY]   <I>To</I> is a directory and is not empty.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="symlink.html">symlink(7)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>rename</B>() function call is expected to conform to IEEE Std1003.1-1990
+     (``POSIX'').
+
+4.2 Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

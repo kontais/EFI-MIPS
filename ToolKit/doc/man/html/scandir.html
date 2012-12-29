@@ -1,0 +1,76 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SCANDIR.html">SCANDIR(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="SCANDIR.html">SCANDIR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>scandir</B>, <B>alphasort</B> - scan a directory
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;dirent.h&gt;</B>
+
+     <I>int</I>
+     <B>scandir</B>(<I>const</I> <I>char</I> <I>*dirname</I>, <I>struct</I> <I>dirent</I> <I>***namelist</I>,
+	     <I>int</I> (<I>*select</I>)(<I>struct</I> <I>dirent</I> <I>*</I>),
+	     <I>int</I> (<I>*compar</I>)(<I>const</I> <I>void</I> <I>*,</I> <I>const</I> <I>void</I> <I>*</I>))
+
+     <I>int</I>
+     <B>alphasort</B>(<I>const</I> <I>void</I> <I>*d1</I>, <I>const</I> <I>void</I> <I>*d2</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>scandir</B>() function reads the directory <I>dirname</I> and builds an array of
+     pointers to directory entries using <B><A HREF="malloc.html">malloc(3)</A></B>.  It returns the number of
+     entries in the array.  A pointer to the array of directory entries is
+     stored in the location referenced by <I>namelist</I>.
+
+     The <I>select</I> parameter is a pointer to a user supplied subroutine which is
+     called by <B>scandir</B>() to select which entries are to be included in the ar-
+     ray.  The select routine is passed a pointer to a directory entry and
+     should return a non-zero value if the directory entry is to be included
+     in the array.  If <I>select</I> is null, then all the directory entries will be
+     included.
+
+     The <I>compar</I> parameter is a pointer to a user supplied subroutine which is
+     passed to <B><A HREF="qsort.html">qsort(3)</A></B> to sort the completed array.  If this pointer is null,
+     the array is not sorted.
+
+     The <B>alphasort</B>() function is a routine which can be used for the <I>compar</I>
+     parameter to sort the array alphabetically.
+
+     The memory allocated for the array can be deallocated with <B><A HREF="malloc.html">free(3)</A></B>,  by
+     freeing each pointer in the array and then the array itself.
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     Returns -1 if the directory cannot be opened for reading or if <B><A HREF="malloc.html">malloc(3)</A></B>
+     cannot allocate enough memory to hold all the data structures.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="directory.html">directory(3)</A></B>,  <B><A HREF="malloc.html">malloc(3)</A></B>,	<B><A HREF="qsort.html">qsort(3)</A></B>,  <B><A HREF="dir.html">dir(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>scandir</B>() and <B>alphasort</B>() functions appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

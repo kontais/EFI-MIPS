@@ -1,0 +1,81 @@
+                     ELILO: the IA-32,IA-64 and x86_64 Linux Loader
+		     ----------------------------------------------
+	               Stephane Eranian <eranian@hpl.hp.com>
+
+		                 August 2003
+
+	           Copyright (C) 2000-2003 Hewlett-Packard Co.
+	           Copyright (C) 2006-2010 Intel Co.
+
+
+This package contains version 3.7 of elilo, the EFI boot loader
+for IA-64(IPF),IA-32(x86) and x86_64 EFI-based platforms.
+
+
+RELEASE NOTES:
+--------------
+	Take a look at the Changelog for a detailed list of changes 
+	since 3.3a.
+
+	- The major new feature of this release pertains to netbooting.
+	  With elilo-3.4, the bootloader will look for files ONLY in the
+	  directory if was downloaded from on the TFTP server. Of course,
+	  if you specific absolute path, files can be placed anywhere in
+	  the TFTP directory structure. This may break some setup but
+	  an explicit error message is printed warning the user. 
+
+	- There were a bunch of important bug fixes, including handling
+	  of paths when booting from the local disk. 
+
+	- Downloading of large files work with EFI versions prior to 14.60
+	  where there was a bug but also with the fixed version of EFI
+	  starting at 14.60.
+
+	- There were also some updates for elilo on IA-32. The loader
+	  can load unmodified Linux kernel/initrd image from either the
+	  local disk or via netbooting. Thanks to Matt Tolentino at Intel
+	  for the IA-32 updates.
+
+	- The ext2fs support code is still present but is not compiled in
+	  anymore. This code does not understand ext3fs and might lead to
+	  errors because it does not understand the journal.
+
+	This package is known to compile and produce working binaries
+	when used in conjunction with gnu-efi-3.0a. This package is
+	available from the HP Labs FTP site:
+
+	ftp://ftp.hpl.hp.com/pub/linux-ia64/gnu-efi-3.0a.tar.gz	
+
+	For IA-64, a toolchain know to produce working binaries is:
+		gcc-3.1
+		binutiuls 2.13.90
+
+	Your may have problems with newer toolchains due to some
+	dependencies in the gnu-efi package. Those dependencies
+	will be fixed eventually.
+
+	For IA-32, the Redhat 8.0 toolchain is known to produce
+	working binaries when used with gnu-efi-3.0a + loader
+	script patch which is included in the gnu-efi-3.0a-ia32.patch
+	in this package. The toolchain includes:
+
+	gcc: gcc version 3.2 20020903 (Red Hat Linux 8.0 3.2-7)
+	as : GNU assembler version 2.13.90.0.2 (i386-redhat-linux) 
+	    using BFD version 2.13.90.0.2 20020802
+	ld : GNU ld version 2.13.90.0.2 20020802
+
+	The Redhat 9.0 toolchain does not work at the moment.
+
+	For x86_64, a toolchain known to produce working binaries is:
+		gcc-4.1.1 or above
+		binutils-2.17.50.0.14 with Intel64 EFI support
+	For x86_64, the following libraries are required for the elilo build
+		gnu-efi library with x86_64
+
+DOCUMENTATION:
+--------------
+	PLEASE READ THE docs/elilo.txt file for some documentation on how
+	to use this program. For netbooting refer to docs/netbooting.txt.
+
+	Make sure you read the README.gnu-efi file for required packages.
+

@@ -1,0 +1,84 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="EXIT.html">EXIT(2)</A></B> 		  FreeBSD System Calls Manual		       <B><A HREF="EXIT.html">EXIT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>_exit</B> - terminate the calling process
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>void</I>
+     <B>_exit</B>(<I>int</I> <I>status</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>_exit</B>() function terminates a process with the following conse-
+     quences:
+
+     <B>o</B>	 All of the descriptors open in the calling process are closed.  This
+	 may entail delays, for example, waiting for output to drain; a pro-
+	 cess in this state may not be killed, as it is already dying.
+
+     <B>o</B>	 If the parent process of the calling process has an outstanding
+	 <B><A HREF="wait.html">wait(2)</A></B> call or catches the SIGCHLD signal, it is notified of the
+	 calling process's termination and the <I>status</I> is set as defined by
+	 <B><A HREF="wait.html">wait(2)</A></B>.
+
+     <B>o</B>	 The parent process-ID of all of the calling process's existing child
+	 processes are set to 1; the initialization process (see the DEFINI-
+	 TIONS section of <B><A HREF="intro.html">intro(2)</A></B>)  inherits each of these processes.
+
+     <B>o</B>	 If the termination of the process causes any process group to become
+	 orphaned (usually because the parents of all members of the group
+	 have now exited; see ``orphaned process group'' in <B><A HREF="intro.html">intro(2)</A></B>),	and if
+	 any member of the orphaned group is stopped, the SIGHUP signal and
+	 the SIGCONT signal are sent to all members of the newly-orphaned pro-
+	 cess group.
+
+     <B>o</B>	 If the process is a controlling process (see <B><A HREF="intro.html">intro(2)</A></B>),  the SIGHUP
+	 signal is sent to the foreground process group of the controlling
+	 terminal, and all current access to the controlling terminal is re-
+	 voked.
+
+     Most C programs call the library routine <B><A HREF="exit.html">exit(3)</A></B>,	which flushes buffers,
+     closes streams, unlinks temporary files, etc., before calling <B>_exit</B>().
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+     <B>_exit</B>() can never return.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="fork.html">fork(2)</A></B>,  <B><A HREF="sigaction.html">sigaction(2)</A></B>,  <B><A HREF="wait.html">wait(2)</A></B>,	<B><A HREF="exit.html">exit(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>_exit</B>() function call is expected to conform to IEEE Std1003.1-1990
+     (``POSIX'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     An <B>_exit</B>() function call appeared in Version 7 AT&amp;T UNIX.
+
+4th Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

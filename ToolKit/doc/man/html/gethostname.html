@@ -1,0 +1,77 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETHOSTNAME.html">GETHOSTNAME(3)</A></B>	       FreeBSD Library Functions Manual 	<B><A HREF="GETHOSTNAME.html">GETHOSTNAME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>gethostname</B>, <B>sethostname</B> - get/set name of current host
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>gethostname</B>(<I>char</I> <I>*name</I>, <I>int</I> <I>namelen</I>)
+
+     <I>int</I>
+     <B>sethostname</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>int</I> <I>namelen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Gethostname</B>() returns the standard host name for the current processor,
+     as previously set by <B>sethostname</B>().  The parameter <I>namelen</I> specifies the
+     size of the <I>name</I> array.  The returned name is null-terminated unless in-
+     sufficient space is provided.
+
+     <B>Sethostname</B>() sets the name of the host machine to be <I>name</I>, which has
+     length <I>namelen</I>. This call is restricted to the super-user and is normally
+     used only when the system is bootstrapped.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If the call succeeds a value of 0 is returned.  If the call fails, a val-
+     ue of -1 is returned and an error code is placed in the global location
+     <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The following errors may be returned by these calls:
+
+     [EFAULT]	   The <I>name</I> or <I>namelen</I> parameter gave an invalid address.
+
+     [EPERM]	   The caller tried to set the hostname and was not the super-
+		   user.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="gethostid.html">gethostid(3)</A></B>,  <B><A HREF="sysctl.html">sysctl(3)</A></B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Host names are limited to MAXHOSTNAMELEN (from &lt;<I>sys/param.h</I>&gt;) characters,
+     currently 256.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>gethostname</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,52 @@
+2f处理器用户手册-v1.0.pdf  
+---------------------------第9章---------------------------
+
+地址窗口配置模块
+
+AWR   Loongson 2F address window registers
+#define	LOONGSON_AWR_BASE_ADDRESS	0x3ff00000
+
+配置物理地址 0x0000_0000_3ff00000
+
+0x900000003ff00000,  XKPHY  64位内核模式，物理地址空间
+
+2F中有CPU，DDR2，及PCI三个地址空间。
+CPU和PCI-DMA两个具有master功能，假设CPU叫Master0，PCI-DMA叫Master1
+CPU和PCI-DMA各有4个地址转换窗口，每个窗口由BASE，MASK及MMAP三个64位寄存器组成，
+BASE以M字节对齐，MASK类似网络掩码，MMAP低两位是路由选择，00b为DDR2，01b为PCI/Local IO.
+
+
+
+上电缺省的寄存器配置
+CPU (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff)  CPU窗口0
+CPU (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff) -> PCI (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff)  CPU窗口1
+PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0
+
+以上解释如下
+Master0窗口0的大小为256M，映射到DDR2，即CPU的物理地址0-256M，映射到DDR的0-256M。
+Master0窗口1的大小为256M，映射到PCI， 即CPU物理地址的256M-512M映射到PCI，具体映射的方法由PCIMAP来决定。(PCI MEM Lo0/1/2)
+Master1窗口0的大小为256M，映射到DDR2，即PCI地址2G-2.25G，映射到DDR的0-256M
+
+
+OpenBSD配置
+CPU (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff)  CPU窗口0 (缺省值)
+CPU (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff) -> PCI (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff)  CPU窗口1 (缺省值)
+PCI (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0 (缺省值)
+CPU (0x0000_0000_4000_0000 - 0x0000_0000_7fff_ffff) -> PCI (0x0000_0000_4000_0000 - 0x0000_0000_7fff_ffff)  CPU窗口2
+CPU (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_7fff_ffff)  CPU窗口3
+
+以上解释如下
+Master0窗口2的大小为1G，  映射到PCI，CPU物理地址的1G-2G映射到PCI 1G-2G。(PCI MEM Hi)
+Master0窗口3的大小为2G，  映射到DDR，CPU物理地址的2G-4G映射到DDR 0-2G。
+
+
+建议配置
+CPU (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_0fff_ffff)  CPU窗口0  OpenBSD采用
+CPU (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff) -> PCI (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff)  CPU窗口1  OpenBSD采用
+CPU (0x0000_0000_4000_0000 - 0x0000_0000_7fff_ffff) -> PCI (0x0000_0000_4000_0000 - 0x0000_0000_7fff_ffff)  CPU窗口2  OpenBSD采用
+CPU (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_7fff_ffff)  CPU窗口3  OpenBSD采用
+PCI (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0  OpenBSD采用
+PCI (0x0000_0000_0080_0000 - 0x0000_0000_00ff_ffff) -> DDR (0x0000_0000_0080_0000 - 0x0000_0000_00ff_ffff)  PCI窗口1  OpenBSD未采用
+
+
+

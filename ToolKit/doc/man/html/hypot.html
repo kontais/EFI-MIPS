@@ -1,0 +1,88 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="HYPOT.html">HYPOT(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="HYPOT.html">HYPOT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>hypot</B>, <B>hypotf</B>, <B>cabs</B>, <B>cabsf</B> - euclidean distance and complex absolute val-
+     ue functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>hypot</B>(<I>double</I> <I>x</I>, <I>double</I> <I>y</I>)
+
+     <I>float</I>
+     <B>hypotf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>y</I>)
+
+     <B>struct</B> <B>{double</B> <B>x,</B> <B>y;}</B> <B>z;</B>
+
+     <I>double</I>
+     <B>cabs</B>(<I>z</I>)
+
+     <B>struct</B> <B>{float</B> <B>x,</B> <B>y;}</B> <B>z;</B>
+
+     <I>float</I>
+     <B>cabsf</B>(<I>z</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>hypot</B>(), <B>hypotf</B>(), <B>cabs</B>() and <B>cabsf</B>() functions compute the
+     sqrt(x*x+y*y) in such a way that underflow will not happen, and overflow
+     occurs only if the final result deserves it.
+
+     <B>hypot</B>(<I>infinity</I>, <I>v</I>) = <B>hypot</B>(<I>v</I>, <I>infinity</I>) = +infinity for all <I>v</I>, including
+     <I>NaN</I>.
+
+
+</PRE>
+<H2>ERROR (due to Roundoff, etc.)</H2><PRE>
+     Below 0.97 <I>ulps</I>. Consequently <B>hypot</B>(<I>5.0</I>, <I>12.0</I>) = 13.0 exactly; in gener-
+     al, hypot and cabs return an integer whenever an integer might be expect-
+     ed.
+
+     The same cannot be said for the shorter and faster version of hypot and
+     cabs that is provided in the comments in cabs.c; its error can exceed 1.2
+     <I>ulps</I>.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     As might be expected, <B>hypot</B>(<I>v</I>, <I>NaN</I>) and <B>hypot</B>(<I>NaN</I>, <I>v</I>) are <I>NaN</I> for all
+     <I>finite</I> <I>v</I>; with "reserved operand" in place of "<I>NaN</I>", the same is true on
+     a VAX. But programmers on machines other than a VAX (if has no infinity)
+     might be surprised at first to discover that <B>hypot</B>(<I>+-infinity</I>, <I>NaN</I>) =
+     +infinity.  This is intentional; it happens because <B>hypot</B>(<I>infinity</I>, <I>v</I>) =
+     +infinity for <I>all</I> <I>v</I>, finite or infinite.  Hence <B>hypot</B>(<I>infinity</I>, <I>v</I>) is in-
+     dependent of <I>v</I>. Unlike the reserved operand fault on a VAX, the IEEE <I>NaN</I>
+     is designed to disappear when it turns out to be irrelevant, as it does
+     in <B>hypot</B>(<I>infinity</I>, <I>NaN</I>).
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>,  <B><A HREF="sqrt.html">sqrt(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     Both a <B>hypot</B>() function and a <B>cabs</B>() function appeared in Version 7 AT&amp;T
+     UNIX.
+
+4th Berkeley Distribution	  May 6, 1991				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

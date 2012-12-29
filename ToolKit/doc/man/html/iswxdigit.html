@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>ISWXDIGIT(3)</B>	       FreeBSD Library Functions Manual 	   <B>ISWXDIGIT(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>iswxdigit</B> - hexadecimal-digit wide character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>int</I>
+     <B>iswxdigit</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>iswxdigit</B>() function tests for any hexadecimal-digit wide character.  In
+     the ASCII character set, this includes the following characters:
+
+     060 ``0''	   061 ``1''	 062 ``2''     063 ``3''     064 ``4''
+     065 ``5''	   066 ``6''	 067 ``7''     070 ``8''     071 ``9''
+     101 ``A''	   102 ``B''	 103 ``C''     104 ``D''     105 ``E''
+     106 ``F''	   141 ``a''	 142 ``b''     143 ``c''     144 ``d''
+     145 ``e''	   146 ``f''
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>iswxdigit</B>() function returns zero if the wide character tests false and re-
+     turns non-zero if the wide character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctype(3)</B>,	<B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

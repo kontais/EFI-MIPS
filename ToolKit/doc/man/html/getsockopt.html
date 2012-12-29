@@ -1,0 +1,229 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETSOCKOPT.html">GETSOCKOPT(2)</A></B>		  FreeBSD System Calls Manual		 <B><A HREF="GETSOCKOPT.html">GETSOCKOPT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getsockopt</B>, <B>setsockopt</B> - get and set options on sockets
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>getsockopt</B>(<I>int</I> <I>s</I>, <I>int</I> <I>level</I>, <I>int</I> <I>optname</I>, <I>void</I> <I>*optval</I>, <I>int</I> <I>*optlen</I>)
+
+     <I>int</I>
+     <B>setsockopt</B>(<I>int</I> <I>s</I>, <I>int</I> <I>level</I>, <I>int</I> <I>optname</I>, <I>const</I> <I>void</I> <I>*optval</I>, <I>int</I> <I>optlen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Getsockopt</B>() and <B>setsockopt</B>() manipulate the <I>options</I> associated with a
+     socket.  Options may exist at multiple protocol levels; they are always
+     present at the uppermost ``socket'' level.
+
+     When manipulating socket options the level at which the option resides
+     and the name of the option must be specified.  To manipulate options at
+     the socket level, <I>level</I> is specified as SOL_SOCKET. To manipulate options
+     at any other level the protocol number of the appropriate protocol con-
+     trolling the option is supplied.  For example, to indicate that an option
+     is to be interpreted by the TCP protocol, <I>level</I> should be set to the pro-
+     tocol number of TCP; see <B><A HREF="getprotoent.html">getprotoent(3)</A></B>.
+
+     The parameters <I>optval</I> and <I>optlen</I> are used to access option values for
+     <B>setsockopt</B>().  For <B>getsockopt</B>() they identify a buffer in which the value
+     for the requested option(s) are to be returned.  For <B>getsockopt</B>(), <I>optlen</I>
+     is a value-result parameter, initially containing the size of the buffer
+     pointed to by <I>optval</I>, and modified on return to indicate the actual size
+     of the value returned.  If no option value is to be supplied or returned,
+     <I>optval</I> may be NULL.
+
+     <I>Optname</I> and any specified options are passed uninterpreted to the appro-
+     priate protocol module for interpretation.  The include file
+     &lt;<I>sys/socket.h</I>&gt; contains definitions for socket level options, described
+     below.  Options at other protocol levels vary in format and name; consult
+     the appropriate entries in section 4 of the manual.
+
+     Most socket-level options utilize an <I>int</I> parameter for <I>optval</I>. For
+     <B>setsockopt</B>(), the parameter should be non-zero to enable a boolean op-
+     tion, or zero if the option is to be disabled.  SO_LINGER uses a <I>struct</I>
+     <I>linger</I> parameter, defined in &lt;<I>sys/socket.h</I>&gt;, which specifies the desired
+     state of the option and the linger interval (see below).  SO_SNDTIMEO and
+     SO_RCVTIMEO use a <I>struct</I> <I>timeval</I> parameter, defined in &lt;<I>sys/time.h</I>&gt;.
+
+     The following options are recognized at the socket level.	Except as not-
+     ed, each may be examined with <B>getsockopt</B>() and set with <B>setsockopt</B>().
+
+	   SO_DEBUG	   enables recording of debugging information
+	   SO_REUSEADDR    enables local address reuse
+	   SO_REUSEPORT    enables duplicate address and port bindings
+	   SO_KEEPALIVE    enables keep connections alive
+	   SO_DONTROUTE    enables routing bypass for outgoing messages
+	   SO_LINGER	   linger on close if data present
+	   SO_BROADCAST    enables permission to transmit broadcast messages
+	   SO_OOBINLINE    enables reception of out-of-band data in band
+	   SO_SNDBUF	   set buffer size for output
+	   SO_RCVBUF	   set buffer size for input
+
+	   SO_SNDLOWAT	   set minimum count for output
+	   SO_RCVLOWAT	   set minimum count for input
+	   SO_SNDTIMEO	   set timeout value for output
+	   SO_RCVTIMEO	   set timeout value for input
+	   SO_TYPE	   get the type of the socket (get only)
+	   SO_ERROR	   get and clear error on the socket (get only)
+
+     SO_DEBUG enables debugging in the underlying protocol modules.
+     SO_REUSEADDR indicates that the rules used in validating addresses sup-
+     plied in a <B><A HREF="bind.html">bind(2)</A></B> call should allow reuse of local addresses.
+     SO_REUSEPORT allows completely duplicate bindings by multiple processes
+     if they all set SO_REUSEPORT before binding the port.  This option per-
+     mits multiple instances of a program to each receive UDP/IP multicast or
+     broadcast datagrams destined for the bound port.  SO_KEEPALIVE enables
+     the periodic transmission of messages on a connected socket.  Should the
+     connected party fail to respond to these messages, the connection is con-
+     sidered broken and processes using the socket are notified via a SIGPIPE
+     signal when attempting to send data.  SO_DONTROUTE indicates that outgo-
+     ing messages should bypass the standard routing facilities.  Instead,
+     messages are directed to the appropriate network interface according to
+     the network portion of the destination address.
+
+     SO_LINGER controls the action taken when unsent messages are queued on
+     socket and a <B><A HREF="close.html">close(2)</A></B> is performed.  If the socket promises reliable de-
+     livery of data and SO_LINGER is set, the system will block the process on
+     the <B><A HREF="close.html">close(2)</A></B> attempt until it is able to transmit the data or until it
+     decides it is unable to deliver the information (a timeout period, termed
+     the linger interval, is specified in seconds in the <B>setsockopt</B>() call
+     when SO_LINGER is requested).  If SO_LINGER is disabled and a <B><A HREF="close.html">close(2)</A></B> is
+     issued, the system will process the close in a manner that allows the
+     process to continue as quickly as possible.
+
+     The option SO_BROADCAST requests permission to send broadcast datagrams
+     on the socket.  Broadcast was a privileged operation in earlier versions
+     of the system.  With protocols that support out-of-band data, the
+     SO_OOBINLINE option requests that out-of-band data be placed in the nor-
+     mal data input queue as received; it will then be accessible with <B><A HREF="recv.html">recv(2)</A></B>
+     or <B><A HREF="read.html">read(2)</A></B> calls without the MSG_OOB flag.  Some protocols always behave
+     as if this option is set.	SO_SNDBUF and SO_RCVBUF are options to adjust
+     the normal buffer sizes allocated for output and input buffers, respec-
+     tively.  The buffer size may be increased for high-volume connections, or
+     may be decreased to limit the possible backlog of incoming data.  The
+     system places an absolute maximum on these values, which is accessible
+     through the <B><A HREF="sysctl.html">sysctl(3)</A></B> MIB variable ``kern.maxsockbuf''.
+
+     SO_SNDLOWAT is an option to set the minimum count for output operations.
+     Most output operations process all of the data supplied by the call, de-
+     livering data to the protocol for transmission and blocking as necessary
+     for flow control.	Nonblocking output operations will process as much da-
+     ta as permitted subject to flow control without blocking, but will pro-
+     cess no data if flow control does not allow the smaller of the low water
+     mark value or the entire request to be processed.	A <B><A HREF="select.html">select(2)</A></B> operation
+     testing the ability to write to a socket will return true only if the low
+     water mark amount could be processed.  The default value for SO_SNDLOWAT
+     is set to a convenient size for network efficiency, often 1024.
+     SO_RCVLOWAT is an option to set the minimum count for input operations.
+     In general, receive calls will block until any (non-zero) amount of data
+     is received, then return with the smaller of the amount available or the
+     amount requested.	The default value for SO_RCVLOWAT is 1.  If
+     SO_RCVLOWAT is set to a larger value, blocking receive calls normally
+     wait until they have received the smaller of the low water mark value or
+     the requested amount.  Receive calls may still return less than the low
+     water mark if an error occurs, a signal is caught, or the type of data
+     next in the receive queue is different from that which was returned.
+
+     SO_SNDTIMEO is an option to set a timeout value for output operations.
+     It accepts a <I>struct</I> <I>timeval</I> parameter with the number of seconds and mi-
+     croseconds used to limit waits for output operations to complete.	If a
+     send operation has blocked for this much time, it returns with a partial
+     count or with the error EWOULDBLOCK if no data were sent.	In the current
+     implementation, this timer is restarted each time additional data are de-
+     livered to the protocol, implying that the limit applies to output por-
+     tions ranging in size from the low water mark to the high water mark for
+     output.  SO_RCVTIMEO is an option to set a timeout value for input opera-
+     tions.  It accepts a <I>struct</I> <I>timeval</I> parameter with the number of seconds
+     and microseconds used to limit waits for input operations to complete.
+     In the current implementation, this timer is restarted each time addi-
+     tional data are received by the protocol, and thus the limit is in effect
+     an inactivity timer.  If a receive operation has been blocked for this
+     much time without receiving additional data, it returns with a short
+     count or with the error EWOULDBLOCK if no data were received.
+
+     Finally, SO_TYPE and SO_ERROR are options used only with <B>getsockopt</B>().
+     SO_TYPE returns the type of the socket, such as SOCK_STREAM; it is useful
+     for servers that inherit sockets on startup.  SO_ERROR returns any pend-
+     ing error on the socket and clears the error status.  It may be used to
+     check for asynchronous errors on connected datagram sockets or for other
+     asynchronous errors.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>getsockopt</B>() is implemented as the <I>getsockopt</I>
+     syscall.
+
+     In the threaded library, the <I>getsockopt</I> syscall is assembled to
+     <B>_thread_sys_getsockopt</B>() and <B>getsockopt</B>() is implemented as a function
+     which locks <I>s</I> for read and write, then calls <B>_thread_sys_getsockopt</B>().
+     Before returning, <B>getsockopt</B>() unlocks <I>s</I>.
+
+     In the non-threaded library <B>setsockopt</B>() is implemented as the <I>setsockopt</I>
+     syscall.
+
+     In the threaded library, the <I>setsockopt</I> syscall is assembled to
+     <B>_thread_sys_setsockopt</B>() and <B>setsockopt</B>() is implemented as a function
+     which locks <I>s</I> for read and write, then calls <B>_thread_sys_setsockopt</B>().
+     Before returning, <B>setsockopt</B>() unlocks <I>s</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A 0 is returned if the call succeeds, -1 if it fails.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The call succeeds unless:
+
+     [EBADF]	    The argument <I>s</I> is not a valid descriptor.
+
+     [ENOTSOCK]     The argument <I>s</I> is a file, not a socket.
+
+     [ENOPROTOOPT]  The option is unknown at the level indicated.
+
+     [EFAULT]	    The address pointed to by <I>optval</I> is not in a valid part of
+		    the process address space.	For <B>getsockopt</B>(), this error
+		    may also be returned if <I>optlen</I> is not in a valid part of
+		    the process address space.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ioctl.html">ioctl(2)</A></B>,	<B><A HREF="socket.html">socket(2)</A></B>,  <B><A HREF="getprotoent.html">getprotoent(3)</A></B>,  <B><A HREF="sysctl.html">sysctl(3)</A></B>,  <B><A HREF="protocols.html">protocols(5)</A></B>,
+     <B><A HREF="sysctl.html">sysctl(8)</A></B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Several of the socket options should be handled at lower levels of the
+     system.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getsockopt</B>() system call appeared in 4.2BSD.
+
+4.3-Reno Berkeley Distribution	  May 2, 1995				     4
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FUNOPEN.html">FUNOPEN(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="FUNOPEN.html">FUNOPEN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>funopen</B>, <B>fropen</B>, <B>fwopen</B> - open a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>FILE</I> <I>*</I>
+     <B>funopen</B>(<I>const</I> <I>void</I> <I>*cookie</I>, <I>int</I> <I>(*readfn)(void</I> <I>*,</I> <I>char</I> <I>*,</I> <I>int)</I>,
+	     <I>int</I> <I>(*writefn)(void</I> <I>*,</I> <I>const</I> <I>char</I> <I>*,</I> <I>int)</I>,
+	     <I>fpos</I><B>_</B><I>t</I> <I>(*seekfn)(void</I> <I>*,</I> <I>fpos</I><B>_</B><I>t,</I> <I>int)</I>, <I>int</I> <I>(*closefn)(void</I> <I>*)</I>)
+
+     <I>FILE</I> <I>*</I>
+     <B>fropen</B>(<I>void</I> <I>*cookie</I>, <I>int</I> <I>(*readfn)(void</I> <I>*,</I> <I>char</I> <I>*,</I> <I>int)</I>)
+
+     <I>FILE</I> <I>*</I>
+     <B>fwopen</B>(<I>void</I> <I>*cookie</I>, <I>int</I> <I>(*writefn)(void</I> <I>*,</I> <I>const</I> <I>char</I> <I>*,</I> <I>int)</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>funopen</B>() function associates a stream with up to four ``I/O
+     functions''. Either <I>readfn</I> or <I>writefn</I> must be specified; the others can
+     be given as an appropriately-typed NULL pointer.  These I/O functions
+     will be used to read, write, seek and close the new stream.
+
+     In general, omitting a function means that any attempt to perform the as-
+     sociated operation on the resulting stream will fail.  If the close func-
+     tion is omitted, closing the stream will flush any buffered output and
+     then succeed.
+
+     The calling conventions of <I>readfn</I>, <I>writefn</I>, <I>seekfn</I> and <I>closefn</I> must match
+     those, respectively, of <B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="write.html">write(2)</A></B>,  <B><A HREF="lseek.html">seek(2)</A></B>,  and <B><A HREF="close.html">close(2)</A></B> with
+     the single exception that they are passed the <I>cookie</I> argument specified
+     to <B>funopen</B>() in place of the traditional file descriptor argument.
+
+     Read and write I/O functions are allowed to change the underlying buffer
+     on fully buffered or line buffered streams by calling <B><A HREF="setbuf.html">setvbuf(3)</A></B>.	They
+     are also not required to completely fill or empty the buffer.  They are
+     not, however, allowed to change streams from unbuffered to buffered or to
+     change the state of the line buffering flag.  They must also be prepared
+     to have read or write calls occur on buffers other than the one most re-
+     cently specified.
+
+     All user I/O functions can report an error by returning -1.  Additional-
+     ly, all of the functions should set the external variable <I>errno</I> appropri-
+     ately if an error occurs.
+
+     An error on <B>closefn</B>() does not keep the stream open.
+
+     As a convenience, the include file &lt;<I>stdio.h</I>&gt; defines the macros <B>fropen</B>()
+     and <B>fwopen</B>() as calls to <B>funopen</B>() with only a read or write function
+     specified.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>funopen</B>() returns a FILE pointer.  Otherwise,
+     NULL is returned and the global variable <I>errno</I> is set to indicate the er-
+     ror.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EINVAL]  The <B>funopen</B>() function was called without either a read or
+	       write function.	The <B>funopen</B>() function may also fail and set
+	       <I>errno</I> for any of the errors specified for the routine
+	       <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="fcntl.html">fcntl(2)</A></B>,	<B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="fclose.html">fclose(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="fseek.html">fseek(3)</A></B>,  <B><A HREF="setbuf.html">setbuf(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>funopen</B>() functions first appeared in 4.4BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The <B>funopen</B>() function may not be portable to systems other than BSD
+     UNIX.
+
+BSD				 June 9, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

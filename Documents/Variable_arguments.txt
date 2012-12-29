@@ -1,0 +1,6 @@
+make sure the sp (stack pointer) is 8byte aligned.
+
+#define VA_ARG64(ap, t)   (*(t *) ((ap = ((VOID*)((UINTN)(ap + _EFI_INT_SIZE_OF (t) - 1) & ~(_EFI_INT_SIZE_OF (t) - 1)) + _EFI_INT_SIZE_OF (t))) - _EFI_INT_SIZE_OF (t)))
+
+#define VA_ARG64(ap, t)   (*(t *) ((ap = ((VOID*)((UINTN)(ap + 7) & ~(7)) + 8)) - 8))
+

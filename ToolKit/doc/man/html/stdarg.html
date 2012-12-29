@@ -1,0 +1,133 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STDARG.html">STDARG(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STDARG.html">STDARG(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>stdarg</B> - variable argument lists
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdarg.h&gt;</B>
+
+     <I>void</I>
+     <B>va_start</B>(<I>va</I><B>_</B><I>list</I> <I>ap</I>, <I>last</I>)
+
+     <I>type</I>
+     <B>va_arg</B>(<I>va</I><B>_</B><I>list</I> <I>ap</I>, <I>type</I>)
+
+     <I>void</I>
+     <B>va_end</B>(<I>va</I><B>_</B><I>list</I> <I>ap</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     A function may be called with a varying number of arguments of varying
+     types.  The include file &lt;<I>stdarg.h</I>&gt; declares a type (<I>va</I><B>_</B><I>list</I>) and defines
+     three macros for stepping through a list of arguments whose number and
+     types are not known to the called function.
+
+     The called function must declare an object of type <I>va</I><B>_</B><I>list</I> which is used
+     by the macros <B>va_start</B>(), <B>va_arg</B>(), and <B>va_end</B>().
+
+     The <B>va_start</B>() macro initializes <I>ap</I> for subsequent use by <B>va_arg</B>() and
+     <B>va_end</B>(), and must be called first.
+
+     The parameter <I>last</I> is the name of the last parameter before the variable
+     argument list, i.e. the last parameter of which the calling function
+     knows the type.
+
+     Because the address of this parameter is used in the <B>va_start</B>() macro, it
+     should not be declared as a register variable, or as a function or an ar-
+     ray type.
+
+     The <B>va_start</B>() macro returns no value.
+
+     The <B>va_arg</B>() macro expands to an expression that has the type and value
+     of the next argument in the call.	The parameter <I>ap</I> is the <I>va</I><B>_</B><I>list</I> <I>ap</I>
+     initialized by <B>va_start</B>().  Each call to <B>va_arg</B>() modifies <I>ap</I> so that the
+     next call returns the next argument.  The parameter <I>type</I> is a type name
+     specified so that the type of a pointer to an object that has the speci-
+     fied type can be obtained simply by adding a * to <I>type</I>.
+
+     If there is no next argument, or if <I>type</I> is not compatible with the type
+     of the actual next argument (as promoted according to the default argu-
+     ment promotions), random errors will occur.
+
+     The first use of the <B>va_arg</B>() macro after that of the <B>va_start</B>() macro
+     returns the argument after <I>last</I>. Successive invocations return the values
+     of the remaining arguments.
+
+     The <B>va_end</B>() macro handles a normal return from the function whose vari-
+     able argument list was initialized by <B>va_start</B>().
+
+     The <B>va_end</B>() macro returns no value.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     The function <I>foo</I> takes a string of format characters and prints out the
+     argument associated with each format character based on the type.
+
+	   void foo(char *fmt, ...)
+	   {
+		   va_list ap;
+		   int d;
+		   char c, *p, *s;
+
+		   va_start(ap, fmt);
+		   while (*fmt)
+			   switch(*fmt++) {
+			   case 's':			   /* string */
+				   s = va_arg(ap, char *);
+				   printf("string %s\n", s);
+				   break;
+			   case 'd':			   /* int */
+				   d = va_arg(ap, int);
+				   printf("int %d\n", d);
+				   break;
+			   case 'c':			   /* char */
+				   /* Note: char is promoted to int. */
+				   c = va_arg(ap, int);
+				   printf("char %c\n", c);
+				   break;
+			   }
+		   va_end(ap);
+	   }
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>va_start</B>(), <B>va_arg</B>(), and <B>va_end</B>() macros conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</PRE>
+<H2>COMPATIBILITY</H2><PRE>
+     These macros are <I>not</I> compatible with the historic macros they replace.  A
+     backward compatible version can be found in the include file &lt;<I>varargs.h</I>&gt;.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Unlike the <I>varargs</I> macros, the <B>stdarg</B> macros do not permit programmers to
+     code a function with no fixed arguments.  This problem generates work
+     mainly when converting <I>varargs</I> code to <B>stdarg</B> code, but it also creates
+     difficulties for variadic functions that wish to pass all of their argu-
+     ments on to a function that takes a <I>va</I><B>_</B><I>list</I> argument, such as
+     <B><A HREF="printf.html">vfprintf(3)</A></B>.
+
+BSD				 June 5, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

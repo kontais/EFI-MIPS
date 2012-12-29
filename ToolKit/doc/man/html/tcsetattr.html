@@ -1,0 +1,193 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TCSETATTR.html">TCSETATTR(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="TCSETATTR.html">TCSETATTR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>cfgetispeed</B>, <B>cfsetispeed</B>, <B>cfgetospeed</B>, <B>cfsetospeed</B>, <B>cfsetspeed</B>,
+     <B>tcgetattr</B>, <B>tcsetattr</B> - manipulating the termios structure
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;termios.h&gt;</B>
+
+     <I>speed</I><B>_</B><I>t</I>
+     <B>cfgetispeed</B>(<I>const</I> <I>struct</I> <I>termios</I> <I>*t</I>)
+
+     <I>int</I>
+     <B>cfsetispeed</B>(<I>struct</I> <I>termios</I> <I>*t</I>, <I>speed</I><B>_</B><I>t</I> <I>speed</I>)
+
+     <I>speed</I><B>_</B><I>t</I>
+     <B>cfgetospeed</B>(<I>const</I> <I>struct</I> <I>termios</I> <I>*t</I>)
+
+     <I>int</I>
+     <B>cfsetospeed</B>(<I>struct</I> <I>termios</I> <I>*t</I>, <I>speed</I><B>_</B><I>t</I> <I>speed</I>)
+
+     <I>int</I>
+     <B>cfsetspeed</B>(<I>struct</I> <I>termios</I> <I>*t</I>, <I>speed</I><B>_</B><I>t</I> <I>speed</I>)
+
+     <I>int</I>
+     <B>tcgetattr</B>(<I>int</I> <I>fd</I>, <I>struct</I> <I>termios</I> <I>*t</I>)
+
+     <I>int</I>
+     <B>tcsetattr</B>(<I>int</I> <I>fd</I>, <I>int</I> <I>action</I>, <I>const</I> <I>struct</I> <I>termios</I> <I>*t</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>tcgetattr</B>() and <B>tcsetattr</B>() functions are provided for
+     getting and setting the termios structure.
+
+     The <B>cfgetispeed</B>(), <B>cfsetispeed</B>(), <B>cfgetospeed</B>(), <B>cfsetospeed</B>() and
+     <B>cfsetspeed</B>() functions are provided for getting and setting the baud rate
+     values in the termios structure.  The effects of the functions on the
+     terminal as described below do not become effective, nor are all errors
+     detected, until the <B>tcsetattr</B>() function is called.  Certain values for
+     baud rates set in the termios structure and passed to <B>tcsetattr</B>() have
+     special meanings.	These are discussed in the portion of the manual page
+     that describes the <B>tcsetattr</B>() function.
+
+
+</PRE>
+<H2>GETTING AND SETTING THE BAUD RATE</H2><PRE>
+     The input and output baud rates are found in the termios structure.  The
+     unsigned integer speed_t is typdef'd in the include file &lt;<I>termios.h</I>&gt;. The
+     value of the integer corresponds directly to the baud rate being repre-
+     sented, however, the following symbolic values are defined.
+
+     #define B0      0
+     #define B50     50
+     #define B75     75
+     #define B110    110
+     #define B134    134
+     #define B150    150
+     #define B200    200
+     #define B300    300
+     #define B600    600
+     #define B1200   1200
+     #define B1800   1800
+     #define B2400   2400
+     #define B4800   4800
+     #define B9600   9600
+     #define B19200  19200
+     #define B38400  38400
+     #ifndef _POSIX_SOURCE
+     #define EXTA    19200
+     #define EXTB    38400
+     #endif  /*_POSIX_SOURCE */
+
+     The <B>cfgetispeed</B>() function returns the input baud rate in the termios
+     structure referenced by <I>tp</I>.
+
+     The <B>cfsetispeed</B>() function sets the input baud rate in the termios struc-
+     ture referenced by <I>tp</I> to <I>speed</I>.
+
+     The <B>cfgetospeed</B>() function returns the output baud rate in the termios
+     structure referenced by <I>tp</I>.
+
+     The <B>cfsetospeed</B>() function sets the output baud rate in the termios
+     structure referenced by <I>tp</I> to <I>speed</I>.
+
+     The <B>cfsetspeed</B>() function sets both the input and output baud rate in the
+     termios structure referenced by <I>tp</I> to <I>speed</I>.
+
+     Upon successful completion, the functions <B>cfsetispeed</B>(), <B>cfsetospeed</B>(),
+     and <B>cfsetspeed</B>() return a value of 0.  Otherwise, a value of -1 is re-
+     turned and the global variable <I>errno</I> is set to indicate the error.
+
+
+</PRE>
+<H2>GETTING AND SETTING THE TERMIOS STATE</H2><PRE>
+     This section describes the functions that are used to control the general
+     terminal interface.  Unless otherwise noted for a specific command, these
+     functions are restricted from use by background processes.  Attempts to
+     perform these operations shall cause the process group to be sent a SIGT-
+     TOU signal.  If the calling process is blocking or ignoring SIGTTOU sig-
+     nals, the process is allowed to perform the operation and the SIGTTOU
+     signal is not sent.
+
+     In all the functions, although <I>fd</I> is an open file descriptor, the func-
+     tions affect the underlying terminal file, not just the open file de-
+     scription associated with the particular file descriptor.
+
+     The <B>tcgetattr</B>() function copies the parameters associated with the termi-
+     nal referenced by <I>fd</I> in the termios structure referenced by <I>tp</I>. This
+     function is allowed from a background process, however, the terminal at-
+     tributes may be subsequently changed by a foreground process.
+
+     The <B>tcsetattr</B>() function sets the parameters associated with the terminal
+     from the termios structure referenced by <I>tp</I>. The <I>action</I> field is created
+     by <I>or</I>'ing the following values, as specified in the include file
+     &lt;<I>termios.h</I>&gt;.
+
+     <I>TCSANOW</I>	The change occurs immediately.
+
+     <I>TCSADRAIN</I>	The change occurs after all output written to <I>fd</I> has been
+		transmitted to the terminal.  This value of <I>action</I> should be
+
+		used when changing parameters that affect output.
+
+     <I>TCSAFLUSH</I>	The change occurs after all output written to <I>fd</I> has been
+		transmitted to the terminal.  Additionally, any input that has
+		been received but not read is discarded.
+
+     <I>TCSASOFT</I>	If this value is <I>or</I>'ed into the <I>action</I> value, the values of
+		the <I>c</I><B>_</B><I>cflag</I>, <I>c</I><B>_</B><I>ispeed</I>, and <I>c</I><B>_</B><I>ospeed</I> fields are ignored.
+
+     The 0 baud rate is used to terminate the connection.  If 0 is specified
+     as the output speed to the function <B>tcsetattr</B>(), modem control will no
+     longer be asserted on the terminal, disconnecting the terminal.
+
+     If zero is specified as the input speed to the function <B>tcsetattr</B>(), the
+     input baud rate will be set to the same value as that specified by the
+     output baud rate.
+
+     If <B>tcsetattr</B>() is unable to make any of the requested changes, it returns
+     -1 and sets errno.  Otherwise, it makes all of the requested changes it
+     can.  If the specified input and output baud rates differ and are a com-
+     bination that is not supported, neither baud rate is changed.
+
+     Upon successful completion, the functions <B>tcgetattr</B>() and <B>tcsetattr</B>() re-
+     turn a value of 0.  Otherwise, they return -1 and the global variable
+     <I>errno</I> is set to indicate the error, as follows:
+
+     [EBADF]	   The <I>fd</I> argument to <B>tcgetattr</B>() or <B>tcsetattr</B>() was not a
+		   valid file descriptor.
+
+     [EINTR]	   The <B>tcsetattr</B>() function was interrupted by a signal.
+
+     [EINVAL]	   The <I>action</I> argument to the <B>tcsetattr</B>() function was not
+		   valid, or an attempt was made to change an attribute repre-
+		   sented in the termios structure to an unsupported value.
+
+     [ENOTTY]	   The file associated with the <I>fd</I> argument to <B>tcgetattr</B>() or
+		   <B>tcsetattr</B>() is not a terminal.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="tcsendbreak.html">tcsendbreak(3)</A></B>,  <B><A HREF="termios.html">termios(4)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>cfgetispeed</B>(), <B>cfsetispeed</B>(), <B>cfgetospeed</B>(), <B>cfsetospeed</B>(), <B>tcgetattr</B>()
+     and <B>tcsetattr</B>() functions are expected to be compliant with the
+     IEEE Std1003.1-1988 (``POSIX'') specification.  The <B>cfsetspeed</B>() function,
+     as well as the TCSASOFT option to the <B>tcsetattr</B>() function are extensions
+     to the IEEE Std1003.1-1988 (``POSIX'') specification.
+
+BSD				January 2, 1994 			     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

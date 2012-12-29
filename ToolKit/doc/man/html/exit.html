@@ -1,0 +1,64 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="EXIT.html">EXIT(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="EXIT.html">EXIT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>exit</B> - perform normal program termination
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>void</I>
+     <B>exit</B>(<I>int</I> <I>status</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Exit</B>() terminates a process.
+
+     Before termination it performs the following functions in the order list-
+     ed:
+
+	   1.	Call the functions registered with the <B><A HREF="atexit.html">atexit(3)</A></B> function, in
+		the reverse order of their registration.
+
+	   2.	Flush all open output streams.
+
+	   3.	Close all open streams.
+
+	   4.	Unlink all files created with the <B><A HREF="tmpnam.html">tmpfile(3)</A></B> function.
+
+     Passing arbitrary values back to the environment as <I>status</I> is considered
+     bad style.  Instead, use the values as described in <B><A HREF="sysexits.html">sysexits(3)</A></B>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>exit</B>() function never returns.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="_exit.html">_exit(2)</A></B>,	<B><A HREF="atexit.html">atexit(3)</A></B>,  <B><A HREF="intro.html">intro(3)</A></B>,  <B><A HREF="sysexits.html">sysexits(3)</A></B>,  <B><A HREF="tmpnam.html">tmpfile(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>exit</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

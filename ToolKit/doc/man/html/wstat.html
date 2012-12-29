@@ -1,0 +1,192 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>WSTAT(2)</b> 		  FreeBSD System Calls Manual		       <b>WSTAT(2)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>wstat</b>, <b>wlstat</b> - get file status, wide character version
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>wint</i>
+     <b>wstat</b>(<i>const</i> <i>wchar_t</i> <i>*path</i>, <i>struct</i> <i>stat</i> <i>*sb</i>)
+
+     <i>int</i>
+     <b>wlstat</b>(<i>const</i> w<i>char_t</i> <i>*path</i>, <i>struct</i> <i>stat</i> <i>*sb</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>wstat</b>() function obtains information about the file pointed to by
+     <i>path</i>. Read, write or execute permission of the named file is not re-
+     quired, but all directories listed in the path name leading to the file
+     must be searchable.
+
+     <b>wlstat</b>() is like <b>wstat</b>() except in the case where the named file is a sym-
+     bolic link, in which case <b>wlstat</b>() returns information about the link,
+     while <b>stat</b>() returns information about the file the link references.  Un-
+     like other filesystem objects, symbolic links do not have an owner,
+     group, access mode, times, etc.  Instead, these attributes are taken from
+     the directory that contains the link.  The only attributes returned from
+     an <b>wlstat</b>() that refer to the symbolic link itself are the file type
+     (S_IFLNK), size, blocks, and link count (always 1).
+
+     The <i>sb</i> argument is a pointer to a <b>wstat</b>() structure as defined by
+     &lt;<i>sys/stat.h</i>&gt; (shown below) and into which information is placed concern-
+     ing the file.
+
+     struct stat {
+	 dev_t	   st_dev;		 /* inode's device */
+	 ino_t	   st_ino;		 /* inode's number */
+	 mode_t    st_mode;		 /* inode protection mode */
+	 nlink_t   st_nlink;		 /* number of hard links */
+	 uid_t	   st_uid;		 /* user ID of the file's owner */
+	 gid_t	   st_gid;		 /* group ID of the file's group */
+	 dev_t	   st_rdev;		 /* device type */
+     #ifndef _POSIX_SOURCE
+	 struct timespec st_atimespec;	/* time of last access */
+	 struct timespec st_mtimespec;	/* time of last data modification */
+	 long	   st_ctimensec;	 /* nsec of last file status change */
+     #endif
+	 off_t	   st_size;		 /* file size, in bytes */
+	 int64_t   st_blocks;		 /* blocks allocated for file */
+	 u_int32_t st_blksize;		 /* optimal blocksize for I/O */
+	 u_int32_t st_flags;		 /* user defined flags for file */
+	 u_int32_t st_gen;		 /* file generation number */
+     };
+
+     The time-related fields of <i>struct</i> <i>stat</i> are as follows:
+
+     st_atime	  Time when file data last accessed.  Changed by the <b>mknod(2)</b>,
+		   <b>utimes(2)</b> and <b>read(2)</b> system calls.
+
+     st_mtime	  Time when file data last modified.  Changed by the <b>mknod(2)</b>,
+		   <b>utimes(2)</b> and <b>write(2)</b> system calls.
+
+     st_ctime	  Time when file status was last changed (inode data modifica-
+		  tion).  Changed by the <b>chmod(2)</b>,  <b>chown(2)</b>,  <b>link(2)</b>,
+		  <b>mknod(2)</b>,  <b>rename(2)</b>,  <b>unlink(2)</b>,  <b>utimes(2)</b> and <b>write(2)</b>
+		  system calls.
+
+     If _POSIX_SOURCE is not defined, the time-related fields are defined as:
+
+     #ifndef _POSIX_SOURCE
+     #define st_atime st_atimespec.tv_sec
+     #define st_mtime st_mtimespec.tv_sec
+     #define st_ctime st_ctimespec.tv_sec
+     #endif
+
+     The size-related fields of the <i>struct</i> <i>stat</i> are as follows:
+
+     st_blksize     The optimal I/O block size for the file.
+
+     st_blocks	    The actual number of blocks allocated for the file in
+		    512-byte units.  As short symbolic links are stored in the
+		    inode, this number may be zero.
+
+     The status information word <i>st</i><b>_</b><i>mode</i> has the following bits:
+
+     #define S_IFMT 0170000	      /* type of file */
+     #define	    S_IFIFO  0010000  /* named pipe (fifo) */
+     #define	    S_IFCHR  0020000  /* character special */
+     #define	    S_IFDIR  0040000  /* directory */
+     #define	    S_IFBLK  0060000  /* block special */
+     #define	    S_IFREG  0100000  /* regular */
+     #define	    S_IFLNK  0120000  /* symbolic link */
+     #define	    S_IFSOCK 0140000  /* socket */
+     #define	    S_IFWHT  0160000  /* whiteout */
+     #define S_ISUID 0004000  /* set user id on execution */
+     #define S_ISGID 0002000  /* set group id on execution */
+     #define S_ISVTX 0001000  /* save swapped text even after use */
+     Upon successful completion a value of 0 is returned.  Otherwise, a value
+     of -1 is returned and <i>errno</i> is set to indicate the error.
+
+
+</pre>
+
+<h2>COMPATIBILITY</h2>
+
+<pre>
+     Previous versions of the system used different types for the st_dev,
+     st_uid, st_gid, st_rdev, st_size, st_blksize and st_blocks fields.
+
+
+</pre>
+
+<h2>ERRORS</h2>
+
+<pre>
+     <b>wstat</b>() and <b>wlstat</b>() will fail if:
+
+     [ENOTDIR]	     A component of the path prefix is not a directory.
+
+     [ENAMETOOLONG]  A component of a pathname exceeded 255 characters, or an
+
+		     entire path name exceeded 1023 characters.
+
+     [ENOENT]	     The named file does not exist.
+
+     [EACCES]	     Search permission is denied for a component of the path
+		     prefix.
+
+     [ELOOP]	     Too many symbolic links were encountered in translating
+		     the pathname.
+
+     [EFAULT]	     <i>Sb</i> or <i>name</i> points to an invalid address.
+
+     [EIO]	     An I/O error occurred while reading from or writing to
+		     the file system.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>access(2)</b>,  <b>chmod(2)</b>,  <b>chown(2)</b>,  <b>utimes(2)</b>,  <b>symlink(7)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>wstat</b>() function call is expected to conform to IEEE
+     Std1003.1-1990 (``POSIX'').
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>FGETWS(3)</b>	       FreeBSD Library Functions Manual 	      <b>FGETWS(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>fgetws</b>, <b>getws</b> - get a line from a stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>wchar_t</i> <i>*</i>
+     <b>fgetws</b>(<i>wchar</i>_t <i>*str</i>, <i>int</i> <i>size</i>, <i>FILE</i> <i>*stream</i>)
+
+     <i>wchar_t</i> <i>*</i>
+     <b>getws</b>(<i>wchar_t</i> <i>*str</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>fgetws</b>() function reads at most one less than the number of wide characters
+     specified by <i>size</i> from the given <i>stream</i> and stores them in the wide character
+     string <i>str</i>. Reading stops when a newline character is found, at end-of-file or
+     error.  The newline, if any, is retained.	If any characters are read and
+     there is no error, a L`\0' wide character is appended to end the string.
+
+     The <b>getws</b>() function is equivalent to <b>fgetws</b>() with an infinite <i>size</i> and a
+     <i>stream</i> of <i>stdin</i>, except that the newline character (if any) is not stored
+     in the string.  It is the caller's responsibility to ensure that the in-
+     put line, if any, is sufficiently short to fit in the string.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     Upon successful completion, <b>fgetws</b>() and <b>getws</b>() return a pointer to the
+     wide character string.  If end-of-file occurs before any wide characters are 
+     read, they return NULL and the buffer contents is unchanged.  If an error occurs,
+     they return NULL and the buffer contents is indeterminate.  The <b>fgetws</b>() and
+     <b>getws</b>() functions do not distinguish between end-of-file and error, and
+     callers must use <b>feof(3)</b> and <b>ferror(3)</b> to determine which occurred.
+
+
+</pre>
+
+<h2>ERRORS</h2>
+
+<pre>
+     [EBADF]  The given <i>stream</i> is not a readable stream.
+
+     The function <b>fgetws</b>() may also fail and set <i>errno</i> for any of the errors
+     specified for the routines <b>fflush(3)</b>,  <b>fstat(2)</b>,  <b>read(2)</b>,  or <b>malloc(3)</b>.
+
+
+     The function <b>getws</b>() may also fail and set <i>errno</i> for any of the errors
+     specified for the routine <b>getwchar(3)</b>.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>feof(3)</b>,  <b>ferror(3)</b>,  <b>fgetln(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The functions <b>fgetws</b>() and <b>getws</b>() conform to ISO 9899: 1990 (``ISO C'').
+
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

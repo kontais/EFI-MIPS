@@ -1,0 +1,58 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>BIN2HEX(1)</B>              Libc General Commands Manual             <B>BIN2HEX(1)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>bin2hex</B> - Give binary file a hexadecimal readable format
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>bin2hex</B> <I>Inputfile</I>
+
+
+</PRE>
+<H2>DESCRIPTION</H2>
+<PRE>
+     The <B>bin2hex</B> utility is a Win32 application.  It reads an 
+     <I>Inputfile</I> and produces a corresponding output file which represents
+     the original input file byte by byte in readable hexadecimal
+     format. The output file's name is the input file's name plus the
+     extension '.txt'.          
+</PRE>
+<PRE>
+
+     Options list: 
+
+     <I>Inputfile</I> : the name of the input file ( only one input 
+                        file is allowed )
+</PRE>
+<PRE>
+     The <B>bin2hex</B> utility is mainly used with the following files as
+     input: LC_CTYPE, LC_COLLATE and LC_TIME. 
+     
+     For each file, <B>bin2hex</B> produces a block of text in hexadecimal
+     format which can be inserted into the related C source file which
+     implements a certain locale. The inserted part serves as global variable 
+     initialization data and can be handled by the C compiler to allocate 
+     storage in the resulting '.efi' image. In such a way, there is no need
+     to handle disk files, since the data are available within the program.
+</PRE>
+
+
+<H2>SEE ALSO</H2><PRE>
+     <B>mkcollate(1)</B>,  <B>mkctype(1)</B>,  <B>mktime(1)</B>,
+     <B>mklocale(1)</B>,
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     
+</PRE>
+<HR>
+</BODY>
+</HTML>

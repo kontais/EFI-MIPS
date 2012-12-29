@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETDTABLESIZE.html">GETDTABLESIZE(2)</A></B>	  FreeBSD System Calls Manual	      <B><A HREF="GETDTABLESIZE.html">GETDTABLESIZE(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getdtablesize</B> - get descriptor table size
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>getdtablesize</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     Each process has a fixed size descriptor table, which is guaranteed to
+     have at least 20 slots.  The entries in the descriptor table are numbered
+     with small integers starting at 0.  The call <B>getdtablesize</B>() returns the
+     size of this table.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="close.html">close(2)</A></B>,	<B><A HREF="dup.html">dup(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getdtablesize</B> function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

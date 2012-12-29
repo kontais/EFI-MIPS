@@ -1,0 +1,239 @@
+#/*++
+#
+# Copyright (c) 2005 - 2007, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution. The full text of the license may be found at         
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    Shell.inf
+#
+#  Abstract: 
+#
+#    Component description file for EFI Shell module.
+#
+#--*/
+
+[defines]
+BASE_NAME            = Shell
+FILE_GUID            = c57ad6b7-0515-40a8-9d21-551652854e37
+COMPONENT_TYPE       = APPLICATION
+
+[sources.common]
+  Library/ShellDebug.c
+  Library/DPath.c
+  Library/Init.c
+  Library/Lock.c
+  Library/Str.c
+  Library/IO.c
+  Library/Mem.c
+  Library/Misc.c
+  Library/Data.c
+  Library/RtData.c
+  Library/ShellEnvInt.c
+  Library/Handle.c
+  Library/FileIO.c
+  Library/ConsistMapping.c
+  Library/CRC.c
+  Library/Event.c
+  Library/Perf.c
+  Library/VarCheck.c
+
+  newshell/NshellStrings.uni
+  newshell/init.c
+  newshell/nshell.h
+  newshell/FakeHii.c
+
+  ShCommonStrings.uni
+  shellenv/ShellenvHelpStrings.uni
+  shellenv/ShellenvStrings.uni
+  shellenv/ScriptCmdStrings.uni
+  shellenv/ConnectStrings.uni
+  shellenv/EchoStrings.uni
+  shellenv/HelpStrings.uni
+  shellenv/MapStrings.uni
+  shellenv/CdStrings.uni
+  shellenv/DhStrings.uni
+  
+  shellenv/cmddisp.c
+  shellenv/Connect.c
+  shellenv/data.c
+  shellenv/exec.c
+  shellenv/init.c
+  shellenv/protid.c
+  shellenv/var.c
+  shellenv/conio.c
+  shellenv/ConsoleProxy.c
+  shellenv/handle.c
+  shellenv/dprot.c
+  shellenv/map.c
+  shellenv/marg.c
+  shellenv/batch.c
+  shellenv/if.c
+  shellenv/goto.c
+  shellenv/echo.c
+  shellenv/pause.c
+  shellenv/for.c
+  shellenv/wait.c
+  shellenv/help.c
+  shellenv/shelle.h
+  shellenv/shellenvguid.h
+  shellenv/parsecmd.c
+  shellenv/shift.c
+ 
+  unload/UnloadStrings.uni
+  unload/unload.c
+  
+  attrib/AttribStrings.uni
+  attrib/attrib.c
+  attrib/attrib.h
+
+  cls/clsstrings.uni
+  cls/cls.c
+
+  cp/CpStrings.uni
+  cp/cp.h
+  cp/cp.c
+ 
+  date/DateStrings.uni
+  date/date.c
+  date/date.h
+
+  load/LoadStrings.uni
+  load/load.c
+  load/load.h
+
+  ls/LsStrings.uni
+  ls/ls.h
+  ls/ls.c
+
+  mkdir/MkdirStrings.uni
+  mkdir/mkdir.c
+  mkdir/mkdir.h
+
+  mv/MvStrings.uni
+  mv/mv.c
+  mv/mv.h
+ 
+  reset/ResetStrings.uni
+  reset/reset.c
+  reset/reset.h
+  
+  rm/RmStrings.uni
+  rm/rm.h
+  rm/rm.c
+  
+  type/TypeStrings.uni
+  type/type.c
+  type/type.h
+  time/TimeStrings.uni
+  time/time.c
+  time/time.h
+
+  touch/TouchStrings.uni
+  touch/touch.c
+  touch/touch.h
+
+  vol/VolStrings.uni
+  vol/vol.c
+  vol/vol.h
+
+  ver/VerStrings.uni
+  ver/ver.c
+  ver/ver.h
+  
+  drivers/DriversStrings.uni
+  drivers/drivers.c
+  drivers/drivers.h
+  
+  drvcfg/DrvcfgStrings.uni
+  drvcfg/drvcfg.c
+  drvcfg/drvcfg.h
+        
+  drvdiag/DrvdiagStrings.uni
+  drvdiag/drvdiag.c
+  drvdiag/drvdiag.h
+ 
+
+[sources.Mips32]
+  ver/Mips32/ver32.c
+  Library/Mips32/Math.s
+  Library/Mips32/initplat.c
+
+
+[sources.ia32]
+  ver/ia32/ver32.c
+  Library/ia32/math.c
+  Library/ia32/initplat.c
+
+
+[sources.ipf]
+  ver/ipf/ver64.c
+  Library/ipf/math.c
+  Library/ipf/initplat.c
+  Library/ipf/palproc.s
+  Library/ipf/salpal.c
+
+[sources.EBC]
+  ver/ebc/verEbc.c
+  Library/EBC/math.c
+  Library/EBC/initplat.c
+
+[sources.x64]
+  ver/ia32/ver32.c
+  Library/ipf/math.c
+  Library/ia32/initplat.c
+
+[includes.common]
+  .
+  ./inc
+  ./ver
+  ./Library
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(DEST_DIR)
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
+
+[libraries.common]
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+    
+[--]
+
+#
+# To enable building shell commands standalone or built into the shell,
+# we will specify some additional DEFINEs on the compile command line.
+#
+[nmake.common]
+  C_PROJ_FLAGS += 
+  IMAGE_ENTRY_POINT=InitializeShell
+  C_STD_FLAGS += -D EFI_MONOSHELL
+  C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+
+[nmake.ebc]
+  EBC_C_STD_FLAGS += -D EFI_MONOSHELL
+  EBC_C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  EBC_C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+
+
+
+ 

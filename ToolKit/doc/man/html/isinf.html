@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ISINF.html">ISINF(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="ISINF.html">ISINF(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>isinf</B>, <B>isnan</B> - test for infinity or not-a-number
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <I>int</I>
+     <B>isinf</B>(<I>double</I>)
+
+     <I>int</I>
+     <B>isnan</B>(<I>double</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>isninf</B>() function returns 1 if the number is ``infinity'', otherwise
+     0.
+
+     The <B>isnan</B>() function returns 1 if the number is ``not-a-number'', other-
+     wise 0.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+     <I>IEEE</I> <I>Standard</I> <I>for</I> <I>Binary</I> <I>Floating-Point</I> <I>Arithmetic</I>, Std 754-1985, ANSI.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Neither the VAX nor the Tahoe floating point have distinguished values
+     for either infinity or not-a-number.  These routines always return 0 on
+     those architectures.
+
+BSD			       January 29, 1994 			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

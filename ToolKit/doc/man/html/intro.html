@@ -1,0 +1,580 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="INTRO.html">INTRO(2)</A></B>		  FreeBSD System Calls Manual		      <B><A HREF="INTRO.html">INTRO(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>intro</B> - introduction to system calls and error numbers
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;errno.h&gt;</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     This section provides an overview of the system calls, their error re-
+     turns, and other common definitions and concepts.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Nearly all of the system calls provide an error number referenced via the
+     external identifier errno. This identifier is defined in &lt;<I>sys/errno.h</I>&gt; as
+
+	   extern int * __error();
+	   #define errno (* __error())
+
+     The <B>__</B><I>error()</I> function returns a pointer to a field in the thread specif-
+     ic structure for threads other than the initial thread. For the initial
+     thread and non-threaded processes, <B>__</B><I>error()</I> returns a pointer to a glob-
+     al <I>errno</I> variable that is compatible with the previous definition.
+
+     When a system call detects an error, it returns an integer value indicat-
+     ing failure (usually -1) and sets the variable <I>errno</I> accordingly.	&lt;This
+     allows interpretation of the failure on receiving a -1 and to take action
+     accordingly.&gt; Successful calls never set <I>errno</I>; once set, it remains un-
+     til another error occurs.	It should only be examined after an error.
+     Note that a number of system calls overload the meanings of these error
+     numbers, and that the meanings must be interpreted according to the type
+     and circumstances of the call.
+
+     The following is a complete list of the errors and their names as given
+     in &lt;<I>sys/errno.h</I>&gt;.
+
+     0 <I>Error</I> <I>0</I>. Not used.
+
+     1 EPERM <I>Operation</I> <I>not</I> <I>permitted</I>. An attempt was made to perform an opera-
+	     tion limited to processes with appropriate privileges or to the
+	     owner of a file or other resources.
+
+     2 ENOENT <I>No</I> <I>such</I> <I>file</I> <I>or</I> <I>directory</I>. A component of a specified pathname
+	     did not exist, or the pathname was an empty string.
+
+     3 ESRCH <I>No</I> <I>such</I> <I>process</I>. No process could be found corresponding to that
+	     specified by the given process ID.
+
+     4 EINTR <I>Interrupted</I> <I>function</I> <I>call</I>. An asynchronous signal (such as SIGINT
+	     or SIGQUIT) was caught by the process during the execution of an
+	     interruptible function. If the signal handler performs a normal
+	     return, the interrupted function call will seem to have returned
+	     the error condition.
+
+     5 EIO <I>Input/output</I> <I>error</I>. Some physical input or output error occurred.
+	     This error will not be reported until a subsequent operation on
+	     the same file descriptor and may be lost (over written) by any
+	     subsequent errors.
+
+     6 ENXIO <I>No</I> <I>such</I> <I>device</I> <I>or</I> <I>address</I>. Input or output on a special file re-
+	     ferred to a device that did not exist, or made a request beyond
+	     the limits of the device.	This error may also occur when, for
+	     example, a tape drive is not online or no disk pack is loaded on
+
+	     a drive.
+
+     7 E2BIG <I>Arg</I> <I>list</I> <I>too</I> <I>long</I>. The number of bytes used for the argument and
+	     environment list of the new process exceeded the current limit of
+	     65536 bytes (NCARGS in &lt;<I>sys/param.h</I>&gt;).
+
+     8 ENOEXEC <I>Exec</I> <I>format</I> <I>error</I>. A request was made to execute a file that,
+	     although it has the appropriate permissions, was not in the for-
+	     mat required for an executable file.
+
+     9 EBADF <I>Bad</I> <I>file</I> <I>descriptor</I>. A file descriptor argument was out of range,
+	     referred to no open file, or a read (write) request was made to a
+	     file that was only open for writing (reading).
+
+     10 ECHILD <I>No</I> <I>child</I> <I>processes</I>. A <B><A HREF="wait.html">wait(2)</A></B> or <B><A HREF="waitpid.html">waitpid(2)</A></B> function was exe-
+	     cuted by a process that had no existing or unwaited-for child
+	     processes.
+
+     11 EDEADLK <I>Resource</I> <I>deadlock</I> <I>avoided</I>. An attempt was made to lock a sys-
+	     tem resource that would have resulted in a deadlock situation.
+
+     12 ENOMEM <I>Cannot</I> <I>allocate</I> <I>memory</I>. The new process image required more
+	     memory than was allowed by the hardware or by system-imposed mem-
+	     ory management constraints.  A lack of swap space is normally
+	     temporary; however, a lack of core is not.  Soft limits may be
+	     increased to their corresponding hard limits.
+
+     13 EACCES <I>Permission</I> <I>denied</I>. An attempt was made to access a file in a
+	     way forbidden by its file access permissions.
+
+     14 EFAULT <I>Bad</I> <I>address</I>. The system detected an invalid address in attempt-
+	     ing to use an argument of a call.
+
+     15 ENOTBLK <I>Not</I> <I>a</I> <I>block</I> <I>device</I>. A block device operation was attempted on
+	     a non-block device or file.
+
+     16 EBUSY <I>Resource</I> <I>busy</I>. An attempt to use a system resource which was in
+	     use at the time in a manner which would have conflicted with the
+	     request.
+
+     17 EEXIST <I>File</I> <I>exists</I>. An existing file was mentioned in an inappropriate
+	     context, for instance, as the new link name in a <B><A HREF="link.html">link(2)</A></B> func-
+	     tion.
+
+     18 EXDEV <I>Improper</I> <I>link</I>. A hard link to a file on another file system was
+	     attempted.
+
+     19 ENODEV <I>Operation</I> <I>not</I> <I>supported</I> <I>by</I> <I>device</I>. An attempt was made to apply
+	     an inappropriate function to a device, for example, trying to
+	     read a write-only device such as a printer.
+
+     20 ENOTDIR <I>Not</I> <I>a</I> <I>directory</I>. A component of the specified pathname exist-
+	     ed, but it was not a directory, when a directory was expected.
+
+     21 EISDIR <I>Is</I> <I>a</I> <I>directory</I>. An attempt was made to open a directory with
+	     write mode specified.
+
+     22 EINVAL <I>Invalid</I> <I>argument</I>. Some invalid argument was supplied. (For ex-
+	     ample, specifying an undefined signal to a <B><A HREF="signal.html">signal(3)</A></B> or <B><A HREF="kill.html">kill(2)</A></B>
+	     function).
+
+     23 ENFILE <I>Too</I> <I>many</I> <I>open</I> <I>files</I> <I>in</I> <I>system</I>. Maximum number of file descrip-
+	     tors allowable on the system has been reached and a requests for
+	     an open cannot be satisfied until at least one has been closed.
+
+     24 EMFILE <I>Too</I> <I>many</I> <I>open</I> <I>files</I>. &lt;As released, the limit on the number of
+	     open files per process is 64.&gt; <B><A HREF="Getdtablesize.html">Getdtablesize(2)</A></B> will obtain the
+	     current limit.
+
+     25 ENOTTY <I>Inappropriate</I> <I>ioctl</I> <I>for</I> <I>device</I>. A control function (see
+	     <B><A HREF="ioctl.html">ioctl(2)</A></B>)	was attempted for a file or special device for which
+	     the operation was inappropriate.
+
+     26 ETXTBSY <I>Text</I> <I>file</I> <I>busy</I>. The new process was a pure procedure (shared
+	     text) file which was open for writing by another process, or
+	     while the pure procedure file was being executed an <B><A HREF="open.html">open(2)</A></B> call
+	     requested write access.
+
+     27 EFBIG <I>File</I> <I>too</I> <I>large</I>. The size of a file exceeded the maximum (about
+	     2.1E9 bytes).
+
+     28 ENOSPC <I>Device</I> <I>out</I> <I>of</I> <I>space</I>. A <B><A HREF="write.html">write(2)</A></B> to an ordinary file, the cre-
+	     ation of a directory or symbolic link, or the creation of a di-
+	     rectory entry failed because no more disk blocks were available
+	     on the file system, or the allocation of an inode for a newly
+	     created file failed because no more inodes were available on the
+	     file system.
+
+     29 ESPIPE <I>Illegal</I> <I>seek</I>. An <B><A HREF="lseek.html">lseek(2)</A></B> function was issued on a socket, pipe
+	     or FIFO.
+
+     30 EROFS <I>Read-only</I> <I>file</I> <I>system</I>. An attempt was made to modify a file or
+	     directory was made on a file system that was read-only at the
+	     time.
+
+     31 EMLINK <I>Too</I> <I>many</I> <I>links</I>. Maximum allowable hard links to a single file
+	     has been exceeded (limit of 32767 hard links per file).
+
+     32 EPIPE <I>Broken</I> <I>pipe</I>. A write on a pipe, socket or FIFO for which there
+	     is no process to read the data.
+
+     33 EDOM <I>Numerical</I> <I>argument</I> <I>out</I> <I>of</I> <I>domain</I>. A numerical input argument was
+	     outside the defined domain of the mathematical function.
+
+     34 ERANGE <I>Numerical</I> <I>result</I> <I>out</I> <I>of</I> <I>range</I>. A numerical result of the func-
+	     tion was too large to fit in the available space (perhaps exceed-
+	     ed precision).
+
+     35 EAGAIN <I>Resource</I> <I>temporarily</I> <I>unavailable</I>. This is a temporary condition
+	     and later calls to the same routine may complete normally.
+
+     36 EINPROGRESS <I>Operation</I> <I>now</I> <I>in</I> <I>progress</I>. An operation that takes a long
+	     time to complete (such as a <B><A HREF="connect.html">connect(2)</A></B>)  was attempted on a non-
+	     blocking object (see <B><A HREF="fcntl.html">fcntl(2)</A></B>).
+
+     37 EALREADY <I>Operation</I> <I>already</I> <I>in</I> <I>progress</I>. An operation was attempted on
+	     a non-blocking object that already had an operation in progress.
+
+     38 ENOTSOCK <I>Socket</I> <I>operation</I> <I>on</I> <I>non-socket</I>. Self-explanatory.
+
+     39 EDESTADDRREQ <I>Destination</I> <I>address</I> <I>required</I>. A required address was
+	     omitted from an operation on a socket.
+
+     40 EMSGSIZE <I>Message</I> <I>too</I> <I>long</I>. A message sent on a socket was larger than
+	     the internal message buffer or some other network limit.
+
+     41 EPROTOTYPE <I>Protocol</I> <I>wrong</I> <I>type</I> <I>for</I> <I>socket</I>. A protocol was specified
+	     that does not support the semantics of the socket type requested.
+	     For example, you cannot use the ARPA Internet UDP protocol with
+	     type SOCK_STREAM.
+
+     42 ENOPROTOOPT <I>Protocol</I> <I>not</I> <I>available</I>. A bad option or level was speci-
+
+	     fied in a <B><A HREF="getsockopt.html">getsockopt(2)</A></B> or <B><A HREF="getsockopt.html">setsockopt(2)</A></B> call.
+
+     43 EPROTONOSUPPORT <I>Protocol</I> <I>not</I> <I>supported</I>. The protocol has not been con-
+	     figured into the system or no implementation for it exists.
+
+     44 ESOCKTNOSUPPORT <I>Socket</I> <I>type</I> <I>not</I> <I>supported</I>. The support for the socket
+	     type has not been configured into the system or no implementation
+	     for it exists.
+
+     45 EOPNOTSUPP <I>Operation</I> <I>not</I> <I>supported</I>. The attempted operation is not
+	     supported for the type of object referenced.  Usually this occurs
+	     when a file descriptor refers to a file or socket that cannot
+	     support this operation, for example, trying to <I>accept</I> a connec-
+	     tion on a datagram socket.
+
+     46 EPFNOSUPPORT <I>Protocol</I> <I>family</I> <I>not</I> <I>supported</I>. The protocol family has
+	     not been configured into the system or no implementation for it
+	     exists.
+
+     47 EAFNOSUPPORT <I>Address</I> <I>family</I> <I>not</I> <I>supported</I> <I>by</I> <I>protocol</I> <I>family</I>. An ad-
+	     dress incompatible with the requested protocol was used.  For ex-
+	     ample, you shouldn't necessarily expect to be able to use NS ad-
+	     dresses with ARPA Internet protocols.
+
+     48 EADDRINUSE <I>Address</I> <I>already</I> <I>in</I> <I>use</I>. Only one usage of each address is
+	     normally permitted.
+
+     49 EADDRNOTAVAIL <I>Cannot</I> <I>assign</I> <I>requested</I> <I>address</I>. Normally results from
+	     an attempt to create a socket with an address not on this ma-
+	     chine.
+
+     50 ENETDOWN <I>Network</I> <I>is</I> <I>down</I>. A socket operation encountered a dead net-
+	     work.
+
+     51 ENETUNREACH <I>Network</I> <I>is</I> <I>unreachable</I>. A socket operation was attempted
+	     to an unreachable network.
+
+     52 ENETRESET <I>Network</I> <I>dropped</I> <I>connection</I> <I>on</I> <I>reset</I>. The host you were con-
+	     nected to crashed and rebooted.
+
+     53 ECONNABORTED <I>Software</I> <I>caused</I> <I>connection</I> <I>abort</I>. A connection abort was
+	     caused internal to your host machine.
+
+     54 ECONNRESET <I>Connection</I> <I>reset</I> <I>by</I> <I>peer</I>. A connection was forcibly closed
+	     by a peer.  This normally results from a loss of the connection
+	     on the remote socket due to a timeout or a reboot.
+
+     55 ENOBUFS <I>No</I> <I>buffer</I> <I>space</I> <I>available</I>. An operation on a socket or pipe
+	     was not performed because the system lacked sufficient buffer
+	     space or because a queue was full.
+
+     56 EISCONN <I>Socket</I> <I>is</I> <I>already</I> <I>connected</I>. A <B><A HREF="connect.html">connect(2)</A></B> request was made on
+	     an already connected socket; or, a <B><A HREF="send.html">sendto(2)</A></B> or <B><A HREF="send.html">sendmsg(2)</A></B> re-
+	     quest on a connected socket specified a destination when already
+	     connected.
+
+     57 ENOTCONN <I>Socket</I> <I>is</I> <I>not</I> <I>connected</I>. An request to send or receive data
+	     was disallowed because the socket was not connected and (when
+	     sending on a datagram socket) no address was supplied.
+
+     58 ESHUTDOWN <I>Cannot</I> <I>send</I> <I>after</I> <I>socket</I> <I>shutdown</I>. A request to send data
+	     was disallowed because the socket had already been shut down with
+	     a previous <B><A HREF="shutdown.html">shutdown(2)</A></B> call.
+
+     60 ETIMEDOUT <I>Operation</I> <I>timed</I> <I>out</I>. A <B><A HREF="connect.html">connect(2)</A></B> or <B><A HREF="send.html">send(2)</A></B> request failed
+	     because the connected party did not properly respond after a pe-
+	     riod of time.  (The timeout period is dependent on the communica-
+	     tion protocol.)
+
+     61 ECONNREFUSED <I>Connection</I> <I>refused</I>. No connection could be made because
+	     the target machine actively refused it.  This usually results
+	     from trying to connect to a service that is inactive on the for-
+	     eign host.
+
+     62 ELOOP <I>Too</I> <I>many</I> <I>levels</I> <I>of</I> <I>symbolic</I> <I>links</I>. A path name lookup involved
+	     more than 8 symbolic links.
+
+     63 ENAMETOOLONG <I>File</I> <I>name</I> <I>too</I> <I>long</I>. A component of a path name exceeded
+	     255 (MAXNAMELEN) characters, or an entire path name exceeded 1023
+	     (MAXPATHLEN-1) characters.
+
+     64 EHOSTDOWN <I>Host</I> <I>is</I> <I>down</I>. A socket operation failed because the destina-
+	     tion host was down.
+
+     65 EHOSTUNREACH <I>No</I> <I>route</I> <I>to</I> <I>host</I>. A socket operation was attempted to an
+	     unreachable host.
+
+     66 ENOTEMPTY <I>Directory</I> <I>not</I> <I>empty</I>. A directory with entries other than `.'
+	     and `..' was supplied to a remove directory or rename call.
+
+     67 EPROCLIM <I>Too</I> <I>many</I> <I>processes</I>.
+
+     68 EUSERS <I>Too</I> <I>many</I> <I>users</I>. The quota system ran out of table entries.
+
+     69 EDQUOT <I>Disc</I> <I>quota</I> <I>exceeded</I>. A <B><A HREF="write.html">write(2)</A></B> to an ordinary file, the cre-
+	     ation of a directory or symbolic link, or the creation of a di-
+	     rectory entry failed because the user's quota of disk blocks was
+	     exhausted, or the allocation of an inode for a newly created file
+	     failed because the user's quota of inodes was exhausted.
+
+     70 ESTALE <I>Stale</I> <I>NFS</I> <I>file</I> <I>handle</I>. An attempt was made to access an open
+	     file (on an NFS filesystem) which is now unavailable as refer-
+	     enced by the file descriptor.  This may indicate the file was
+	     deleted on the NFS server or some other catastrophic event oc-
+	     curred.
+
+     72 EBADRPC <I>RPC</I> <I>struct</I> <I>is</I> <I>bad</I>. Exchange of RPC information was unsuccess-
+	     ful.
+
+     73 ERPCMISMATCH <I>RPC</I> <I>version</I> <I>wrong</I>. The version of RPC on the remote peer
+	     is not compatible with the local version.
+
+     74 EPROGUNAVAIL <I>RPC</I> <I>prog.</I> <I>not</I> <I>avail</I>. The requested program is not regis-
+	     tered on the remote host.
+
+     75 EPROGMISMATCH <I>Program</I> <I>version</I> <I>wrong</I>. The requested version of the pro-
+	     gram is not available on the remote host (RPC).
+
+     76 EPROCUNAVAIL <I>Bad</I> <I>procedure</I> <I>for</I> <I>program</I>. An RPC call was attempted for
+	     a procedure which doesn't exist in the remote program.
+
+     77 ENOLCK <I>No</I> <I>locks</I> <I>available</I>. A system-imposed limit on the number of si-
+	     multaneous file locks was reached.
+
+     78 ENOSYS <I>Function</I> <I>not</I> <I>implemented</I>. Attempted a system call that is not
+	     available on this system.
+
+
+</PRE>
+<H2>DEFINITIONS</H2><PRE>
+     Process ID.
+	     Each active process in the system is uniquely identified by a
+	     non-negative integer called a process ID.	The range of this ID
+
+	     is from 0 to 99999.
+
+     Parent process ID
+	     A new process is created by a currently active process; (see
+	     <B><A HREF="fork.html">fork(2)</A></B>).	The parent process ID of a process is initially the
+	     process ID of its creator.  If the creating process exits, the
+	     parent process ID of each child is set to the ID of a system pro-
+	     cess, <B><A HREF="init.html">init(8)</A></B>.
+
+     Process Group
+	     Each active process is a member of a process group that is iden-
+	     tified by a non-negative integer called the process group ID.
+	     This is the process ID of the group leader.  This grouping per-
+	     mits the signaling of related processes (see <B><A HREF="termios.html">termios(4)</A></B>)  and the
+	     job control mechanisms of <B><A HREF="csh.html">csh(1)</A></B>.
+
+     Session
+	     A session is a set of one or more process groups.	A session is
+	     created by a successful call to <B><A HREF="setsid.html">setsid(2)</A></B>,  which causes the
+	     caller to become the only member of the only process group in the
+	     new session.
+
+     Session leader
+	     A process that has created a new session by a successful call to
+	     <B><A HREF="setsid.html">setsid(2)</A></B>,  is known as a session leader.	Only a session leader
+	     may acquire a terminal as its controlling terminal (see
+	     <B><A HREF="termios.html">termios(4)</A></B>).
+
+     Controlling process
+	     A session leader with a controlling terminal is a controlling
+	     process.
+
+     Controlling terminal
+	     A terminal that is associated with a session is known as the con-
+	     trolling terminal for that session and its members.
+
+     Terminal Process Group ID
+	     A terminal may be acquired by a session leader as its controlling
+	     terminal.	Once a terminal is associated with a session, any of
+	     the process groups within the session may be placed into the
+	     foreground by setting the terminal process group ID to the ID of
+	     the process group.  This facility is used to arbitrate between
+	     multiple jobs contending for the same terminal; (see <B><A HREF="csh.html">csh(1)</A></B> and
+	     <B><A HREF="tty.html">tty(4)</A></B>).
+
+     Orphaned Process Group
+	     A process group is considered to be <I>orphaned</I> if it is not under
+	     the control of a job control shell.  More precisely, a process
+	     group is orphaned when none of its members has a parent process
+	     that is in the same session as the group, but is in a different
+	     process group.  Note that when a process exits, the parent pro-
+	     cess for its children is changed to be <B><A HREF="init.html">init(8)</A></B>,  which is in a
+	     separate session.	Not all members of an orphaned process group
+	     are necessarily orphaned processes (those whose creating process
+	     has exited).  The process group of a session leader is orphaned
+	     by definition.
+
+     Real User ID and Real Group ID
+	     Each user on the system is identified by a positive integer
+	     termed the real user ID.
+
+	     Each user is also a member of one or more groups.	One of these
+	     groups is distinguished from others and used in implementing ac-
+	     counting facilities.  The positive integer corresponding to this
+	     distinguished group is termed the real group ID.
+
+	     All processes have a real user ID and real group ID.  These are
+	     initialized from the equivalent attributes of the process that
+	     created it.
+
+     Effective User Id, Effective Group Id, and Group Access List
+	     Access to system resources is governed by two values: the effec-
+	     tive user ID, and the group access list.  The first member of the
+	     group access list is also known as the effective group ID.  (In
+	     POSIX.1, the group access list is known as the set of supplemen-
+	     tary group IDs, and it is unspecified whether the effective group
+	     ID is a member of the list.)
+
+	     The effective user ID and effective group ID are initially the
+	     process's real user ID and real group ID respectively.  Either
+	     may be modified through execution of a set-user-ID or set-group-
+	     ID file (possibly by one its ancestors) (see <B><A HREF="execve.html">execve(2)</A></B>).  By con-
+	     vention, the effective group ID (the first member of the group
+	     access list) is duplicated, so that the execution of a set-group-
+	     ID program does not result in the loss of the original (real)
+	     group ID.
+
+	     The group access list is a set of group IDs used only in deter-
+	     mining resource accessibility.  Access checks are performed as
+	     described below in ``File Access Permissions''.
+
+     Saved Set User ID and Saved Set Group ID
+	     When a process executes a new file, the effective user ID is set
+	     to the owner of the file if the file is set-user-ID, and the ef-
+	     fective group ID (first element of the group access list) is set
+	     to the group of the file if the file is set-group-ID.  The effec-
+	     tive user ID of the process is then recorded as the saved set-us-
+	     er-ID, and the effective group ID of the process is recorded as
+	     the saved set-group-ID.  These values may be used to regain those
+	     values as the effective user or group ID after reverting to the
+	     real ID (see <B><A HREF="setuid.html">setuid(2)</A></B>).  (In POSIX.1, the saved set-user-ID and
+	     saved set-group-ID are optional, and are used in setuid and set-
+	     gid, but this does not work as desired for the super-user.)
+
+     Super-user
+	     A process is recognized as a <I>super-user</I> process and is granted
+	     special privileges if its effective user ID is 0.
+
+     Special Processes
+	     The processes with process IDs of 0, 1, and 2 are special.  Pro-
+	     cess 0 is the scheduler.  Process 1 is the initialization process
+	     <B><A HREF="init.html">init(8)</A></B>,  and is the ancestor of every other process in the sys-
+	     tem.  It is used to control the process structure.  Process 2 is
+	     the paging daemon.
+
+     Descriptor
+	     An integer assigned by the system when a file is referenced by
+	     <B><A HREF="open.html">open(2)</A></B> or <B><A HREF="dup.html">dup(2)</A></B>,  or when a socket is created by <B><A HREF="pipe.html">pipe(2)</A></B>,
+	     <B><A HREF="socket.html">socket(2)</A></B> or <B><A HREF="socketpair.html">socketpair(2)</A></B>,  which uniquely identifies an access
+	     path to that file or socket from a given process or any of its
+	     children.
+
+     File Name
+	     Names consisting of up to 255 (MAXNAMELEN) characters may be used
+	     to name an ordinary file, special file, or directory.
+
+	     These characters may be selected from the set of all ASCII char-
+	     acter excluding 0 (NUL) and the ASCII code for `/' (slash).
+
+	     Note that it is generally unwise to use `*', `?', `[' or `]' as
+	     part of file names because of the special meaning attached to
+
+	     these characters by the shell.
+
+     Path Name
+	     A path name is a NUL-terminated character string starting with an
+	     optional slash `/', followed by zero or more directory names sep-
+	     arated by slashes, optionally followed by a file name.  The total
+	     length of a path name must be less than 1024 (MAXPATHLEN) charac-
+	     ters.
+
+	     If a path name begins with a slash, the path search begins at the
+	     <I>root</I> directory.  Otherwise, the search begins from the current
+	     working directory.  A slash by itself names the root directory.
+	     An empty pathname refers to the current directory.
+
+     Directory
+	     A directory is a special type of file that contains entries that
+	     are references to other files.  Directory entries are called
+	     links.  By convention, a directory contains at least two links,
+	     `.' and `..', referred to as <I>dot</I> and <I>dot-dot</I> respectively.  Dot
+	     refers to the directory itself and dot-dot refers to its parent
+	     directory.
+
+     Root Directory and Current Working Directory
+	     Each process has associated with it a concept of a root directory
+	     and a current working directory for the purpose of resolving path
+	     name searches.  A process's root directory need not be the root
+	     directory of the root file system.
+
+     File Access Permissions
+	     Every file in the file system has a set of access permissions.
+	     These permissions are used in determining whether a process may
+	     perform a requested operation on the file (such as opening a file
+	     for writing).  Access permissions are established at the time a
+	     file is created.  They may be changed at some later time through
+	     the <B><A HREF="chmod.html">chmod(2)</A></B> call.
+
+	     File access is broken down according to whether a file may be:
+	     read, written, or executed.  Directory files use the execute per-
+	     mission to control if the directory may be searched.
+
+	     File access permissions are interpreted by the system as they ap-
+	     ply to three different classes of users: the owner of the file,
+	     those users in the file's group, anyone else.  Every file has an
+	     independent set of access permissions for each of these classes.
+	     When an access check is made, the system decides if permission
+	     should be granted by checking the access information applicable
+	     to the caller.
+
+	     Read, write, and execute/search permissions on a file are granted
+	     to a process if:
+
+	     The process's effective user ID is that of the super-user. (Note:
+	     even the super-user cannot execute a non-executable file.)
+
+	     The process's effective user ID matches the user ID of the owner
+	     of the file and the owner permissions allow the access.
+
+	     The process's effective user ID does not match the user ID of the
+	     owner of the file, and either the process's effective group ID
+	     matches the group ID of the file, or the group ID of the file is
+	     in the process's group access list, and the group permissions al-
+	     low the access.
+
+	     Neither the effective user ID nor effective group ID and group
+	     access list of the process match the corresponding user ID and
+	     group ID of the file, but the permissions for ``other users'' al-
+	     low access.
+
+	     Otherwise, permission is denied.
+
+     Sockets and Address Families
+
+	     A socket is an endpoint for communication between processes.
+	     Each socket has queues for sending and receiving data.
+
+	     Sockets are typed according to their communications properties.
+	     These properties include whether messages sent and received at a
+	     socket require the name of the partner, whether communication is
+	     reliable, the format used in naming message recipients, etc.
+
+	     Each instance of the system supports some collection of socket
+	     types; consult <B><A HREF="socket.html">socket(2)</A></B> for more information about the types
+	     available and their properties.
+
+	     Each instance of the system supports some number of sets of com-
+	     munications protocols.  Each protocol set supports addresses of a
+	     certain format.  An Address Family is the set of addresses for a
+	     specific group of protocols.  Each socket has an address chosen
+	     from the address family in which the socket was created.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="intro.html">intro(3)</A></B>,	<B><A HREF="strerror.html">perror(3)</A></B>
+
+4th Berkeley Distribution      February 27, 1995			     9
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

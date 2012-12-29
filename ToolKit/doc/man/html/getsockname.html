@@ -1,0 +1,85 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETSOCKNAME.html">GETSOCKNAME(2)</A></B>		  FreeBSD System Calls Manual		<B><A HREF="GETSOCKNAME.html">GETSOCKNAME(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getsockname</B> - get socket name
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>getsockname</B>(<I>int</I> <I>s</I>, <I>struct</I> <I>sockaddr</I> <I>*name</I>, <I>int</I> <I>*namelen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Getsockname</B>() returns the current <I>name</I> for the specified socket.  The
+     <I>namelen</I> parameter should be initialized to indicate the amount of space
+     pointed to by <I>name</I>. On return it contains the actual size of the name re-
+     turned (in bytes).
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>getsockname</B>() is implemented as the
+     <I>getsockname</I> syscall.
+
+     In the threaded library, the <I>getsockname</I> syscall is assembled to
+     <B>_thread_sys_getsockname</B>() and <B>getsockname</B>() is implemented as a function
+     which locks <I>fd</I> for read and write, then calls <B>_thread_sys_getsockname</B>().
+     Before returning, <B>getsockname</B>() unlocks <I>fd</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A 0 is returned if the call succeeds, -1 if it fails.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The call succeeds unless:
+
+     [EBADF]	 The argument <I>s</I> is not a valid descriptor.
+
+     [ENOTSOCK]  The argument <I>s</I> is a file, not a socket.
+
+     [ENOBUFS]	 Insufficient resources were available in the system to per-
+		 form the operation.
+
+     [EFAULT]	 The <I>name</I> parameter points to memory not in a valid part of
+		 the process address space.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bind.html">bind(2)</A></B>,  <B><A HREF="getpeername.html">getpeername(2)</A></B>,	<B><A HREF="socket.html">socket(2)</A></B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Names bound to sockets in the UNIX domain are inaccessible; getsockname
+     returns a zero length name.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getsockname</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

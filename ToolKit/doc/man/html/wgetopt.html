@@ -1,0 +1,118 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WGETOPT(1)</B>		FreeBSD General Commands Manual 	     <B>WGETOPT(1)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wgetopt</B> - parse wide command options
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>args=`wgetopt</B> <I>optstring</I> <I>$*`</I> ; errcode=$?; set -- $args
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Wgetopt</B> is used to break up options in command lines for easy parsing by
+     shell procedures, and to check for legal options.	<I>Optstring</I> is a string
+     of recognized option letters (see <B>wgetopt(3)</B> ); if a letter is followed by
+     a colon, the option is expected to have an argument which may or may not
+     be separated from it by white space.  The special option `--' is used to
+     delimit the end of the options.  <B>Wgetopt</B> will place `--' in the arguments
+     at the end of the options, or recognize it if used explicitly.  The shell
+     arguments (<B>$1</B> <B>$2</B> ...) are reset so that each option is preceded by a `-'
+     and in its own shell argument; each option argument is also in its own
+     shell argument.
+
+
+</PRE>
+<H2>EXAMPLE</H2><PRE>
+     The following code fragment shows how one might process the arguments for
+     a command that can take the options <B>-a</B> and <B>-b</B>, and the option <B>-o</B>, which
+     requires an argument.
+
+	   args=`wgetopt abo: $*`
+	   # you should not use `wgetopt abo: "$@"` since that would parse
+	   # the arguments differently from what the set command below does.
+	   if [ $? != 0 ]
+	   then
+		   echo 'Usage: ...'
+		   exit 2
+	   fi
+	   set -- $args
+	   # You cannot use the set command with a backquoted wgetopt directly,
+	   # since the exit code from wgetopt would be shadowed by those of set,
+	   # which is zero by definition.
+	   for i
+	   do
+		   case "$i"
+		   in
+			   -a|-b)
+				   echo flag $i set; sflags="${i#-}$sflags";
+				   shift;;
+			   -o)
+				   echo oarg is "'"$2"'"; oarg="$2"; shift;
+				   shift;;
+			   --)
+				   shift; break;;
+		   esac
+	   done
+	   cmd -oarg -a file file
+	   cmd -a -oarg -- file file
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>sh(1)</B>,  <B>wgetopt(3)</B>
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     <B>Wgetopt</B> prints an error message on the standard error output and exits
+     with status &gt; 0 when it encounters an option letter not included in
+     <I>optstring</I>.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     Written by Henry Spencer, working from a Bell Labs manual page.  Behavior
+     believed identical to the Bell version. Example changed in FreeBSD ver-
+     sion 3.2 and 4.0.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Whatever <B>wgetopt(3)</B> has.
+
+     Arguments containing white space or embedded shell metacharacters gener-
+     ally will not survive intact;  this looks easy to fix but isn't. People
+     trying to fix <B>wgetopt</B> or the example in this manpage should check the his-
+     tory of this file in FreeBSD.
+
+     The error message for an invalid option is identified as coming from
+     <B>wgetopt</B> rather than from the shell procedure containing the invocation of
+     <B>wgetopt</B>; this again is hard to fix.
+
+     The precise best way to use the <B>set</B> command to set the arguments without
+     disrupting the value(s) of shell options varies from one shell version to
+     another.
+
+     Each shellscript has to carry complex code to parse arguments halfway
+     correcty (like the example presented here). A better wgetopt-like tool
+     would move much of the complexity into the tool and keep the client shell
+     scripts simpler.
+
+BSD				 April 3, 1999				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

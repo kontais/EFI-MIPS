@@ -1,0 +1,188 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="RECV.html">RECV(2)</A></B> 		  FreeBSD System Calls Manual		       <B><A HREF="RECV.html">RECV(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>recv</B>, <B>recvfrom</B>, <B>recvmsg</B> - receive a message from a socket
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>recv</B>(<I>int</I> <I>s</I>, <I>void</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>, <I>int</I> <I>flags</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>recvfrom</B>(<I>int</I> <I>s</I>, <I>void</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>, <I>int</I> <I>flags</I>, <I>struct</I> <I>sockaddr</I> <I>*from</I>,
+	     <I>int</I> <I>*fromlen</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>recvmsg</B>(<I>int</I> <I>s</I>, <I>struct</I> <I>msghdr</I> <I>*msg</I>, <I>int</I> <I>flags</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Recvfrom</B>() and <B>recvmsg</B>() are used to receive messages from a socket, and
+     may be used to receive data on a socket whether or not it is connection-
+     oriented.
+
+     If <I>from</I> is non-nil, and the socket is not connection-oriented, the source
+     address of the message is filled in.  <I>Fromlen</I> is a value-result parame-
+     ter, initialized to the size of the buffer associated with <I>from</I>, and mod-
+     ified on return to indicate the actual size of the address stored there.
+
+     The <B>recv</B>() call is normally used only on a <I>connected</I> socket (see
+     <B><A HREF="connect.html">connect(2)</A></B>)  and is identical to <B>recvfrom</B>() with a nil <I>from</I> parameter.
+     As it is redundant, it may not be supported in future releases.
+
+     All three routines return the length of the message on successful comple-
+     tion.  If a message is too long to fit in the supplied buffer, excess
+     bytes may be discarded depending on the type of socket the message is re-
+     ceived from (see <B><A HREF="socket.html">socket(2)</A></B>).
+
+     If no messages are available at the socket, the receive call waits for a
+     message to arrive, unless the socket is nonblocking (see <B><A HREF="fcntl.html">fcntl(2)</A></B>)  in
+     which case the value -1 is returned and the external variable <I>errno</I> set
+     to EAGAIN. The receive calls normally return any data available, up to
+     the requested amount, rather than waiting for receipt of the full amount
+     requested; this behavior is affected by the socket-level options
+     SO_RCVLOWAT and SO_RCVTIMEO described in <B><A HREF="getsockopt.html">getsockopt(2)</A></B>.
+
+     The <B><A HREF="select.html">select(2)</A></B> call may be used to determine when more data arrive.
+
+     The <I>flags</I> argument to a recv call is formed by <I>or</I>'ing one or more of the
+     values:
+
+	   MSG_OOB	  process out-of-band data
+	   MSG_PEEK	  peek at incoming message
+	   MSG_WAITALL	  wait for full request or error
+     The MSG_OOB flag requests receipt of out-of-band data that would not be
+     received in the normal data stream.  Some protocols place expedited data
+     at the head of the normal data queue, and thus this flag cannot be used
+     with such protocols.  The MSG_PEEK flag causes the receive operation to
+     return data from the beginning of the receive queue without removing that
+     data from the queue.  Thus, a subsequent receive call will return the
+     same data.  The MSG_WAITALL flag requests that the operation block until
+     the full request is satisfied.  However, the call may still return less
+     data than requested if a signal is caught, an error or disconnect occurs,
+     or the next data to be received is of a different type than that re-
+     turned.
+
+     The <B>recvmsg</B>() call uses a <I>msghdr</I> structure to minimize the number of di-
+     rectly supplied parameters.  This structure has the following form, as
+     defined in &lt;<I>sys/socket.h</I>&gt;:
+
+     struct msghdr {
+	     caddr_t msg_name;	     /* optional address */
+	     u_int   msg_namelen;    /* size of address */
+	     struct  iovec *msg_iov; /* scatter/gather array */
+	     u_int   msg_iovlen;     /* # elements in msg_iov */
+	     caddr_t msg_control;    /* ancillary data, see below */
+	     u_int   msg_controllen; /* ancillary data buffer len */
+	     int     msg_flags;      /* flags on received message */
+     };
+
+     Here <I>msg</I><B>_</B><I>name</I> and <I>msg</I><B>_</B><I>namelen</I> specify the destination address if the
+     socket is unconnected; <I>msg</I><B>_</B><I>name</I> may be given as a null pointer if no
+     names are desired or required.  <I>Msg</I><B>_</B><I>iov</I> and <I>msg</I><B>_</B><I>iovlen</I> describe scatter
+     gather locations, as discussed in <B><A HREF="read.html">read(2)</A></B>.  <I>Msg</I><B>_</B><I>control</I>, which has length
+     <I>msg</I><B>_</B><I>controllen</I>, points to a buffer for other protocol control related
+     messages or other miscellaneous ancillary data.  The messages are of the
+     form:
+
+     struct cmsghdr {
+	     u_int   cmsg_len;	     /* data byte count, including hdr */
+	     int     cmsg_level;     /* originating protocol */
+	     int     cmsg_type;      /* protocol-specific type */
+     /* followed by
+	     u_char  cmsg_data[]; */
+     };
+     As an example, one could use this to learn of changes in the data-stream
+     in XNS/SPP, or in ISO, to obtain user-connection-request data by request-
+     ing a recvmsg with no data buffer provided immediately after an <B>accept</B>()
+     call.
+
+     Open file descriptors are now passed as ancillary data for AF_UNIX domain
+     sockets, with <I>cmsg</I><B>_</B><I>level</I> set to SOL_SOCKET and <I>cmsg</I><B>_</B><I>type</I> set to
+     SCM_RIGHTS.
+
+     Process credentials can also be passed as ancillary data for AF_UNIX do-
+     main sockets using a <I>cmsg</I><B>_</B><I>type</I> of SCM_CREDS. In this case, <I>cmsg</I><B>_</B><I>data</I>
+     should be a structure of type <I>cmsgcred</I>, which is defined in
+     &lt;<I>sys/socket.h</I>&gt; as follows:
+
+     struct cmsgcred {
+	     pid_t   cmcred_pid;	     /* PID of sending process */
+	     uid_t   cmcred_uid;	     /* real UID of sending process */
+	     uid_t   cmcred_euid;	     /* effective UID of sending process */
+	     gid_t   cmcred_gid;	     /* real GID of sending process */
+	     short   cmcred_ngroups;	     /* number or groups */
+	     gid_t   cmcred_groups[CMGROUP_MAX];     /* groups */
+     };
+
+     The kernel will fill in the credential information of the sending process
+     and deliver it to the receiver.
+
+     The <I>msg</I><B>_</B><I>flags</I> field is set on return according to the message received.
+     MSG_EOR indicates end-of-record; the data returned completed a record
+     (generally used with sockets of type SOCK_SEQPACKET). MSG_TRUNC indicates
+     that the trailing portion of a datagram was discarded because the data-
+     gram was larger than the buffer supplied.	MSG_CTRUNC indicates that some
+     control data were discarded due to lack of space in the buffer for ancil-
+     lary data.  MSG_OOB is returned to indicate that expedited or out-of-band
+     data were received.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     These calls return the number of bytes received, or -1 if an error oc-
+     curred.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The calls fail if:
+
+     [EBADF]	 The argument <I>s</I> is an invalid descriptor.
+
+     [ENOTCONN]  The socket is associated with a connection-oriented protocol
+		 and has not been connected (see <B><A HREF="connect.html">connect(2)</A></B> and <B><A HREF="accept.html">accept(2)</A></B>).
+
+     [ENOTSOCK]  The argument <I>s</I> does not refer to a socket.
+
+     [EAGAIN]	 The socket is marked non-blocking, and the receive operation
+		 would block, or a receive timeout had been set, and the time-
+		 out expired before data were received.
+
+     [EINTR]	 The receive was interrupted by delivery of a signal before
+		 any data were available.
+
+     [EFAULT]	 The receive buffer pointer(s) point outside the process's ad-
+		 dress space.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="fcntl.html">fcntl(2)</A></B>,	<B><A HREF="getsockopt.html">getsockopt(2)</A></B>,	<B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>recv</B>() function call appeared in 4.2BSD.
+
+4.3-Reno Berkeley Distribution February 21, 1994			     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

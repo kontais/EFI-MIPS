@@ -1,0 +1,238 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1250">
+<meta http-equiv="Content-Language" content="en-us">
+
+
+<link rel="stylesheet" type="text/css" href="default.css">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Cloanto Implementation of INI File Format</title>
+<meta name="robots" content="noarchive">
+<meta name="description" content="This document specifies a text-based file format for representing software
+configuration data in a format which is easily editable by humans, and
+unambiguously readable by a simple automatic parser.">
+<meta name="keywords" content="ini file format, INI, skin, SERIFF, .ini">
+<link rel="Start" href="http://www.cloanto.com/">
+</head>
+<body onload="preload_mouseover_f();" alink="#FF6600" bgcolor="#FFFFFF" link="#000000" text="#000000" vlink="#000000">
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <form method="GET" action="../../search/" name="searchform" onsubmit="return search_validate(this)" language="JavaScript">
+  </form>
+    <tbody>
+      <tr>
+      </tr>
+      <tr>
+        <td colspan="3" align="left" height="55" valign="top" width="100%">
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" width="76">
+        </td>
+        <td align="left" valign="top" width="554">
+        <h1>Cloanto Implementation of INI File Format</h1>
+        <h2 class="kbartbody">Abstract</h2>
+        <p class="kbartbody">This
+ document specifies a text-based file format for representing software 
+configuration data in a format which is easily editable by humans and 
+unambiguously readable by a simple automatic parser.</p><h2 class="kbartbody">Introduction</h2><p class="kbartbody">The
+ format described here is an implementation of the ".INI File Format", 
+as defined in the Microsoft Windows for Workgroups Resource Kit. Since 
+the original Microsoft specification is generic, and implementations 
+vary widely, we decided to document how the INI files and parsers used 
+in Cloanto applications works. As far as possible, existing 
+specifications and practices for character encoding and programming have
+ been retained.</p><p class="kbartbody">Where this document says that an
+ application "should" implement a certain feature in a certain way, it 
+means that the Cloanto INI parser supports this feature as recommended 
+here. Where this document says that a certain style "should" be avoided,
+ but parsers "should" support it or ignore it, it means that authors of 
+INI files should not use that style (the risk being incompatibility with
+ slightly different INI parsers), but authors of parser software should 
+support it or ignore it as indicated, rather than generate an error 
+condition. In the following, "INI" refers to the file format as 
+specified here. </p><h2 class="kbartbody">Character Set</h2><p class="kbartbody">For
+ maximum compatibility, the entire INI file (including section names, 
+key names and data values) should be encoded using 8-bit characters in 
+the ISO 8859-1 character set (of which 7-bit ASCII is a subset). 
+Application-specific string values may store data using other character 
+sets, and even binary data, as long as they are encoded as either ASCII 
+or ISO 8859-1 text. ANSI C Escape sequences are used for the encoding of
+ special characters in strings.</p><p class="kbartbody">Alternatively, 
+if the risk of incompatibility with other application scenarios (e.g. 
+data exchange with other applications, driver INF files, AutoRun, etc.) 
+can be excluded, the INI file may be encoded as a Unicode stream, 
+inclusive of an initial byte order mark (BOM) that describes the 
+encoding (UTF-8, UTF-16 or UTF-32) and endianness (big endian or little 
+endian).</p><p class="kbartbody">Known applications that write Unicode INI files include <a href="http://www.softwaredirector.com/">Software Director</a> and the Windows Registry Editor. Both write little-endian UTF-16 data.</p><p class="kbartbody">Also see the section "<a href="#defensiveini">Defensive INI: Detecting Unicode, XML</a>" in this document.</p><h2 class="kbartbody">File Names</h2><p class="kbartbody">If
+ the INI file is to be stored or used on a Microsoft Windows system, the
+ following characters should not be used in the file name, as they are 
+not supported by older file systems: <font face="Arial">"\", "/", ":", "*", "?", """ (double quote character), "&lt;", "&gt;" and "|".</font></p><p class="kbartbody"><font face="Arial">Additionally,
+ certain file names are supported at the file system level, and can be 
+accessed by programs, but they are not accessible from certain shells 
+and file manipulation programs. These names include: "COM<em>x</em>", "AUX", "LPT<em>x</em>",
+ "PRN", "NUL" and "CON", and all variants with a "dot suffix". File 
+names entirely consisting of dots (".", "..", etc.) are also "problem 
+files".</font></p><p class="kbartbody">Where compatibility with older file systems is important, short names ("8+3") should be used for directory and file names.</p><h2 class="kbartbody">File Structure</h2><p class="kbartbody">An
+ INI file is an 8-bit text file divided into sections, each containing 
+zero or more keys. Each key contains zero or more values.</p><p class="kbartbody">Example:</p><p class="codesample">[SectionName]</p><p class="codesample">keyname=value</p><p class="codesample">;comment</p><p class="codesample">keyname=value, value, value ;comment</p><p class="kbartbody">Section names are enclosed in square brackets, and must begin at the beginning of a line.</p><p class="kbartbody">Section
+ and key names are case-insensitive. In consideration of possible future
+ upgrades from INI to XML, authors of INI files may want to use 
+consistent and case-exact section and key names, as if INI parsers were 
+case-sensitive (XML parsers are case-sensitive).</p><p class="kbartbody">Section
+ and key names cannot contain spacing characters. The key name is 
+followed by an equal sign ("=", decimal code 61), optionally surrounded 
+by spacing characters, which are ignored.</p><p class="kbartbody">If the
+ same section appears more than once in the same file, or if the same 
+key appears more than once in the same section, then the last occurrence
+ prevails.</p><p class="kbartbody">Multiple values for a key are separated by a comma, optionally followed by one or more spacing characters (as defined below).</p><p class="kbartbody">When
+ a parser encounters an unrecognized section name, the entire section 
+(with all its keys) should be skipped. Within a known section, only 
+unrecognized keys should be skipped.</p><h2 class="kbartbody">Spacing, Line Terminators and Comments</h2><p class="kbartbody">Both Space (decimal code 32) and Horizontal Tab (HT, decimal code 9) are acceptable spacing characters.</p><p class="kbartbody">Lines
+ are terminated by a CR (decimal code 13) or LF (decimal code 10) 
+character. If CR+LF or LF+CR appear consecutively, they count as a 
+single line terminator, generating one line, not two lines. A sequence 
+consisting of CR+LF+CR+LF would however result in two lines, not one 
+line. Where implementation-specific considerations do not advise 
+otherwise, the recommended line terminator is a LF character.</p><p class="kbartbody">Comments
+ are introduced by a semicolon character (";", decimal code 59). 
+Comments must begin at the beginning of a line or after a spacing 
+character. Comments terminate at the end of the line.</p><p class="kbartbody">Parsers
+ should treat HT (decimal code 9) characters as space characters 
+(decimal code 32). Comments, empty lines, and spaces at the beginning of
+ a line should be ignored. Parsers should also ignore binary characters 
+other than HT, LF and CR, and treat an end of file like an end of line 
+before continuing with specific end-of-file processing.</p><p class="kbartbody">Parsers should be tolerant towards spacing variations, such as in:</p><p class="codesample">[section name]</p><p class="codesample">keyname=value</p><p class="codesample">; comment</p><p class="codesample">keyname = value, value , value ;comment</p><h2 class="kbartbody">String Values</h2><p class="kbartbody">String
+ values may optionally be enclosed in quote characters (""", decimal 
+code 34). String values beginning or ending with spaces, or containing 
+commas or semicolons, must be enclosed in quotes. Quote and backslash 
+("\", decimal code 92) characters, as well as binary characters (decimal
+ ranges 0..31, 127..159) appearing inside strings must be encoded using 
+the <a href="#escapesequences">escape sequences</a> described in this document.</p><p class="kbartbody">The
+ default character set for text appearing inside string values is ISO 
+8859-1. Applications may define certain sections and/or keys to store 
+text which, from the application side, results as being encoded using 
+different character sets, or even binary data. However, the string data 
+appearing in the INI file must be encoded as ISO 8859-1 text, using 
+escape sequences as necessary, so as to be compatible with INI parsers.</p><h2 class="kbartbody">Path Values</h2><p class="kbartbody">Path
+ values are identical to String values, with the exception that escape 
+sequences introduced by the backslash character are not supported. Path 
+values are used to represent file system and registry paths, where for 
+clarity it is not desirable to use double backslash characters ("\\") to
+ indicate backslash characters inside paths. This means that a path like
+ "C:\readme.txt" would remain unchanged (whereas it would have to be 
+indicated as "C:\\readme.txt" in a String field).</p><h2 class="kbartbody">Numerical Values</h2><p class="kbartbody">In
+ numerical values, the period (".", decimal code 46) is the only valid 
+decimal separator. Leading zeros are optional (e.g. "0.5", "000.5" and 
+".5" are all valid representations for the same value, i.e. 0.5). For 
+consistency, one leading zero (e.g. "0.5") is the preferred format to 
+represent values smaller than 1.</p><p class="kbartbody">Trailing zeroes
+ may be used on an application-dependent basis, for example to express 
+precision (e.g. "0.50", opposed to "0.5", may indicate that the smallest
+ currency unit is equal to fifty "cents", as opposed to five "tenths" of
+ the full unit, and "1.234000" may indicate to use a precision of six 
+decimal digits in partial or total results).</p><h2 class="kbartbody"><a name="escapesequences"></a>Escape Sequences</h2><p class="kbartbody">Escape
+ sequences, consisting of a backslash followed by a lower case letter or
+ by a combination of digits, should be used to encode binary data and 
+certain other special characters and character combinations. The result 
+of each escape sequence is parsed as if it were a single character. 
+Quote and backslash characters inside a string must always be preceded 
+by a backslash character. Binary data in key values should be encoded 
+using one of the octal or hexadecimal notations described below.</p><center><table frame="below" rules="rows" border="0" cellpadding="2" cellspacing="15" cols="2"><tbody><tr valign="top"><th class="label" width="28%"><p class="kbartbody" align="left">Escape Sequence</p></th><th class="label" width="72%"><p class="kbartbody" align="left">Represents</p></th></tr><tr valign="top"><td width="28%"><p class="kbartbody">\a</p></td><td width="72%"><p class="kbartbody">Bell (alert)</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\b</p></td><td width="72%"><p class="kbartbody">Backspace</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\f</p></td><td width="72%"><p class="kbartbody">Form feed</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\n</p></td><td width="72%"><p class="kbartbody">New line</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\r</p></td><td width="72%"><p class="kbartbody">Carriage return</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\t</p></td><td width="72%"><p class="kbartbody">Horizontal tab</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\v</p></td><td width="72%"><p class="kbartbody">Vertical tab</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\'</p></td><td width="72%"><p class="kbartbody">Single quotation mark</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\"</p></td><td width="72%"><p class="kbartbody">Double quotation mark</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\\</p></td><td width="72%"><p class="kbartbody">Backslash</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\?</p></td><td width="72%"><p class="kbartbody">Question mark</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\<em>ooo</em></p></td><td width="72%"><p class="kbartbody">ASCII character in octal notation</p></td></tr><tr valign="top"><td width="28%"><p class="kbartbody">\x<em>hhh</em></p></td><td width="72%"><p class="kbartbody">ASCII character in hexadecimal notation</p></td></tr><tr><td width="28%"><p class="kbartbody">\ at end of line</p></td><td width="72%"><p class="kbartbody">Continuation character</p></td></tr></tbody></table></center><p class="kbartbody"><br>The octal (<em>ooo</em>) and hexadecimal (<em>hhh</em>)
+ streams can be of any length, and terminate as soon as the first 
+non-octal or non-hexadecimal character is encountered. For example, the 
+digit 8 would terminate an octal stream, and be interpreted as a 
+separate character. Both uppercase and lowercase letters A..F are 
+acceptable for hexadecimal.</p><p class="kbartbody">The use of "\'" and 
+"\?" is entirely optional (unlike "\"", "\\" and binary characters), and
+ implemented only for compatibility with ANSI C.</p><p class="kbartbody">Nonprinting
+ sequences, such as "\a" and "\f", produce device-dependent results. 
+Applications should ignore such codes if they are not applicable to the 
+context. Applications should try to implement at least "\n" and "\t". A 
+simple implementation for "\t" could be to replace it with eight space 
+characters, or with one space character, depending on the intended use.</p><p class="kbartbody">All
+ escape sequences consisting of a backslash character plus a character 
+that does not appear in the table listed above are ignored. For example,
+ "\A" or "\c" would simply be skipped by a parser.</p><p class="kbartbody">A
+ backslash followed by any combination of CR and LF characters is 
+considered a continuation character. In this case, the backslash is 
+ignored, and the new line beginning after the sequence of CR and LF 
+characters ends is treated as the continuation of the previous line. For
+ line-counting purposes (e.g. to report an error in a certain line), 
+however, the lines are treated as separate.</p><h2 class="kbartbody">INI Files on Web Servers</h2><p class="kbartbody">A few special considerations apply to INI files hosted on web servers.</p><p class="kbartbody">MIME
+ Media Types instruct web clients how to handle files received from a 
+server. The HTTP protocol specification requires that the web server 
+reports the MIME type for content. By default, servers like Internet 
+Information Services 6.0 serve only files with extensions registered in 
+their MIME type list. If the web server does not already have a MIME 
+type entry for INI files, we recommend that it be added by setting the 
+MIME type for extension ".ini" to "application/octet-stream".</p><p class="kbartbody">If
+ a security filter such as Microsoft Urlscan is running on the web 
+server to control client requests, it must be configured to allow the 
+data files to be fetched (e.g. by adding .ini to the [AllowExtensions] 
+section and removing it from [DenyExtensions] in 
+%SystemRoot%\System32\Inetsrv\Urlscan\URLScan.ini). If it is not 
+possible to change the security settings, the names of the data files 
+should be changed (e.g. replacing ".ini" with ".txt").</p><h2>INI in Autorun.inf Files</h2><p class="kbartbody">AutoRun
+ is a feature of the Microsoft Windows operating system which makes it 
+possible to automatically run a program (e.g. a menu window, a setup 
+procedure, etc.) when a medium is inserted in the drive. When a medium 
+is inserted in an AutoRun-enabled drive, the system looks for a file 
+named "autorun.inf". For maximum compatibility both with Windows 
+(especially older versions) and with third-party parser applications, it
+ is recommended that:</p><ul><li><p class="kbartbody">No comments should be used in the file</p></li><li><p class="kbartbody">No space characters should be used around "="</p></li><li><p class="kbartbody">No space characters should be used in Open and Icon paths (not even if the paths are quoted)</p></li><li><p class="kbartbody">Line terminators should be CR+LF</p></li></ul><p class="kbartbody">For additional information on AutoRun you may want to refer to the <a href="http://www.menubox.com/">MenuBox</a> FAQ, documentation and Knowledge Base pages.</p><h2><a name="defensiveini"></a>Defensive INI: Detecting Unicode, XML</h2><p>Sometimes
+ data is initially written as an 8-bit INI file, but later as the 
+application requirements evolve this morphs into a Unicode INI and/or an
+ XML file. In order to support format changes and extensions, version 
+information is traditionally placed inside the INI data (e.g. a 
+"RequiredVersion" key). However, a transition from 8-bit INI to Unicode 
+or XML would prevent legacy code to access the version information 
+itself. It may therefore make sense to implement a simple check from the
+ very first version of the software, so that such a condition can be 
+handled appropriately (e.g. by displaying a "newer version required" 
+message instead of a generic error message).</p><p>All the application 
+needs to do is to check whether the file begins with a Unicode Byte 
+Order Mark (BOM) or an XML header (e.g. "&lt;" or "&lt;?xml"), which are
+ easily recognizable as non-8-bit INI.</p><p>Here are some frequent header byte patterns (hexadecimal notation):</p><ul><li>3C 3F 78 6D 6C (beginning of XML "&lt;?xml" header)</li><li>FE FF (UTF-16 BOM, big-endian)</li><li>FF FE (UTF-16 BOM, little-endian)</li><li>EF BB BF (UTF-8 BOM)</li><li>FF FE 00 00 (UTF-32 BOM, little-endian)</li><li>00 00 FE FF (UTF-32 BOM, big-endian)</li></ul><p>It
+ should be noted that an XML file may begin with a BOM and/or with 
+"white space" (space, line feed, tab) before the first "&lt;" .</p><p>XML
+ detection by checking for "&lt;?xml" rather than for just "&lt;" is 
+more prudent, as it minimizes confusion with HTML content (e.g. server 
+and proxy error messages) that may also begin with "&lt;".</p>
+<table border="0" cellpadding="0" cellspacing="0" width="554">
+  <tbody>
+    <tr><td colspan="2" class="kbartbody" height="20"><hr width="554"></td></tr>
+    <tr><td class="kbartinfo" colspan="2" width="554"><b>Specification Information</b></td></tr>
+    <tr><td class="kbartinfo" colspan="2" height="20" width="554"></td></tr>
+    <tr><td class="kbartinfo" width="150">Home Page:</td>
+        <td class="kbartinfo" width="404">
+            <a href="http://www.cloanto.com/specs/ini/">http://www.cloanto.com/specs/ini/</a>
+        </td>
+    </tr>
+    <tr><td class="kbartinfo" width="150">Version:</td>
+        <td class="kbartinfo" width="404">1.4 (2009-10-23)</td>
+    </tr>
+    <tr><td class="kbartinfo" width="150">Status:</td>
+        <td class="kbartinfo" width="404">Unmodified spec is free to distribute, free to implement</td>
+    </tr>
+    <tr>
+        <td class="kbartinfo" width="150">Last Page Update:</td>
+        <td class="kbartinfo" width="404"><!--webbot bot="TimeStamp" s-format="%Y-%m-%d" s-type="EDITED" startspan -->2012-11-13<!--webbot bot="TimeStamp" endspan i-checksum="12077" --> </td>
+    </tr>
+    <tr><td class="kbartinfo" colspan="2" height="20" width="554"></td></tr>
+    <tr><td class="kbartinfo" colspan="2" width="554"><i>Your <a href="http://www.cloanto.com/contact/">feedback</a> is always appreciated. It is safe to link to this page.</i></td></tr>
+</tbody>
+</table>
+</td>
+<td align="left" valign="top" width="100%"></td>
+</tr>
+	<tr>
+		<td rowspan="2" align="left" height="47" valign="bottom" width="130">
+			<img src="" height="14" width="104"><br>
+		</td>
+	</tr>
+</tbody>
+</table>
+</body>
+</html>

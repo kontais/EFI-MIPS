@@ -1,0 +1,70 @@
+Bonito                             UNCACHED
+  0x00000000   256M RAM           (0xa0000000)
+  0x10000000    63M PCI MEM Lo0   (0xb0000000)
+  0x13f00000     1M Video Acc
+  0x14000000    64M PCI MEM Lo1
+  0x18000000    64M PCI MEM Lo2
+  
+  0x1fc00000    BOOT ROM
+  0x1fd00000    PCI IO            (0xbfd00000)
+
+  0x20000000    PCI MEM Hi
+
+
+在CPU则访问0x10000000,0x14000000,0x18000000即访问了PCI MEM Lo0/1/2
+
+
+实例1:
+CPU访问PCI
+  m0_win1_base = 0x00000000_10000000   // CPU 256-521M
+  m0_win1_mask = 0xffffffff_f0000000
+  m0_win1_mmap = 0x00000000_10000001   // IO controller 256-512M
+        ---- (使用CPU 0x3ff00000地址配置)
+
+  trans_lo0 = 0x00   // lo0 => PCI 0-64M
+  trans_lo1 = 0x04   // lo1 => PCI 256-320M
+  trans_lo2 = 0x07   // lo2 => PCI 446-512M
+        ---- (使用CPU 0x1fe00110, PCIMap地址配置)
+
+PCI访问DDR2
+  pci_hit0_sel = 0xffffffff_c000000c    // 1G bar size，使能
+  pci_hit1_sel = 0xffffffff_00000006    // invalid bar
+  pci_hit2_sel = 0xffffffff_00000006    // invalid bar
+        ---- (使用CPU 0x1fe00150, PCI_Hit0_Sel_L地址配置)
+
+  pci_bar0 = 0x00000000_c0000000  // PCI 3G
+        ---- (使用CPU 0x1fe00010, 0x1fe00010, {BAR1, BAR0}地址配置)
+
+  m1_win0_base = 0x00000000_c0000000   // PCI 3-4G
+  m1_win0_mask = 0xffffffff_c0000000
+  m1_win0_mmap = 0x00000000_c0000000   // => DDR2 3-4G
+        ---- (使用CPU 0x3ff00000地址配置)
+
+
+实例2:
+CPU访问PCI
+  m0_win1_base = 0x00000000_10000000   // CPU 256-521M
+  m0_win1_mask = 0xffffffff_f0000000
+  m0_win1_mmap = 0x00000000_10000001   // IO controller 256-512M
+        ---- (使用CPU 0x3ff00000地址配置)
+
+  trans_lo0 = 0x00   // lo0 => PCI 0-64M
+  trans_lo1 = 0x04   // lo1 => PCI 256-320M
+  trans_lo2 = 0x07   // lo2 => PCI 446-512M
+        ---- (使用CPU 0x1fe00110, PCIMap地址配置)
+
+PCI访问DDR2
+  BONITO_PCIBASE0 = 0x80000000;
+  BONITO_PCIBASE1 = 0x0;
+        ---- (使用CPU 0x1fe00010, 0x1fe00010, {BAR1, BAR0}地址配置)
+
+  BONITO_PCIMEMBASECFG = 0;
+        ---- (使用CPU 0x1fe00114 PCIX_Bridge_Cfg，在龙芯中可能没有用)
+
+  PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0
+  Master1窗口0的大小为256M，映射到DDR2，即PCI地址2G-2.25G，映射到DDR的0-256M
+        ---- (使用CPU 0x3ff00000地址配置)
+
+
+
+

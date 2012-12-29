@@ -1,0 +1,124 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>WFOPEN(3)</b>	       FreeBSD Library Functions Manual 	      <b>WFOPEN(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>wfopen</b> - wide character version of stream open function
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>FILE</i> <i>*</i>
+     <b>wfopen</b>(<i>const</i> <i>wchar_t</i> <i>*path</i>, <i>const</i> <i>wchar_t</i> <i>*mode</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>wfopen</b>() function opens the file whose name is the wide character string
+     pointed to by <i>path</i> and associates a stream with it.
+
+     The argument <i>mode</i> points to a string beginning with one of the following
+     sequences (Additional characters may follow these sequences.):
+
+     L``r''   Open text file for reading.  The stream is positioned at the be-
+	     ginning of the file.
+
+     L``r+''  Open for reading and writing.  The stream is positioned at the
+	     beginning of the file.
+
+     L``w''   Truncate file to zero length or create text file for writing.
+	     The stream is positioned at the beginning of the file.
+
+     L``w+''  Open for reading and writing.  The file is created if it does not
+	     exist, otherwise it is truncated.	The stream is positioned at
+	     the beginning of the file.
+
+     L``a''   Open for writing.	The file is created if it does not exist.  The
+	     stream is positioned at the end of the file.
+
+     L``a+''  Open for reading and writing.  The file is created if it does not
+	     exist.  The stream is positioned at the end of the file.
+
+     The <i>mode</i> string can also include the letter L``b'' either as a third char-
+     acter or as a character between the characters in any of the two-charac-
+     ter strings described above.  This is strictly for compatibility with ISO
+     9899: 1990 (``ISO C'') and has no effect; the L``b'' is ignored.
+
+     Any created files will have mode &quot;S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
+     S_IROTH | S_IWOTH&quot; (0666), as modified by the process' umask value (see
+     <b>umask(2)</b>).
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     Upon successful completion <b>wfopen</b>() returns a FILE pointer.  Otherwise, 
+     NULL is returned and the global variable <i>errno</i> is set to indicate the error.
+
+
+</pre>
+
+<h2>ERRORS</h2>
+
+<pre>
+     [EINVAL]  The <i>mode</i> provided to <b>wfopen</b>() was invalid.
+
+     The <b>wfopen</b>() functions may also fail and set <i>errno</i>
+     for any of the errors specified for the routine <b>malloc(3)</b>.
+
+     The <b>wfopen</b>() function may also fail and set <i>errno</i> for any of the errors
+     specified for the routine <b>wopen(2)</b>.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>wopen(2)</b>,  <b>fclose(3)</b>,  <b>fseek(3)</b>,  <b>funopen(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>wfopen</b>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

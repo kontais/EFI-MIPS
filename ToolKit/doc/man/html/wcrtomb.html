@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCRTOMB(3)</B>             Libc Functions Manual             <B>WCRTOMB(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcrtomb</B> - restartably converts wide character to multibyte character
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>size_t</I>
+     <B>wcrtomb</B> ( <I>char *  s </I>, <I>wchar_t wc</I>,<I>size_t n</I>, <I>mbstate_t * pst</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     If s is a null pointer, the wcrtomb function is equivalent to the call:
+     wcrtomb(buf, L’\0’, ps), where buf is an internal buffer.If s is not a null pointer, 
+     the wcrtomb function determines the number of bytes needed to represent the 
+     multibyte character that corresponds to the wide character given by wc (including 
+     any shift sequences), and stores the resulting bytes in the array whose first
+     element is pointed to by s. At most MB_CUR_MAX bytes are stored. If wc is a null wide
+     character, a null byte is stored, preceded by any shift sequence needed to restore the
+     initial shift state; the resulting state described is the initial conversion state.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The wcrtomb function returns the number of bytes stored in the array object (including
+     any shift sequences). When wc is not a valid wide character, an encoding error occurs:
+     the function stores the value of the macro EILSEQ in errno and returns (size_t)-1;
+     the conversion state is undefined.
+     This function has not been actually implemented. So it will always return -1.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>btowc(3)</B>,  <B>wctob(3)</B>,  <B>mbsinit(3)</B>,  <B>mbrlen(3)</B>,  <B>mbrtowc(3)</B>,
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wcrtomb</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+Libc                              April 7, 2000                               1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,91 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSTOD(3)</B>              FreeBSD Library Functions Manual              <B>WCSTOD(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcstod</B> - convert wide char string to double
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>double</I>
+     <B>wcstod</B>(<I>const</I> <I>wchar</I><B>_</B><I>t</I> <I>*nptr</I>, <I>wchar</I><B>_</B><I>t</I> <I>**endptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcstod</B>() function converts the initial portion of the string pointed
+     to by <I>nptr</I> to <I>double</I> representation.
+
+     The expected form of the string is an optional plus (``+'') or minus sign
+     (``-'') followed by a sequence of digits optionally containing a decimal-
+     point character, optionally followed by an exponent.  An exponent con-
+     sists of an ``E'' or ``e'', followed by an optional plus or minus sign,
+     followed by a sequence of digits.
+
+     Leading white-space characters in the string (as defined by the iss-
+     <B>pace(3)</B> function) are skipped.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wcstod</B>() function returns the converted value, if any.
+
+     If <I>endptr</I> is not NULL, a pointer to the character after the last charac-
+     ter used in the conversion is stored in the location referenced by
+     <I>endptr</I>.
+
+     If no conversion is performed, zero is returned and the value of <I>nptr</I> is
+     stored in the location referenced by <I>endptr</I>.
+
+     If the correct value would cause overflow, plus or minus HUGE_VAL is re-
+     turned (according to the sign of the value), and ERANGE is stored in
+     <I>errno</I>. If the correct value would cause underflow, zero is returned and
+     ERANGE is stored in <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ERANGE]  Overflow or underflow occurred.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wcstol(3)</B>,  <B>wcstoul(3)</B>,  <B>wcstoq(3)</B>,  <B>wcstouq(3)</B>,
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wcstod</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+     The author of this software is David M. Gay.
+
+
+     THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+     WARRANTY.  IN PARTICULAR, NEITHER THE AUTHOR NOR AT&amp;T MAKES ANY REPRESEN-
+     TATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
+     SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+
+
+     Contact your vendor for a free copy of the source code to <B>wcstod</B>() and
+     accompanying functions.
+
+BSD                              June 4, 1993                                2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

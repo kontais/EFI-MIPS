@@ -1,0 +1,106 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>WCTYPE(3)</b>	       FreeBSD Library Functions Manual 	    <b>WCTYPE(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>wctype</b> - Determines a classification rule for wide-character codes.
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wctype.h&gt;</b>
+
+<em>     wctype_t
+</em><b>     wctype</b>(<em>const wchar_t * property</em>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     <strong>wctype</strong> determines a classification rule for wide-character codes.
+     The following pairs of calls have the same behavior in all locales
+     (but an implementation can define additional classification rules 
+     even in the &quot;C&quot; locale):
+
+     <strong>iswalnum</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>alnum</strong>&quot;))
+
+     <strong>iswalpha</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>alpha</strong>&quot;))
+
+     <strong>iswcntrl</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>cntrl</strong>&quot;))
+
+     <strong>iswdigit</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>digit</strong>&quot;))
+
+     <strong>iswgraph</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>graph</strong>&quot;))
+
+     <strong>iswlower</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>lower</strong>&quot;))
+
+     <strong>iswprint</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>print</strong>&quot;))
+
+     <strong>iswpunct</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>punct</strong>&quot;))
+
+     <strong>iswspace</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>space</strong>&quot;))
+
+     <strong>iswupper</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>upper</strong>&quot;))
+
+     <strong>iswxdigit</strong>(c) same as  <strong>iswctype</strong>(c, <strong>wctype</strong>(&quot;<strong>xdigit</strong>&quot;))
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     If the LC_CTYPE category of the current locale does not define 
+     a classification rule whose name matches the property string 
+     property, The <strong>wctype</strong>() functions returns zero. Otherwise, it 
+     returns a nonzero value suitable for use as the second argument 
+     to a subsequent call to <strong>towctrans</strong>. 
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>iswctype(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>wctype</b>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

@@ -1,0 +1,10 @@
+
+INC_DEPS += \
+    $(SDK_INSTALL_DIR)/lib/libdb/btree/btree.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/btree/extern.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/hash/extern.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/hash/hash.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/hash/page.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/hash/search.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/recno/extern.h \
+    $(SDK_INSTALL_DIR)/lib/libdb/recno/recno.h \

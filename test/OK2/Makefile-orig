@@ -1,0 +1,18 @@
+
+
+CC = gcc
+READELF=readelf
+OBJDUMP=objdump
+
+all: s
+
+
+s: s.c
+	$(CC) -e EntryPoint -nostdlib -Ttext=0x400000 -N -o s s.c
+	$(READELF) -a s > s.readelf
+	$(OBJDUMP) -Dtr s > s.dump
+	$(CC) -e EntryPoint -nostdlib -Ttext=0x400000 -c -N -o s.o s.c
+	$(READELF) -a s.o > s.o.readelf
+	$(OBJDUMP) -Dtr s.o > s.o.dump
+clean:
+	rm -rf s s.o *.dump *.readelf

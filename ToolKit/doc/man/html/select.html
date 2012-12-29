@@ -1,0 +1,128 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SELECT.html">SELECT(2)</A></B>		  FreeBSD System Calls Manual		     <B><A HREF="SELECT.html">SELECT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>select</B> - synchronous I/O multiplexing
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/time.h&gt;</B>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>select</B>(<I>int</I> <I>nfds</I>, <I>fd</I><B>_</B><I>set</I> <I>*readfds</I>, <I>fd</I><B>_</B><I>set</I> <I>*writefds</I>, <I>fd</I><B>_</B><I>set</I> <I>*exceptfds</I>,
+	     <I>struct</I> <I>timeval</I> <I>*timeout</I>)
+
+     <B>FD_SET</B>(<I>fd</I>, <I>&amp;fdset</I>)
+
+     <B>FD_CLR</B>(<I>fd</I>, <I>&amp;fdset</I>)
+
+     <B>FD_ISSET</B>(<I>fd</I>, <I>&amp;fdset</I>)
+
+     <B>FD_ZERO</B>(<I>&amp;fdset</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Select</B>() examines the I/O descriptor sets whose addresses are passed in
+     <I>readfds</I>, <I>writefds</I>, and <I>exceptfds</I> to see if some of their descriptors are
+     ready for reading, are ready for writing, or have an exceptional condi-
+     tion pending, respectively.  The only exceptional condition detectable is
+     out-of-band data received on a socket.  The first <I>nfds</I> descriptors are
+     checked in each set; i.e., the descriptors from 0 through <I>nfds</I>-1 in the
+     descriptor sets are examined.  On return, <B>select</B>() replaces the given de-
+     scriptor sets with subsets consisting of those descriptors that are ready
+     for the requested operation.  <B>Select</B>() returns the total number of ready
+     descriptors in all the sets.
+
+     The descriptor sets are stored as bit fields in arrays of integers.  The
+     following macros are provided for manipulating such descriptor sets:
+     <B>FD_ZERO</B>(<I>&amp;fdset</I>) initializes a descriptor set <I>fdset</I> to the null set.
+     <B>FD_SET</B>(<I>fd</I>, <I>&amp;fdset</I>) includes a particular descriptor <I>fd</I> in <I>fdset</I>.
+     <B>FD_CLR</B>(<I>fd</I>, <I>&amp;fdset</I>) removes <I>fd</I> from <I>fdset</I>. <B>FD_ISSET</B>(<I>fd</I>, <I>&amp;fdset</I>) is non-ze-
+     ro if <I>fd</I> is a member of <I>fdset</I>, zero otherwise.  The behavior of these
+     macros is undefined if a descriptor value is less than zero or greater
+     than or equal to FD_SETSIZE, which is normally at least equal to the max-
+     imum number of descriptors supported by the system.
+
+     If <I>timeout</I> is a non-nil pointer, it specifies a maximum interval to wait
+     for the selection to complete.  If <I>timeout</I> is a nil pointer, the select
+     blocks indefinitely.  To effect a poll, the <I>timeout</I> argument should be
+     non-nil, pointing to a zero-valued timeval structure.
+
+     Any of <I>readfds</I>, <I>writefds</I>, and <I>exceptfds</I> may be given as nil pointers if
+     no descriptors are of interest.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <B>Select</B>() returns the number of ready descriptors that are contained in
+     the descriptor sets, or -1 if an error occurred.  If the time limit ex-
+     pires, <B>select</B>() returns 0.  If <B>select</B>() returns with an error, including
+     one due to an interrupted call, the descriptor sets will be unmodified.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     An error return from <B>select</B>() indicates:
+
+     [EBADF]	   One of the descriptor sets specified an invalid descriptor.
+
+     [EINTR]	   A signal was delivered before the time limit expired and
+
+		   before any of the selected events occurred.
+
+     [EINVAL]	   The specified time limit is invalid.  One of its components
+		   is negative or too large.
+
+     [EINVAL]	   <I>nfds</I> was invalid.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="accept.html">accept(2)</A></B>,  <B><A HREF="connect.html">connect(2)</A></B>,  <B><A HREF="getdtablesize.html">getdtablesize(2)</A></B>,  <B><A HREF="gettimeofday.html">gettimeofday(2)</A></B>,  <B><A HREF="read.html">read(2)</A></B>,
+     <B><A HREF="recv.html">recv(2)</A></B>,  <B><A HREF="send.html">send(2)</A></B>,  <B><A HREF="write.html">write(2)</A></B>,  <B><A HREF="clocks.html">clocks(7)</A></B>
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     The default size of FD_SETSIZE is currently 1024.	In order to accommo-
+     date programs which might potentially use a larger number of open files
+     with <B>select</B>() , it is possible to increase this size by having the pro-
+     gram define FD_SETSIZE before the inclusion of any header which includes
+     &lt;<I>sys/types.h</I>&gt;.
+
+     If <I>nfds</I> is greater than the number of open files, <B>select</B>() is not guaran-
+     teed to examine the unused file descriptors.   For historical reasons,
+     <B>select</B>() will always examine the first 256 descriptors.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     <B>select</B>() should probably return the time remaining from the original
+     timeout, if any, by modifying the time value in place.  This may be im-
+     plemented in future versions of the system.  Thus, it is unwise to assume
+     that the timeout value will be unmodified by the <B>select</B>() call.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>select</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	March 25, 1994				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,77 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRINGLIST.html">STRINGLIST(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="STRINGLIST.html">STRINGLIST(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>stringlist</B>, <B>sl_init</B>, <B>sl_add</B>, <B>sl_free</B>, <B>sl_find</B> - stringlist manipulation
+     functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stringlist.h&gt;</B>
+
+     <I>StringList</I> <I>*</I>
+     <B>sl_init</B>()
+
+     <I>void</I>
+     <B>sl_add</B>(<I>StringList</I> <I>*sl</I>, <I>char</I> <I>*item</I>)
+
+     <I>void</I>
+     <B>sl_free</B>(<I>StringList</I> <I>*sl</I>, <I>int</I> <I>freeall</I>)
+
+     <I>char</I> <I>*</I>
+     <B>sl_find</B>(<I>StringList</I> <I>*sl</I>, <I>char</I> <I>*item</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>stringlist</B> functions manipulate stringlists, which are lists of
+     strings that extend automatically if necessary.
+
+     The <I>StringList</I> structure has the following definition:
+
+	   typedef struct _stringlist {
+		   char    **sl_str;
+		   size_t    sl_max;
+		   size_t    sl_cur;
+	   } StringList;
+
+	   <I>sl</I><B>_</B><I>str</I>  a pointer to the base of the array containing the list.
+
+	   <I>sl</I><B>_</B><I>max</I>  the size of <I>sl</I><B>_</B><I>str</I>.
+
+	   <I>sl</I><B>_</B><I>cur</I>  the offset in <I>sl</I><B>_</B><I>str</I> of the current element.
+
+     The following stringlist manipulation functions are available:
+
+     <B>sl_init</B>()	Create a stringlist.  Returns a pointer to a <I>StringList</I>.
+
+     <B>sl_free</B>()	Releases memory occupied by <I>sl</I> and the <I>sl-&gt;sl</I><B>_</B><I>str</I> array.  If
+		<I>freeall</I> is non-zero, then each of the items within <I>sl-&gt;sl</I><B>_</B><I>str</I>
+		is released as well.
+
+     <B>sl_add</B>()	Add <I>item</I> to <I>sl-&gt;sl</I><B>_</B><I>str</I> at <I>sl-&gt;sl</I><B>_</B><I>cur</I>, extending the size of
+		<I>sl-&gt;sl</I><B>_</B><I>str</I>
+
+     <B>sl_find</B>()	Find <I>item</I> in <I>sl</I>, returning NULL if it's not found.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="malloc.html">free(3)</A></B>,  <B><A HREF="malloc.html">malloc(3)</A></B>
+
+NetBSD 1.3		       February 24, 1997			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

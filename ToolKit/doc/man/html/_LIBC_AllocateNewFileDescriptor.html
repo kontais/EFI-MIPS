@@ -1,0 +1,99 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>_LIBC_AllocateNewFileDescriptor</B> 	  Libc    Manual	<B>_LIBC_AllocateNewFileDescriptor</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>_LIBC_AllocateNewFileDescriptor</B> - allocate a new file descriptor 
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>EFI_STATUS</I>
+     <B>_LIBC_AllocateNewFileDescriptor</B>(<I>CHAR16</I> <I>*FileName</I>, <I>UINT32</I> <I>Flags</I>, <I>UINT32</I> <I>Mode</I>,
+          <I>BOOLEAN</I> <I>IsATTy</I>, <I>VOID</I> <I>*DevSpecific</I>, <I>EFILIBC_READ_T</I> <I>read</I>, <I>EFILIBC_WRITE_T</I> <I>write</I>,
+          <I>EFILIBC_CLOSE_T</I> <I>close</I>, <I>EFILIBC_LSEEK_T</I> <I>lseek</I>, <I>EFILIBC_FSTAT_T</I> <I>fstat</I>,
+          <I>EFILIBC_IOCTL_T</I> <I>ioctl</I>, <I>INT32</I>, <I>EFILIBC_POLL_T</I> <I>poll</I>, <I>*fd</I> );
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_READ_T)</B><I>(</I> <I>OUT VOID *Buffer,</I> <I>IN OUT UINTN *BufSize,</I> <I>IN VOID *DevSpecific</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_WRITE_T)</B><I>(</I> <I>OUT VOID *Buffer,</I> <I>IN OUT UINTN *BufSize,</I> <I>IN VOID *DevSpecific</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_CLOSE_T)</B><I>(</I> <I>IN VOID *DevSpecific</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_LSEEK_T)</B><I>(</I> <I>IN UINT64 *Position,</I> <I>IN UINT32 Whence,</I> <I>IN VOID *DevSpecific</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_FSTAT_T)</B><I>(</I> <I>IN struct stat *StatBuf,</I> <I>IN VOID *DevSpecific</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_IOCTL_T)</B><I>(</I> <I>IN VOID *DevSpecific,</I> <I>IN UINT32 Request,</I> <I>...</I> <I>);</I>
+
+     <I>typedef</I>
+     <I>EFI_STATUS</I>
+     <B>(*EFILIBC_POLL_T)</B><I>(</I> <I>IN UINT32 Mask, <I>IN VOID *DevSpecific</I> <I>);</I>
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>_LIBC_AllocateNewFileDescriptor</B>() function provides a mechanism to extend the UNIX API
+     layer of the C library to handle arbitrary devices.  Through this mechanism, the user can
+     register a new file descriptor with unique device-specific I/O functions.
+
+     The <B>_LIBC_AllocateNewFileDescriptor</B>() function allocates a new file descriptor for the
+     device named by <I>FileName</I>.
+     
+     The <I>Flags</I> argument includes flags defined in <I>fcntl.h</I>.
+
+     The <I>Mode</I> argument defines the permission mode for the device.
+
+     The <I>BOOLEAN</I> <I>IsATTy</I> argument should be set to TRUE if the device device is a tty.
+     Otherwise, it should be set to FALSE.
+     
+     Depending on device functionality, the function <B>_LIBC_AllocateNewFileDescriptor</B> requires
+     pointers to the functions to read from, write to, close, seek, fstat, and control the
+     device.  These function pointers are passed via the arguments <I>read</I>, <I>write</I>, <I>close</I>, <I>lseek</I>,
+     <I>fstat</I>, <I>ioctl</I>, and <I>poll</>.
+
+     The new file descriptor is returned in the parameter <I>fd</I>, if successful.  Otherwise, <I>fd</I>
+     is set to -1.
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <I>EFI_SUCCESS</I>            File descriptor allocated successfully
+
+     <I>EFI_UNSUPPORTED</I>        File decriptor operation is not supported
+
+     <I>EFI_OUT_OF_RESOURCES</I>   Unable to allocate file descriptor, no EFI resources
+
+     <I>EFI_NOT_FOUND</I>          Unable to allocate file descriptor, file descriptor table full
+
+     <I>EFI_INVALID_PARAMETER</I>  Invalid parameter
+
+     <I>EFI_UNSUPPORTED</I>        File decriptor operation is not supported
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     The system will close the file descriptor and clean up the file descriptor table when the
+     <I>close()</I> function is called.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>_LIBC_MapProtocol</B>(), <B>_LIBC_MapDevice</B>()
+
+</PRE>
+</BODY>
+</HTML>

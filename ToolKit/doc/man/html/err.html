@@ -1,0 +1,136 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ERR.html">ERR(3)</A></B>		       FreeBSD Library Functions Manual 		<B><A HREF="ERR.html">ERR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>err</B>, <B>verr</B>, <B>errc</B>, <B>verrc</B>, <B>errx</B>, <B>verrx</B>, <B>warn</B>, <B>vwarn</B>, <B>warnc</B>, <B>vwarnc</B>, <B>warnx</B>,
+     <B>vwarnx</B>, <B>err_set_file</B>, <B>err_set_exit</B> - formatted error messages
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;err.h&gt;</B>
+
+     <I>void</I>
+     <B>err</B>(<I>int</I> <I>eval</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <I>void</I>
+     <B>errc</B>(<I>int</I> <I>eval</I>, <I>int</I> <I>code</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <I>void</I>
+     <B>errx</B>(<I>int</I> <I>eval</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <I>void</I>
+     <B>warn</B>(<I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <I>void</I>
+     <B>warnc</B>(<I>int</I> <I>code</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <I>void</I>
+     <B>warnx</B>(<I>const</I> <I>char</I> <I>*fmt</I>, <I>...</I>)
+
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>void</I>
+     <B>err_set_file</B>(<I>FILE</I> <I>*fp</I>)
+
+     <I>void</I>
+     <B>err_set_exit</B>(<I>void</I> <I>(*exitf)(int)</I>)
+
+     <B>#include</B> <B>&lt;stdarg.h&gt;</B>
+
+     <I>void</I>
+     <B>verr</B>(<I>int</I> <I>eval</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+     <I>void</I>
+     <B>verrc</B>(<I>int</I> <I>eval</I>, <I>int</I> <I>code</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+     <I>void</I>
+     <B>verrx</B>(<I>int</I> <I>eval</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+     <I>void</I>
+     <B>vwarn</B>(<I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+     <I>void</I>
+     <B>vwarnc</B>(<I>int</I> <I>code</I>, <I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+     <I>void</I>
+     <B>vwarnx</B>(<I>const</I> <I>char</I> <I>*fmt</I>, <I>va</I><B>_</B><I>list</I> <I>args</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>err</B>() and <B>warn</B>() family of functions display a formatted error mes-
+     sage on the standard error output, or on another file specified using the
+     <B>err_set_file</B>() function.  In all cases, the last component of the program
+     name, a colon character, and a space are output.  If the <I>fmt</I> argument is
+     not NULL, the formatted error message is output.  In the case of the
+     <B>errc</B>(), <B>verrc</B>(), <B>warnc</B>(), and <B>vwarnc</B>() functions, the error message
+     string affiliated with the <I>code</I> argument is also output, preceded by an-
+     other colon and space if necessary.  In all cases, the output is followed
+     by a newline character.
+
+     The <B>err</B>(), <B>verr</B>(), <B>warn</B>(), and <B>vwarn</B>() functions use the global variable
+     <I>errno</I> rather than the <I>code</I> argument of the <B>errc</B>() family
+
+     The <B>err</B>(), <B>verr</B>(), <B>errc</B>(), <B>verrc</B>(), <B>errx</B>(), and <B>verrx</B>() functions do not
+     return, but exit with the value of the argument <I>eval</I>. The <B>err_set_exit</B>()
+     function can be used to specify a function which is called before <B><A HREF="exit.html">exit(3)</A></B>
+     to perform any necessary cleanup; passing a null function pointer for
+     <I>exitf</I> resets the hook to do nothing.
+
+
+</PRE>
+<H2>EXAMPLES</H2><PRE>
+     Display the current errno information string and exit:
+
+	   if ((p = malloc(size)) == NULL)
+		   err(1, NULL);
+	   if ((fd = open(file_name, O_RDONLY, 0)) == -1)
+		   err(1, "%s", file_name);
+
+     Display an error message and exit:
+
+	   if (tm.tm_hour &lt; START_TIME)
+		   errx(1, "too early, wait until %s", start_time_string);
+
+     Warn of an error:
+
+	   if ((fd = open(raw_device, O_RDONLY, 0)) == -1)
+		   warnx("%s: %s: trying the block device",
+		       raw_device, strerror(errno));
+	   if ((fd = open(block_device, O_RDONLY, 0)) == -1)
+		   err(1, "%s", block_device);
+
+     Warn of an error without using the global variable <I>errno</I>:
+
+	   error = my_function();  /* returns a value from &lt;errno.h&gt; */
+	   if (error != 0)
+		   warnc(error, "my_function");
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="exit.html">exit(3)</A></B>,  <B><A HREF="strerror.html">strerror(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>err</B>() and <B>warn</B>() functions first appeared in 4.4BSD. The
+     <B>err_set_file</B>() and <B>err_set_exit</B>() functions first appeared in FreeBSD
+     2.1.  The <B>errc</B>() and <B>warnc</B>() functions first appeared in FreeBSD 3.0.
+
+4th Berkeley Distribution	April 13, 1995				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRCSPN.html">STRCSPN(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="STRCSPN.html">STRCSPN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strcspn</B> - span the complement of a string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>strcspn</B>(<I>const</I> <I>char</I> <I>*s</I>, <I>const</I> <I>char</I> <I>*charset</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strcspn</B>() function spans the initial part of the null-terminated
+     string <I>s</I> as long as the characters from <I>s</I> do not occur in string <I>charset</I>
+     (it spans the <I>complement</I> of <I>charset</I>).
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strcspn</B>() function returns the number of characters spanned.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="index.html">index(3)</A></B>,	<B><A HREF="memchr.html">memchr(3)</A></B>,  <B><A HREF="rindex.html">rindex(3)</A></B>,	<B><A HREF="strchr.html">strchr(3)</A></B>,  <B><A HREF="strpbrk.html">strpbrk(3)</A></B>,  <B><A HREF="strrchr.html">strrchr(3)</A></B>,
+     <B><A HREF="strsep.html">strsep(3)</A></B>,  <B><A HREF="strspn.html">strspn(3)</A></B>,  <B><A HREF="strstr.html">strstr(3)</A></B>,  <B><A HREF="strtok.html">strtok(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strcspn</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>IS_VALID_ADDR(3)</B>    FreeBSD Library Functions Manual    <B>IS_VALID_ADDR(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>is_valid_addr</B> - validate a range of addresses
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>int</I>
+     <B>is_valid_addr</B>(<I>uintptr_t</I> <I>address</I>, <I>size_t</I> <I>size</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>is_valid_addr</B>() function checks to validate that a specified 
+     address range contains only addresses that are defined as valid addresses
+     in the EFI memory map.  If <B>all</B> addresses in the specified range 
+     are defined as valid in the EFI memory map, the function returns TRUE;
+     otherwise, it returns FALSE.  If an error is encountered while checking
+     the addresses, errno is set and FALSE is returned.
+     
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>GetMemoryMap(EFI Boot Services)</B>
+
+
+<HR>
+</BODY>
+</HTML>

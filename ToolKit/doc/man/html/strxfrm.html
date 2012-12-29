@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRXFRM.html">STRXFRM(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="STRXFRM.html">STRXFRM(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strxfrm</B> - transform a string under locale
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>strxfrm</B>(<I>char</I> <I>*dst</I>, <I>const</I> <I>char</I> <I>*src</I>, <I>size</I><B>_</B><I>t</I> <I>n</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strxfrm</B>() function transforms a null-terminated string pointed to by
+     <I>src</I> according to the current locale collation if any, then copies the
+     transformed string into <I>dst</I>. Not more than <I>n</I> characters are copied into
+     <I>dst</I>, including the terminating null character added.  If <I>n</I> is set to 0
+     (it helps to determine an actual size needed for transformation), <I>dst</I> is
+     permitted to be a NULL pointer.
+
+     Comparing two strings using <B>strcmp</B>() after <B>strxfrm</B>() is equal to compar-
+     ing two original strings with <B>strcoll</B>().
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>strxfrm</B>() returns the length of the trans-
+     formed string not including the terminating null character. If this value
+     is <I>n</I> or more, the contents of <I>dst</I> are indeterminate.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="setlocale.html">setlocale(3)</A></B>,  <B><A HREF="strcmp.html">strcmp(3)</A></B>,	<B><A HREF="strcoll.html">strcoll(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strxfrm</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

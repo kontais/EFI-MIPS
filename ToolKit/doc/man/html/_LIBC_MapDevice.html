@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>_LIBC_MapDevice</B> 	     Libc    Manual 	       <B>LIBC_MapDevice</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>_LIBC_MapDevice</B> - associate device name and device path with a protocol GUID 
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>EFI_STATUS</I>
+     <B>_LIBC_MapDevice</B>(<I>EFI_GUID</I> <I>*Guid</I>, <I>EFI_DEVICE_PATH</I> <I>*DevPath</I>, <I>char</I>, <I>*DevName</I>)
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>_LIBC_MapDevice</B>() function associates a device name and device path with an EFI
+     protocol GUID.  This function is typically used in conjunction with <B>_LIBC_MapProtocol</B>().
+     In LIBC new devices can be registered in order to allow them to fully utilize the Unix API
+     layer.  The process of doing this consists of two steps.
+
+     In the first step, a protocol specific <B>open</B>() function is associated with an protocol
+     interface GUID.  This mapping is performed via the function <B>_LIBC_MapProtocol</B>().  The
+     protocol specific <B>open</B>() function must provide LIBC with function pointers to all of the
+     protocol specific functions associated with the protocol interface GUID.  These function
+     pointers are stored in the file descriptor table via the function
+     <B>_LIBC_AllocateNewFileDescriptor</B>() when the protocol specific <B>open</B>() function is called. 
+
+     In the second step, a symbolic name is associated with the protocol interface GUID and a
+     specific device path.  This interface is provided by the function <B>_LIBC_MapDevice()</B>.
+     After the mappings are complete, the Unix API layer <B>open</B>() function looks up the symbolic
+     name in the device table and then invokes the protocol specific <B>open</B>() call found in
+     the protocol table.  The protocol specific <B>open</B>() call sets up a new file descriptor
+     containing all the other protocol specific function pointers.
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <I>EFI_SUCCESS</I>            Mapping successful
+
+     <I>EFI_NO_MAPPING</I>         Mapping unsuccessful 
+
+     <I>EFI_INVALID_PARAMETER</I>  Invalid parameter
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>open</B>(), <B>_LIBC_MapProtocol</B>()
+
+</PRE>
+</BODY>
+</HTML>

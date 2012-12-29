@@ -1,0 +1,83 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETC.html">GETC(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="GETC.html">GETC(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fgetc</B>, <B>getc</B>, <B>getchar</B>, <B>getw</B> - get next character or word from input stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fgetc</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>getc</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>getchar</B>()
+
+     <I>int</I>
+     <B>getw</B>(<I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fgetc</B>() function obtains the next input character (if present) from
+     the stream pointed at by <I>stream</I>, or the next character pushed back on the
+     stream via <B><A HREF="ungetc.html">ungetc(3)</A></B>.
+
+     The <B>getc</B>() function acts essentially identically to <B>fgetc</B>(), but is a
+     macro that expands in-line.
+
+     The <B>getchar</B>() function is equivalent to: getc with the argument stdin.
+
+     The <B>getw</B>() function obtains the next <I>int</I> (if present) from the stream
+     pointed at by <I>stream</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If successful, these routines return the next requested object from the
+     <I>stream</I>. If the stream is at end-of-file or a read error occurs, the rou-
+     tines return EOF. The routines <B><A HREF="ferror.html">feof(3)</A></B> and <B><A HREF="ferror.html">ferror(3)</A></B> must be used to dis-
+     tinguish between end-of-file and error.  If an error occurs, the global
+     variable <I>errno</I> is set to indicate the error.  The end-of-file condition
+     is remembered, even on a terminal, and all subsequent attempts to read
+     will return EOF until the condition is cleared with <B><A HREF="ferror.html">clearerr(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ferror.html">ferror(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="fread.html">fread(3)</A></B>,  <B><A HREF="putc.html">putc(3)</A></B>,  <B><A HREF="ungetc.html">ungetc(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>fgetc</B>(), <B>getc</B>() and <B>getchar</B>() functions conform to ISO 9899: 1990
+     (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Since EOF is a valid integer value, <B><A HREF="ferror.html">feof(3)</A></B> and <B><A HREF="ferror.html">ferror(3)</A></B> must be used to
+     check for failure after calling <B>getw</B>().  The size and byte order of an
+     <I>int</I> varies from one machine to another, and <B>getw</B>() is not recommended for
+     portable applications.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

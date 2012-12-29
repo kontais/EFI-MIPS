@@ -1,0 +1,199 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CTIME.html">CTIME(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="CTIME.html">CTIME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>asctime</B>, <B>asctime_r</B>, <B>ctime</B>, <B>ctime_r</B>, <B>difftime</B>, <B>gmtime</B>, <B>gmtime_r</B>,
+     <B>localtime</B>, <B>localtime_r</B>, <B>mktime</B>, <B>timegm</B> - transform binary date and time
+     values
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>extern</I> <I>char</I> <I>*tzname[2];</I>
+
+     <I>char</I> <I>*</I>
+     <B>ctime</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>)
+
+     <I>double</I>
+     <B>difftime</B>(<I>time</I><B>_</B><I>t</I> <I>time1</I>, <I>time</I><B>_</B><I>t</I> <I>time0</I>)
+
+     <I>char</I> <I>*</I>
+     <B>asctime</B>(<I>const</I> <I>struct</I> <I>tm</I> <I>*tm</I>)
+
+     <I>struct</I> <I>tm</I> <I>*</I>
+     <B>localtime</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>)
+
+     <I>struct</I> <I>tm</I> <I>*</I>
+     <B>gmtime</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>)
+
+     <I>time</I><B>_</B><I>t</I>
+     <B>mktime</B>(<I>struct</I> <I>tm</I> <I>*tm</I>)
+
+     <I>time</I><B>_</B><I>t</I>
+     <B>timegm</B>(<I>struct</I> <I>tm</I> <I>*tm</I>)
+
+     <I>char</I> <I>*</I>
+     <B>ctime_r</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>, <I>char</I> <I>*buf</I>)
+
+     <I>struct</I> <I>tm</I> <I>*</I>
+     <B>localtime_r</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>, <I>struct</I> <I>tm</I> <I>*result</I>)
+
+     <I>struct</I> <I>tm</I> <I>*</I>
+     <B>gmtime_r</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>, <I>struct</I> <I>tm</I> <I>*result</I>)
+
+     <I>char</I> <I>*</I>
+     <B>asctime_r</B>(<I>const</I> <I>struct</I> <I>tm</I> <I>*tm</I>, <I>char</I> <I>*buf</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The functions <B>ctime</B>(), <B>gmtime</B>() and <B>localtime</B>() all take as an argument a
+     time value representing the time in seconds since the Epoch (00:00:00
+     UTC, January 1, 1970; see <B><A HREF="time.html">time(3)</A></B>).
+
+     The function <B>localtime</B>() converts the time value pointed at by <I>clock</I>, and
+     returns a pointer to a ``<I>struct</I> <I>tm</I>'' (described below) which contains the
+     broken-out time information for the value after adjusting for the current
+     time zone (and any other factors such as Daylight Saving Time).  Time
+     zone adjustments are performed as specified by the TZ environment vari-
+     able (see <B><A HREF="tzset.html">tzset(3)</A></B>).  The function <B>localtime</B>() uses <B><A HREF="tzset.html">tzset(3)</A></B> to initial-
+     ize time conversion information if <B><A HREF="tzset.html">tzset(3)</A></B> has not already been called
+     by the process.
+
+     After filling in the tm structure, <B>localtime</B>() sets the <I>tm</I><B>_</B><I>isdst</I>'th ele-
+     ment of <I>tzname</I> to a pointer to an ASCII string that's the time zone ab-
+     breviation to be used with <B>localtime</B>()'s return value.
+
+     The function <B>gmtime</B>() similarly converts the time value, but without any
+     time zone adjustment, and returns a pointer to a tm structure (described
+     below).
+
+     The <B>ctime</B>() function adjusts the time value for the current time zone in
+     the same manner as <B>localtime</B>(), and returns a pointer to a 26-character
+     string of the form:
+
+	   Thu Nov 24 18:22:48 1986\n\0
+
+     All the fields have constant width.
+
+     <B>ctime_r</B>() provides the same functionality as <B>ctime</B>() except the caller
+     must provide the output buffer <I>buf</I> to store the result, which must be at
+     least 26 characters long.	<B>localtime_r</B>() and <B>gmtime_r</B>() provide the same
+     functionality as <B>localtime</B>() and <B>gmtime</B>() respectively, except the caller
+     must provide the output buffer <I>result</I>.
+
+     The <B>asctime</B>() function converts the broken down time in the structure <I>tm</I>
+     pointed at by <I>*tm</I> to the form shown in the example above.
+
+     <B>asctime_r</B>() provides the same functionality as <B>asctime</B>() except the
+     caller provide the output buffer <I>buf</I> to store the result, which must be
+     at least 26 characters long.
+
+     The functions <B>mktime</B>() and <B>timegm</B>() converts the broken-down time in the
+     structure pointed to by tm into a time value with the same encoding as
+     that of the values returned by the <B><A HREF="time.html">time(3)</A></B> function (that is, seconds
+     from the Epoch, UTC). <B>mktime</B>() interprets the input structure according
+     to the current timezone setting (see <B><A HREF="tzset.html">tzset(3)</A></B>).  <B>timegm</B>() interprets the
+     input structure as representing Universal Coordinated Time (UTC).
+
+     The original values of the <I>tm</I><B>_</B><I>wday</I> and <I>tm</I><B>_</B><I>yday</I> components of the struc-
+     ture are ignored, and the original values of the other components are not
+     restricted to their normal ranges.  (A positive or zero value for
+     <I>tm</I><B>_</B><I>isdst</I> causes <B>mktime</B>() to presume initially that summer time (for exam-
+     ple, Daylight Saving Time) is or is not in effect for the specified time,
+     respectively.  A negative value for <I>tm</I><B>_</B><I>isdst</I> causes the <B>mktime</B>() function
+     to attempt to divine whether summer time is in effect for the specified
+     time.  The <I>tm</I><B>_</B><I>isdst</I> and <I>tm</I><B>_</B><I>gmtoff</I> members are forced to zero by
+     <B>timegm</B>().)
+
+     On successful completion, the values of the <I>tm</I><B>_</B><I>wday</I> and <I>tm</I><B>_</B><I>yday</I> compo-
+     nents of the structure are set appropriately, and the other components
+     are set to represent the specified calendar time, but with their values
+     forced to their normal ranges; the final value of <I>tm</I><B>_</B><I>mday</I> is not set un-
+     til <I>tm</I><B>_</B><I>mon</I> and <I>tm</I><B>_</B><I>year</I> are determined.  <B>Mktime</B>() returns the specified
+     calendar time; if the calendar time cannot be represented, it returns -1;
+
+     The <B>difftime</B>() function returns the difference between two calendar
+     times, (<I>time1</I> - <I>time0</I>), expressed in seconds.
+
+     External declarations as well as the tm structure definition are in the
+     &lt;<I>time.h</I>&gt; include file.  The tm structure includes at least the following
+     fields:
+
+	   int tm_sec;	   /* seconds (0 - 60) */
+	   int tm_min;	   /* minutes (0 - 59) */
+	   int tm_hour;    /* hours (0 - 23) */
+	   int tm_mday;    /* day of month (1 - 31) */
+	   int tm_mon;	   /* month of year (0 - 11) */
+	   int tm_year;    /* year - 1900 */
+	   int tm_wday;    /* day of week (Sunday = 0) */
+	   int tm_yday;    /* day of year (0 - 365) */
+	   int tm_isdst;   /* is summer time in effect? */
+	   char *tm_zone;  /* abbreviation of timezone name */
+	   long tm_gmtoff; /* offset from UTC in seconds */
+
+     The field <I>tm</I><B>_</B><I>isdst</I> is non-zero if summer time is in effect.
+
+     The field <I>tm</I><B>_</B><I>gmtoff</I> is the offset (in seconds) of the time represented
+     from UTC, with positive values indicating east of the Prime Meridian.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="date.html">date(1)</A></B>,  <B><A HREF="gettimeofday.html">gettimeofday(2)</A></B>,  <B><A HREF="getenv.html">getenv(3)</A></B>,  <B><A HREF="time.html">time(3)</A></B>,  <B><A HREF="tzset.html">tzset(3)</A></B>,  <B><A HREF="tzfile.html">tzfile(5)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>asctime</B>(), <B>ctime</B>(), <B>difftime</B>(), <B>gmtime</B>(), <B>localtime</B>(), and <B>mktime</B>()
+     functions conform to ISO 9899: 1990 (``ISO C''), and conform to IEEE
+     Std1003.1 (``POSIX'') provided the selected local timezone does not con-
+     tain a leap-second table (see <B><A HREF="zic.html">zic(8)</A></B>).
+
+     The <B>asctime_r</B>(), <B>ctime_r</B>(), <B>gmtime_r</B>(), and <B>localtime_r</B>() functions are
+     expected to conform to ISO/IEC 9945-1: 1996 (``POSIX.1'') (again provided
+     the selected local timezone does not contain a leap-second table).
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     This manual page is derived from the time package contributed to Berkeley
+     by Arthur Olsen and which appeared in 4.3BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Except for <B>difftime</B>(), <B>mktime</B>(), and the <B>_r</B>() variants of the other func-
+     tions, these functions leaves their result in an internal static object
+     and return a pointer to that object. Subsequent calls to these function
+     will modify the same object.
+
+     The C Standard provides no mechanism for a program to modify its current
+     local timezone setting, and the POSIX-standard method is not reentrant.
+     (However, thread-safe implementations are provided in the POSIX threaded
+     environment.)
+
+     The <I>tm</I><B>_</B><I>zone</I> field of a returned tm structure points to a static array of
+     characters, which will also be overwritten by any subsequent calls (as
+     well as by subsequent calls to <B><A HREF="tzset.html">tzset(3)</A></B> and <B><A HREF="tzset.html">tzsetwall(3)</A></B>).
+
+     Use of the external variable <I>tzname</I> is discouraged; the <I>tm</I><B>_</B><I>zone</I> entry in
+     the tm structure is preferred.
+
+4.3 Berkeley Distribution	January 2, 1999 			     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

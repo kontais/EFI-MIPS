@@ -1,0 +1,111 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETSERVENT.html">GETSERVENT(3)</A></B>	       FreeBSD Library Functions Manual 	 <B><A HREF="GETSERVENT.html">GETSERVENT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getservent</B>, <B>getservbyport</B>, <B>getservbyname</B>, <B>setservent</B>, <B>endservent</B> - get
+     service entry
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;netdb.h&gt;</B>
+
+     <I>struct</I> <I>servent</I> <I>*</I>
+     <B>getservent</B>()
+
+     <I>struct</I> <I>servent</I> <I>*</I>
+     <B>getservbyname</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>const</I> <I>char</I> <I>*proto</I>)
+
+     <I>struct</I> <I>servent</I> <I>*</I>
+     <B>getservbyport</B>(<I>int</I> <I>port</I>, <I>const</I> <I>char</I> <I>*proto</I>)
+
+     <I>void</I>
+     <B>setservent</B>(<I>int</I> <I>stayopen</I>)
+
+     <I>void</I>
+     <B>endservent</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>getservent</B>(), <B>getservbyname</B>(), and <B>getservbyport</B>() functions each re-
+     turn a pointer to an object with the following structure containing the
+     broken-out fields of a line in the network services data base,
+     <I>/etc/services</I>.
+
+	   struct  servent {
+		   char    *s_name;	   /* official name of service */
+		   char    **s_aliases;    /* alias list */
+		   int	   s_port;	   /* port service resides at */
+		   char    *s_proto;	   /* protocol to use */
+	   };
+
+     The members of this structure are:
+
+     <I>s</I><B>_</B><I>name</I>	The official name of the service.
+
+     <I>s</I><B>_</B><I>aliases</I>	A zero terminated list of alternate names for the service.
+
+     <I>s</I><B>_</B><I>port</I>	The port number at which the service resides.  Port numbers
+		are returned in network byte order.
+
+     <I>s</I><B>_</B><I>proto</I>	The name of the protocol to use when contacting the service.
+
+     The <B>getservent</B>() function reads the next line of the file, opening the
+     file if necessary.
+
+     The <B>setservent</B>() function opens and rewinds the file.  If the <I>stayopen</I>
+     flag is non-zero, the net data base will not be closed after each call to
+     <B>getservbyname</B>() or <B>getservbyport</B>().
+
+     The <B>endservent</B>() function closes the file.
+
+     The <B>getservbyname</B>() and <B>getservbyport</B>() functions sequentially search
+     from the beginning of the file until a matching protocol name or port
+     number is found, or until EOF is encountered.  If a protocol name is also
+
+     supplied (non- NULL), searches must also match the protocol.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     /etc/services
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     Null pointer (0) returned on EOF or error.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="getprotoent.html">getprotoent(3)</A></B>,  <B><A HREF="services.html">services(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getservent</B>(), <B>getservbyport</B>(), <B>getservbyname</B>(), <B>setservent</B>(), and
+     <B>endservent</B>() functions appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     These functions use static data storage; if the data is needed for future
+     use, it should be copied before any subsequent calls overwrite it.  Ex-
+     pecting port numbers to fit in a 32 bit quantity is probably naive.
+
+4.2 Berkeley Distribution	 July 9, 1995				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

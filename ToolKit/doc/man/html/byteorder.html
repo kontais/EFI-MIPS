@@ -1,0 +1,65 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="BYTEORDER.html">BYTEORDER(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="BYTEORDER.html">BYTEORDER(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>htonl</B>, <B>htons</B>, <B>ntohl</B>, <B>ntohs</B> - convert values between host and network byte
+     order
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/param.h&gt;</B>
+
+     <I>u</I><B>_</B><I>long</I>
+     <B>htonl</B>(<I>u</I><B>_</B><I>long</I> <I>hostlong</I>)
+
+     <I>u</I><B>_</B><I>short</I>
+     <B>htons</B>(<I>u</I><B>_</B><I>short</I> <I>hostshort</I>)
+
+     <I>u</I><B>_</B><I>long</I>
+     <B>ntohl</B>(<I>u</I><B>_</B><I>long</I> <I>netlong</I>)
+
+     <I>u</I><B>_</B><I>short</I>
+     <B>ntohs</B>(<I>u</I><B>_</B><I>short</I> <I>netshort</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These routines convert 16 and 32 bit quantities between network byte or-
+     der and host byte order.  On machines which have a byte order which is
+     the same as the network order, routines are defined as null macros.
+
+     These routines are most often used in conjunction with Internet addresses
+     and ports as returned by <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B> and <B><A HREF="getservent.html">getservent(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>,	<B><A HREF="getservent.html">getservent(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>byteorder</B> functions appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     On the VAX bytes are handled backwards from most everyone else in the
+     world.  This is not expected to be fixed in the near future.
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

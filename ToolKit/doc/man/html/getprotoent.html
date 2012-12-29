@@ -1,0 +1,106 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETPROTOENT.html">GETPROTOENT(3)</A></B>	       FreeBSD Library Functions Manual 	<B><A HREF="GETPROTOENT.html">GETPROTOENT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getprotoent</B>, <B>getprotobynumber</B>, <B>getprotobyname</B>, <B>setprotoent</B>, <B>endprotoent</B> -
+     get protocol entry
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;netdb.h&gt;</B>
+
+     <I>struct</I> <I>protoent</I> <I>*</I>
+     <B>getprotoent</B>(<I>void</I>)
+
+     <I>struct</I> <I>protoent</I> <I>*</I>
+     <B>getprotobyname</B>(<I>const</I> <I>char</I> <I>*name</I>)
+
+     <I>struct</I> <I>protoent</I> <I>*</I>
+     <B>getprotobynumber</B>(<I>int</I> <I>proto</I>)
+
+     <I>void</I>
+     <B>setprotoent</B>(<I>int</I> <I>stayopen</I>)
+
+     <I>void</I>
+     <B>endprotoent</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>getprotoent</B>(), <B>getprotobyname</B>(), and <B>getprotobynumber</B>() functions
+     each return a pointer to an object with the following structure contain-
+     ing the broken-out fields of a line in the network protocol data base,
+     <I>/etc/protocols</I>.
+
+	   struct  protoent {
+		   char    *p_name;	   /* official name of protocol */
+		   char    **p_aliases;    /* alias list */
+		   int	   p_proto;	   /* protocol number */
+	   };
+
+     The members of this structure are:
+
+     <I>p</I><B>_</B><I>name</I>	The official name of the protocol.
+
+     <I>p</I><B>_</B><I>aliases</I>	A zero terminated list of alternate names for the protocol.
+
+     <I>p</I><B>_</B><I>proto</I>	The protocol number.
+
+     The <B>getprotoent</B>() function reads the next line of the file, opening the
+     file if necessary.
+
+     The <B>setprotoent</B>() function opens and rewinds the file.  If the <I>stayopen</I>
+     flag is non-zero, the net data base will not be closed after each call to
+     <B>getprotobyname</B>() or <B>getprotobynumber</B>().
+
+     The <B>endprotoent</B>() function closes the file.
+
+     The <B>getprotobyname</B>() function and <B>getprotobynumber</B>() sequentially search
+     from the beginning of the file until a matching protocol name or protocol
+     number is found, or until EOF is encountered.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Null pointer (0) returned on EOF or error.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+
+     /etc/protocols
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="protocols.html">protocols(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getprotoent</B>(), <B>getprotobynumber</B>(), <B>getprotobyname</B>(), <B>setprotoent</B>(),
+     and <B>endprotoent</B>() functions appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     These functions use a static data space; if the data is needed for future
+     use, it should be copied before any subsequent calls overwrite it.  Only
+     the Internet protocols are currently understood.
+
+4.2 Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,55 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CATGETS.html">CATGETS(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="CATGETS.html">CATGETS(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>catgets</B> - retrieve string from message catalog
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;nl_types.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>catgets</B>(<I>nl</I><B>_</B><I>catd</I> <I>catd</I>, <I>int</I> <I>set</I><B>_</B><I>id</I>, <I>int</I> <I>msg</I><B>_</B><I>id</I>, <I>const</I> <I>char</I> <I>*s</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>catgets</B>() function attempts to retrieve message <I>msg</I><B>_</B><I>id</I> of set <I>set</I><B>_</B><I>id</I>
+     from the message catalog referenced by the descriptor <I>catd</I>. The argument
+     <I>s</I> points to a default message which is returned if the function is unable
+     to retrieve the specified message.
+
+
+</PRE>
+<H2>RETURN VALUE</H2><PRE>
+     If the specified message was retrieved successfully, <B>catgets</B>() returns a
+     pointer to an internal buffer containing the message string; otherwise it
+     returns <I>s</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="catclose.html">catclose(3)</A></B>,  <B><A HREF="catopen.html">catopen(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>catgets</B>() function conforms to X/Open Portability Guide Issue 4
+     (``XPG4'').
+
+BSD				 May 29, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

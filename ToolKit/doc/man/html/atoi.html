@@ -1,0 +1,49 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ATOI.html">ATOI(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="ATOI.html">ATOI(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>atoi</B> - convert ASCII string to integer
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>int</I>
+     <B>atoi</B>(<I>const</I> <I>char</I> <I>*nptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>atoi</B>() function converts the initial portion of the string pointed to
+     by <I>nptr</I> to <I>integer</I> representation.
+
+     It is equivalent to:
+
+	   (int)strtol(nptr, (char **)NULL, 10);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="atof.html">atof(3)</A></B>,  <B><A HREF="atol.html">atol(3)</A></B>,  <B><A HREF="strtod.html">strtod(3)</A></B>,  <B><A HREF="strtol.html">strtol(3)</A></B>,  <B><A HREF="strtoul.html">strtoul(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>atoi</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

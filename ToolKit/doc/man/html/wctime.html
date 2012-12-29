@@ -1,0 +1,60 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCTIME(3)</B>              FreeBSD Library Functions Manual              <B>WCTIME(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wasctime</B>, <B>wctime</B>, - transform binary date and time values
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+     <B>#include</B> <B>&lt;time.h&gt;</B>
+
+     <I>extern</I> <I>wchar</I><B>_</B><I>t</I> <I>*tzname[2];</I>
+
+     <I>wchar</I><B>_</B><I>t</I> <I>*</I>
+     <B>wctime</B>(<I>const</I> <I>time</I><B>_</B><I>t</I> <I>*clock</I>)
+
+     <I>wchar</I><B>_</B><I>t</I> <I>*</I>
+     <B>wasctime</B>(<I>const</I> <I>struct</I> <I>tm</I> <I>*tm</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The functions <B>wctime</B>(), takes as an argument a time value representing
+     the time in seconds since the Epoch (00:00:00 UTC, January 1, 1970; see
+     <B>time(3)</B>).
+
+     The <B>wctime</B>() function adjusts the time value for the current time zone in
+     the same manner as <B>localtime</B>(), and returns a pointer to a 26-character
+     string of the form:
+
+           Thu Nov 24 18:22:48 1986\n\0
+
+     All the fields have constant width.
+
+     The <B>wasctime</B>() function converts the broken down time in the structure <I>tm</I>
+     pointed at by <I>*tm</I> to the form shown in the example above.
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wasctime</B>(), <B>wctime</B>(), functions conform to ISO 9899: 1990 (``ISO
+     C''), and conform to IEEE Std1003.1 (``POSIX'') provided the selected lo-
+     cal timezone does not contain a leap-second table (see <B>zic(8)</B>).
+
+4.3 Berkeley Distribution       January 2, 1999                              1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

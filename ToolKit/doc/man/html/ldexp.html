@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="LDEXP.html">LDEXP(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="LDEXP.html">LDEXP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ldexp</B> - multiply floating-point number by integral power of 2
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>ldexp</B>(<I>double</I> <I>x</I>, <I>int</I> <I>exp</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>ldexp</B>() function multiplies a floating-point number by an integral
+     power of 2.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>ldexp</B>() function returns the value of <I>x</I> times 2 raised to the power
+     <I>exp</I>.
+
+     If the resultant value would cause an overflow, the global variable <I>errno</I>
+     is set to ERANGE and the value HUGE is returned.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="frexp.html">frexp(3)</A></B>,	<B><A HREF="math.html">math(3)</A></B>,  <B><A HREF="modf.html">modf(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>ldexp</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				April 19, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

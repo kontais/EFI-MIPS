@@ -1,0 +1,106 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="DIRECTORY.html">DIRECTORY(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="DIRECTORY.html">DIRECTORY(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>opendir</B>, <B>readdir</B>, <B>telldir</B>, <B>seekdir</B>, <B>rewinddir</B>, <B>closedir</B>, <B>dirfd</B> - directo-
+     ry operations
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;dirent.h&gt;</B>
+
+     <I>DIR</I> <I>*</I>
+     <B>opendir</B>(<I>const</I> <I>char</I> <I>*filename</I>)
+
+     <I>struct</I> <I>dirent</I> <I>*</I>
+     <B>readdir</B>(<I>DIR</I> <I>*dirp</I>)
+
+     <I>long</I>
+     <B>telldir</B>(<I>const</I> <I>DIR</I> <I>*dirp</I>)
+
+     <I>void</I>
+     <B>seekdir</B>(<I>DIR</I> <I>*dirp</I>, <I>long</I> <I>loc</I>)
+
+     <I>void</I>
+     <B>rewinddir</B>(<I>DIR</I> <I>*dirp</I>)
+
+     <I>int</I>
+     <B>closedir</B>(<I>DIR</I> <I>*dirp</I>)
+
+     <I>int</I>
+     <B>dirfd</B>(<I>DIR</I> <I>*dirp</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>opendir</B>() function opens the directory named by <I>filename</I>, associates
+     a <I>directory</I> <I>stream</I> with it and returns a pointer to be used to identify
+     the <I>directory</I> <I>stream</I> in subsequent operations.  The pointer NULL is re-
+     turned if <I>filename</I> cannot be accessed, or if it cannot <B><A HREF="malloc.html">malloc(3)</A></B> enough
+     memory to hold the whole thing.
+
+     The <B>readdir</B>() function returns a pointer to the next directory entry.  It
+     returns NULL upon reaching the end of the directory or detecting an in-
+     valid <B>seekdir</B>() operation.
+
+     The <B>telldir</B>() function returns the current location associated with the
+     named <I>directory</I> <I>stream</I>. Values returned by <B>telldir</B>() are good only for
+     the lifetime of the DIR pointer, <I>dirp</I>, from which they are derived.  If
+     the directory is closed and then reopened, prior values returned by
+     <B>telldir</B>() will no longer be valid.
+
+     The <B>seekdir</B>() function sets the position of the next <B>readdir</B>() operation
+     on the <I>directory</I> <I>stream</I>. The new position reverts to the one associated
+     with the <I>directory</I> <I>stream</I> when the <B>telldir</B>() operation was performed.
+
+     The <B>rewinddir</B>() function resets the position of the named <I>directory</I>
+     <I>stream</I> to the beginning of the directory.
+
+     The <B>closedir</B>() function closes the named <I>directory</I> <I>stream</I> and frees the
+     structure associated with the <I>dirp</I> pointer, returning 0 on success.  On
+     failure, -1 is returned and the global variable <I>errno</I> is set to indicate
+     the error.
+
+     The <B>dirfd</B>() function returns the integer file descriptor associated with
+     the named <I>directory</I> <I>stream</I>, see <B><A HREF="open.html">open(2)</A></B>.
+
+     Sample code which searches a directory for entry ``name'' is:
+
+	   len = strlen(name);
+	   dirp = opendir(".");
+	   while ((dp = readdir(dirp)) != NULL)
+		   if (dp-&gt;d_namlen == len &amp;&amp; !strcmp(dp-&gt;d_name, name)) {
+			   (void)closedir(dirp);
+			   return FOUND;
+		   }
+	   (void)closedir(dirp);
+	   return NOT_FOUND;
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="close.html">close(2)</A></B>,	<B><A HREF="lseek.html">lseek(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="dir.html">dir(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>opendir</B>(), <B>readdir</B>(), <B>telldir</B>(), <B>seekdir</B>(), <B>rewinddir</B>(), <B>closedir</B>(),
+     and <B>dirfd</B>() functions appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

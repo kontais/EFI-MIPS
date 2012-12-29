@@ -1,0 +1,57 @@
+#/*++
+#
+# Copyright (c) 2004, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    LinuxFwhPei.inf
+#
+#  Abstract:
+#
+#    Component description file for LinuxFwhPei module
+#
+#--*/
+
+[defines]
+BASE_NAME            = LinuxFwhPei
+FILE_GUID            = F0384FFD-8633-452f-9010-F6B7D2EAE2F1
+COMPONENT_TYPE       = PE32_PEIM
+
+[sources.common]
+  LinuxFwhPei.c
+
+[includes.common]
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Foundation/Include/Pei
+  $(EDK_SOURCE)/Foundation/Library/Pei/Include
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong/Include
+  $(EDK_SOURCE)/Foundation/Core/Pei/Include
+
+[libraries.common]
+  PeiLib
+  EdkPmon32PpiLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+[nmake.common]
+  IMAGE_ENTRY_POINT=PeimInitializeLinuxFwhPei
+  DPX_SOURCE=LinuxFwhPei.dxs

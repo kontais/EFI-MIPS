@@ -1,0 +1,191 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETHOSTBYNAME.html">GETHOSTBYNAME(3)</A></B>       FreeBSD Library Functions Manual       <B><A HREF="GETHOSTBYNAME.html">GETHOSTBYNAME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>gethostbyname</B>, <B>gethostbyname2</B>, <B>gethostbyaddr</B>, <B>gethostent</B>, <B>sethostent</B>,
+     <B>endhostent</B>, <B>herror</B>, <B>hstrerror</B> - get network host entry
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;netdb.h&gt;</B>
+
+     <I>extern</I> <I>int</I> <I>h</I><B>_</B><I>errno;</I>
+
+     <I>struct</I> <I>hostent</I> <I>*</I>
+     <B>gethostbyname</B>(<I>const</I> <I>char</I> <I>*name</I>)
+
+     <I>struct</I> <I>hostent</I> <I>*</I>
+     <B>gethostbyname2</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>int</I> <I>af</I>)
+
+     <I>struct</I> <I>hostent</I> <I>*</I>
+     <B>gethostbyaddr</B>(<I>const</I> <I>char</I> <I>*addr</I>, <I>int</I> <I>len</I>, <I>int</I> <I>type</I>)
+
+     <I>struct</I> <I>hostent</I> <I>*</I>
+     <B>gethostent</B>(<I>void</I>)
+
+     <I>void</I>
+     <B>sethostent</B>(<I>int</I> <I>stayopen</I>)
+
+     <I>void</I>
+     <B>endhostent</B>(<I>void</I>)
+
+     <I>void</I>
+     <B>herror</B>(<I>const</I> <I>char</I> <I>*string</I>)
+
+     <I>const</I> <I>char</I> <I>*</I>
+     <B>hstrerror</B>(<I>int</I> <I>err</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>gethostbyname</B>(), <B>gethostbyname2</B>() and <B>gethostbyaddr</B>() functions each
+     return a pointer to an object with the following structure describing an
+     internet host referenced by name or by address, respectively.  This
+     structure contains either the information obtained from the name server,
+     <B><A HREF="named.html">named(8)</A></B>,	or broken-out fields from a line in <I>/etc/hosts</I>. If the local
+     name server is not running these routines do a lookup in <I>/etc/hosts</I>.
+
+     struct  hostent {
+	     char    *h_name;	     /* official name of host */
+	     char    **h_aliases;    /* alias list */
+	     int     h_addrtype;     /* host address type */
+	     int     h_length;	     /* length of address */
+	     char    **h_addr_list;  /* list of addresses from name server */
+     };
+     #define h_addr  h_addr_list[0]  /* address, for backward compatibility */
+
+     The members of this structure are:
+
+     <I>h</I><B>_</B><I>name</I>	  Official name of the host.
+
+     <I>h</I><B>_</B><I>aliases</I>	  A NULL-terminated array of alternate names for the host.
+
+     <I>h</I><B>_</B><I>addrtype</I>   The type of address being returned; usually AF_INET.
+
+     <I>h</I><B>_</B><I>length</I>	  The length, in bytes, of the address.
+
+     <I>h</I><B>_</B><I>addr</I><B>_</B><I>list</I>  A NULL-terminated array of network addresses for the host.
+
+		  Host addresses are returned in network byte order.
+
+     <I>h</I><B>_</B><I>addr</I>	  The first address in <I>h</I><B>_</B><I>addr</I><B>_</B><I>list</I>; this is for backward com-
+		  patibility.
+
+     When using the nameserver, <B>gethostbyname</B>() and <B>gethostbyname</B>() will
+     search for the named host in the current domain and its parents unless
+     the name ends in a dot.  If the name contains no dot, and if the environ-
+     ment variable ``HOSTALIASES'' contains the name of an alias file, the
+     alias file will first be searched for an alias matching the input name.
+     See <B><A HREF="hostname.html">hostname(7)</A></B> for the domain search procedure and the alias file for-
+     mat.
+
+     The <B>gethostbyname2</B>() function is an evolution of <B>gethostbyname</B>() which is
+     intended to allow lookups in address families other than AF_INET, for ex-
+     ample AF_INET6. Currently the <I>af</I> argument must be specified as AF_INET
+     else the function will return NULL after having set <I>h</I><B>_</B><I>errno</I> to
+     NETDB_INTERNAL
+
+     The <B>sethostent</B>() function may be used to request the use of a connected
+     TCP socket for queries.  If the <I>stayopen</I> flag is non-zero, this sets the
+     option to send all queries to the name server using TCP and to retain the
+     connection after each call to <B>gethostbyname</B>(), <B>gethostbyname2</B>() or
+     <B>gethostbyaddr</B>().  Otherwise, queries are performed using UDP datagrams.
+
+     The <B>endhostent</B>() function closes the TCP connection.
+
+     The <B>herror</B>() function writes a message to the diagnostic output consist-
+     ing of the string parameter <I>s</I>, the constant string ": ", and a message
+     corresponding to the value of <I>h</I><B>_</B><I>errno</I>.
+
+     The <B>hstrerror</B>() function returns a string which is the message text cor-
+     responding to the value of the <I>err</I> parameter.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     /etc/hosts
+     /etc/host.conf
+     /etc/resolv.conf
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     Error return status from <B>gethostbyname</B>(), <B>gethostbyname2</B>() and
+     <B>gethostbyaddr</B>() is indicated by return of a null pointer.	The external
+     integer <I>h</I><B>_</B><I>errno</I> may then be checked to see whether this is a temporary
+     failure or an invalid or unknown host.  The routine <B>herror</B>() can be used
+     to print an error message describing the failure.	If its argument <I>string</I>
+     is non-NULL, it is printed, followed by a colon and a space.  The error
+     message is printed with a trailing newline.
+
+     The variable <I>h</I><B>_</B><I>errno</I> can have the following values:
+
+     HOST_NOT_FOUND  No such host is known.
+
+     TRY_AGAIN	     This is usually a temporary error and means that the lo-
+		     cal server did not receive a response from an authorita-
+		     tive server.  A retry at some later time may succeed.
+
+     NO_RECOVERY     Some unexpected server failure was encountered.  This is
+		     a non-recoverable error.
+
+     NO_DATA	     The requested name is valid but does not have an IP ad-
+		     dress; this is not a temporary error.  This means that
+		     the name is known to the name server but there is no ad-
+		     dress associated with this name.  Another type of request
+		     to the name server using this domain name will result in
+		     an answer; for example, a mail-forwarder may be regis-
+		     tered for this domain.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="resolver.html">resolver(3)</A></B>,  <B><A HREF="hosts.html">hosts(5)</A></B>,  <B><A HREF="hostname.html">hostname(7)</A></B>,  <B><A HREF="named.html">named(8)</A></B>
+
+
+</PRE>
+<H2>CAVEAT</H2><PRE>
+     The <B>gethostent</B>() function is defined, and <B>sethostent</B>() and <B>endhostent</B>()
+     are redefined, when <B><A HREF="libc.html">libc(3)</A></B> is built to use only the routines to lookup
+     in <I>/etc/hosts</I> and not the name server.
+
+     The <B>gethostent</B>() function reads the next line of <I>/etc/hosts</I>, opening the
+     file if necessary.
+
+     The <B>sethostent</B>() function opens and/or rewinds the file <I>/etc/hosts</I>. If
+     the <I>stayopen</I> argument is non-zero, the file will not be closed after each
+     call to <B>gethostbyname</B>(), <B>gethostbyname2</B>() or <B>gethostbyaddr</B>().
+
+     The <B>endhostent</B>() function closes the file.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>herror</B>() function appeared in 4.3BSD. The <B>endhostent</B>(),
+     <B>gethostbyaddr</B>(), <B>gethostbyname</B>(), <B>gethostent</B>(), and <B>sethostent</B>() func-
+     tions appeared in 4.2BSD. The <B>gethostbyname2</B>() function first appeared in
+     bind-4.9.4.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     These functions use static data storage; if the data is needed for future
+     use, it should be copied before any subsequent calls overwrite it.  Only
+     the Internet address format is currently understood.
+
+4.2 Berkeley Distribution	 May 25, 1995				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

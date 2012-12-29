@@ -1,0 +1,167 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="EXP.html">EXP(3)</A></B>		       FreeBSD Library Functions Manual 		<B><A HREF="EXP.html">EXP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>exp</B>, <B>expf</B>, <B>exp2</B>, <B>exp2f</B>, <B>exp10</B>, <B>exp10f</B>, <B>expm1</B>, <B>expm1f</B>, <B>log</B>, <B>logf</B>, <B>log10</B>,
+     <B>log10f</B>, <B>log1p</B>, <B>log1pf</B>, <B>pow</B>, <B>powf</B> - exponential, logarithm, power func-
+     tions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>exp</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>expf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>expm1</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>expm1f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>log</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>logf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>log10</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>log10f</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>log1p</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>log1pf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>pow</B>(<I>double</I> <I>x</I>, <I>double</I> <I>y</I>)
+
+     <I>float</I>
+     <B>powf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>y</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>exp</B>() and the <B>expf</B>() functions compute the exponential value of the
+     given argument <I>x</I>.
+
+     The <B>expm1</B>() and the <B>expm1f</B>() functions compute the value exp(x)-1 accu-
+     rately even for tiny argument <I>x</I>.
+
+     The <B>log</B>() and the <B>logf</B>() functions compute the value of the natural loga-
+     rithm of argument <I>x.</I>
+
+     The <B>log10</B>() and the <B>log10f</B>() functions compute the value of the logarithm
+     of argument <I>x</I> to base 10.
+
+     The <B>log1p</B>() and the <B>log1pf</B>() functions compute the value of log(1+x) ac-
+     curately even for tiny argument <I>x</I>.
+
+     The <B>pow</B>() and the <B>powf</B>() functions compute the value of <I>x</I> to the exponent
+     <I>y</I>.
+
+
+</PRE>
+<H2>ERROR (due to Roundoff etc.)</H2><PRE>
+     <B>exp(x)</B>(), <B>log(x)</B>(), <B>expm1(x)</B>(<I>and</I>) <B>log1p(x)</B>() are accurate to within an
+     <I>ulp</I>, and log10(x) to within about 2 <I>ulps</I>; an <I>ulp</I> is one <I>Unit</I> in the <I>Last</I>
+     <I>Place</I>. The error in <B>pow</B>(<I>x</I>, <I>y</I>) is below about 2 <I>ulps</I> when its magnitude is
+     moderate, but increases as <B>pow</B>(<I>x</I>, <I>y</I>) approaches the over/underflow
+     thresholds until almost as many bits could be lost as are occupied by the
+     floating-point format's exponent field; that is 8 bits for VAX D and 11
+     bits for IEEE 754 Double.	No such drastic loss has been exposed by test-
+     ing; the worst errors observed have been below 20 <I>ulps</I> for VAX D, 300
+     <I>ulps</I> for IEEE 754 Double.	Moderate values of <B>pow</B>() are accurate enough
+     that <B>pow</B>(<I>integer</I>, <I>integer</I>) is exact until it is bigger than 2**56 on a
+     VAX, 2**53 for IEEE 754.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     These functions will return the appropriate computation unless an error
+     occurs or an argument is out of range.  The functions <B>exp</B>(), <B>expm1</B>(),
+     <B>pow</B>() detect if the computed value will overflow, set the global variable
+     <I>errno</I> <I>to</I> ERANGE and cause a reserved operand fault on a VAX or Tahoe. The
+     functions <B>pow</B>(<I>x</I>, <I>y</I>) checks to see if <I>x</I> &lt; 0 and <I>y</I> is not an integer, in
+     the event this is true, the global variable <I>errno</I> is set to EDOM and on
+     the VAX and Tahoe generate a reserved operand fault.  On a VAX and Tahoe,
+     <I>errno</I> is set to EDOM and the reserved operand is returned by log unless <I>x</I>
+     &gt; 0, by <B>log1p</B>() unless <I>x</I> &gt; -1.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     The functions exp(x)-1 and log(1+x) are called expm1 and logp1 in BASIC
+     on the Hewlett-Packard HP-71B and APPLE Macintosh, EXP1 and LN1 in Pas-
+     cal, exp1 and log1 in C on APPLE Macintoshes, where they have been pro-
+     vided to make sure financial calculations of ((1+x)**n-1)/x, namely
+     expm1(n*log1p(x))/x, will be accurate when x is tiny.  They also provide
+     accurate inverse hyperbolic functions.
+
+     The function <B>pow</B>(<I>x</I>, <I>0</I>) returns x**0 = 1 for all x including x = 0, Infin-
+     ity (not found on a VAX), and <I>NaN</I> (the reserved operand on a VAX).
+     Previous implementations of pow may have defined x**0 to be undefined in
+     some or all of these cases.  Here are reasons for returning x**0 = 1 al-
+     ways:
+
+     1.      Any program that already tests whether x is zero (or infinite or
+	     <I>NaN</I>) before computing x**0 cannot care whether 0**0 = 1 or not.
+	     Any program that depends upon 0**0 to be invalid is dubious any-
+	     way since that expression's meaning and, if invalid, its conse-
+	     quences vary from one computer system to another.
+
+     2.      Some Algebra texts (e.g. Sigler's) define x**0 = 1 for all x, in-
+	     cluding x = 0.  This is compatible with the convention that ac-
+	     cepts a[0] as the value of polynomial
+
+		   p(x) = a[0]*x**0 + a[1]*x**1 + a[2]*x**2 +...+ a[n]*x**n
+
+	     at x = 0 rather than reject a[0]*0**0 as invalid.
+
+     3.      Analysts will accept 0**0 = 1 despite that x**y can approach any-
+	     thing or nothing as x and y approach 0 independently.  The reason
+	     for setting 0**0 = 1 anyway is this:
+
+		   If x(z) and y(z) are <I>any</I> functions analytic (expandable in
+		   power series) in z around z = 0, and if there x(0) = y(0) =
+		   0, then x(z)**y(z) -&gt; 1 as z -&gt; 0.
+
+     4.      If 0**0 = 1, then infinity**0 = 1/0**0 = 1 too; and then <I>NaN</I>**0 =
+	     1 too because x**0 = 1 for all finite and infinite x, i.e., inde-
+	     pendently of x.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>exp</B>(), <B>log</B>() and <B>pow</B>() functions appeared in Version 6 AT&amp;T UNIX.  A
+     <B>log10</B>() function appeared in Version 7 AT&amp;T UNIX.	The <B>log1p</B>() and
+     <B>expm1</B>() functions appeared in 4.3BSD.
+
+4th Berkeley Distribution	 July 31, 1991				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

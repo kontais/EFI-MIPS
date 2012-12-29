@@ -1,0 +1,71 @@
+#/*++
+#
+# Copyright (c) 2011, kontais
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    Sm712Uga.inf
+#
+#  Abstract:
+#
+#    Component description file for SM712 UGA module.
+#
+--*/
+
+[defines]
+BASE_NAME       = Sm712Uga
+COMPONENT_TYPE  = BS_DRIVER
+FILE_GUID       = 4b1d3380-7d67-4f1b-b555-eb4377f5ba76
+                  
+
+[sources.common]
+  Sm712.h
+  Sm712Uga.h
+  Sm712UgaDriver.c
+  Sm712UgaScreen.c
+  Sm712UgaIo.c
+  ComponentName.c
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Framework
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Sample/Include
+  $(EDK_SOURCE)/Sample/Chipset/Vga/Sm712
+
+[includes.Mips32.YeeLoong]
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong
+  $(EDK_SOURCE)/Sample/Platform/YeeLoong/Include
+
+[includes.Mips32.FuLoong2F]
+  $(EDK_SOURCE)/Sample/Platform/FuLoong2F
+  $(EDK_SOURCE)/Sample/Platform/FuLoong2F/Include
+
+[libraries.common]
+  EdkPmonProtocolLib
+  EfiDriverLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+[nmake.common]
+  IMAGE_ENTRY_POINT=InitializeSm712Uga

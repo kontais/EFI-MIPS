@@ -1,0 +1,66 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="UTIME.html">UTIME(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="UTIME.html">UTIME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>utime</B> - set file times
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;utime.h&gt;</B>
+
+     <I>int</I>
+     <B>utime</B>(<I>const</I> <I>char</I> <I>*file</I>, <I>const</I> <I>struct</I> <I>utimbuf</I> <I>*timep</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>This</B> <B>interface</B> <B>is</B> <B>obsoleted</B> <B>by</B> <B>utimes(2)</B> <B>.</B>
+
+     The <B>utime</B>() function sets the access and modification times of the named
+     file from the structures in the argument array <I>timep</I>.
+
+     If the times are specified (the <I>timep</I> argument is non-NULL) the caller
+     must be the owner of the file or be the super-user.
+
+     If the times are not specified (the <I>timep</I> argument is NULL) the caller
+     must be the owner of the file, have permission to write the file, or be
+     the super-user.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>utime</B>() function may fail and set <I>errno</I> for any of the errors speci-
+     fied for the library function <B><A HREF="utimes.html">utimes(2)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="stat.html">stat(2)</A></B>,  <B><A HREF="utimes.html">utimes(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>utime</B>() function appeared in Version 7 AT&amp;T UNIX.
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>utime</B>() function conforms to IEEE Std1003.1-1988 (``POSIX'').
+
+4th Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

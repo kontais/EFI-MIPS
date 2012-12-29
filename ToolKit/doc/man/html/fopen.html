@@ -1,0 +1,125 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FOPEN.html">FOPEN(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="FOPEN.html">FOPEN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fopen</B>, <B>fdopen</B>, <B>freopen</B> - stream open functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>FILE</I> <I>*</I>
+     <B>fopen</B>(<I>const</I> <I>char</I> <I>*path</I>, <I>const</I> <I>char</I> <I>*mode</I>)
+
+     <I>FILE</I> <I>*</I>
+     <B>fdopen</B>(<I>int</I> <I>fildes</I>, <I>const</I> <I>char</I> <I>*mode</I>)
+
+     <I>FILE</I> <I>*</I>
+     <B>freopen</B>(<I>const</I> <I>char</I> <I>*path</I>, <I>const</I> <I>char</I> <I>*mode</I>, <I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fopen</B>() function opens the file whose name is the string pointed to
+     by <I>path</I> and associates a stream with it.
+
+     The argument <I>mode</I> points to a string beginning with one of the following
+     sequences (Additional characters may follow these sequences.):
+
+     ``r''   Open text file for reading.  The stream is positioned at the be-
+	     ginning of the file.
+
+     ``r+''  Open for reading and writing.  The stream is positioned at the
+	     beginning of the file.
+
+     ``w''   Truncate file to zero length or create text file for writing.
+	     The stream is positioned at the beginning of the file.
+
+     ``w+''  Open for reading and writing.  The file is created if it does not
+	     exist, otherwise it is truncated.	The stream is positioned at
+	     the beginning of the file.
+
+     ``a''   Open for writing.	The file is created if it does not exist.  The
+	     stream is positioned at the end of the file.
+
+     ``a+''  Open for reading and writing.  The file is created if it does not
+	     exist.  The stream is positioned at the end of the file.
+
+     The <I>mode</I> string can also include the letter ``b'' either as a third char-
+     acter or as a character between the characters in any of the two-charac-
+     ter strings described above.  This is strictly for compatibility with ISO
+     9899: 1990 (``ISO C'') and has no effect; the ``b'' is ignored.
+
+     Any created files will have mode "S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
+     S_IROTH | S_IWOTH" (0666), as modified by the process' umask value (see
+     <B><A HREF="umask.html">umask(2)</A></B>).
+
+     Reads and writes may be intermixed on read/write streams in any order,
+     and do not require an intermediate seek as in previous versions of <I>stdio</I>.
+     This is not portable to other systems, however; ANSI C requires that a
+     file positioning function intervene between output and input, unless an
+     input operation encounters end-of-file.
+
+     The <B>fdopen</B>() function associates a stream with the existing file descrip-
+     tor, <I>fildes</I>. The <I>mode</I> of the stream must be compatible with the mode of
+     the file descriptor.
+
+     The <B>freopen</B>() function opens the file whose name is the string pointed to
+     by <I>path</I> and associates the stream pointed to by <I>stream</I> with it.  The
+     original stream (if it exists) is closed.	The <I>mode</I> argument is used just
+     as in the <B>fopen</B>() function.  The primary use of the <B>freopen</B>() function is
+     to change the file associated with a standard text stream (<I>stderr</I>, <I>stdin</I>,
+     or <I>stdout</I>).
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion <B>fopen</B>(), <B>fdopen</B>() and <B>freopen</B>() return a FILE
+     pointer.  Otherwise, NULL is returned and the global variable <I>errno</I> is
+     set to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EINVAL]  The <I>mode</I> provided to <B>fopen</B>(), <B>fdopen</B>(), or <B>freopen</B>() was in-
+	       valid.
+
+     The <B>fopen</B>(), <B>fdopen</B>() and <B>freopen</B>() functions may also fail and set <I>errno</I>
+     for any of the errors specified for the routine <B><A HREF="malloc.html">malloc(3)</A></B>.
+
+     The <B>fopen</B>() function may also fail and set <I>errno</I> for any of the errors
+     specified for the routine <B><A HREF="open.html">open(2)</A></B>.
+
+     The <B>fdopen</B>() function may also fail and set <I>errno</I> for any of the errors
+     specified for the routine <B><A HREF="fcntl.html">fcntl(2)</A></B>.
+
+     The <B>freopen</B>() function may also fail and set <I>errno</I> for any of the errors
+     specified for the routines <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="fclose.html">fclose(3)</A></B> and <B><A HREF="fflush.html">fflush(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="fclose.html">fclose(3)</A></B>,  <B><A HREF="fseek.html">fseek(3)</A></B>,  <B><A HREF="funopen.html">funopen(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>fopen</B>() and <B>freopen</B>() functions conform to ISO 9899: 1990 (``ISO
+     C''). The <B>fdopen</B>() function conforms to IEEE Std1003.1-1988 (``POSIX'').
+
+BSD				 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

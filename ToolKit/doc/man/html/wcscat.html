@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSCAT(3)</B>	       FreeBSD Library Functions Manual 	     <B>WCSCAT(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcscat</B> - concatenate wide strings
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>wchar_t</I> <I>*</I>
+     <B>wcscat</B>(<I>wchar_t</I> <I>*s</I>, <I>const</I> <I>wchar_t</I> <I>*append</I>)
+
+     <I>wchar_t</I> <I>*</I>
+     <B>wcsncat</B>(<I>wchar_t</I> <I>*s</I>, <I>const</I> <I>wchar_t</I> <I>*append</I>, <I>size</I><B>_</B><I>t</I> <I>count</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcscat</B>() and <B>wcsncat</B>() functions append a copy of the null-terminated
+     string <I>append</I> to the end of the null-terminated string <I>s</I>, then add a ter-
+     minating `\0'. The string <I>s</I> must have sufficient space to hold the re-
+     sult.
+
+     The <B>wcsncat</B>() function appends not more than <I>count</I> characters from
+     <I>append</I>, and then adds a terminating `\0.'
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wcscat</B>() and <B>wcsncat</B>() functions return the pointer <I>s</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>bcopy(3)</B>,	<B>memccpy(3)</B>,  <B>memcpy(3)</B>,  <B>memmove(3)</B>,  <B>strcpy(3)</B>
+
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

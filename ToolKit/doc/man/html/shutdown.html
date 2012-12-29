@@ -1,0 +1,72 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SHUTDOWN.html">SHUTDOWN(2)</A></B>		  FreeBSD System Calls Manual		   <B><A HREF="SHUTDOWN.html">SHUTDOWN(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>shutdown</B> - shut down part of a full-duplex connection
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>shutdown</B>(<I>int</I> <I>s</I>, <I>int</I> <I>how</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>shutdown</B>() call causes all or part of a full-duplex connection on the
+     socket associated with <I>s</I> to be shut down.	If <I>how</I> is SHUT_RD (0), further
+     receives will be disallowed.  If <I>how</I> is SHUT_WR (1), further sends will
+     be disallowed.  If <I>how</I> is SHUT_RDWR (2), further sends and receives will
+     be disallowed.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A 0 is returned if the call succeeds, -1 if it fails.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The call succeeds unless:
+
+     [EBADF]	 <I>S</I> is not a valid descriptor.
+
+     [ENOTSOCK]  <I>S</I> is a file, not a socket.
+
+     [ENOTCONN]  The specified socket is not connected.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="connect.html">connect(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>shutdown</B>() function is expected to comply with IEEE P1003.1g
+     (``POSIX''), when finalized.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>shutdown</B>() function call appeared in 4.2BSD. The SHUT_ constants ap-
+     peared in IEEE P1003.1g (``POSIX'').
+
+4.2 Berkeley Distribution	 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

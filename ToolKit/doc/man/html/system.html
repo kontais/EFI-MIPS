@@ -1,0 +1,62 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SYSTEM.html">SYSTEM(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="SYSTEM.html">SYSTEM(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>system</B>, <B>wsystem</B> - pass a command to the shell
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>int</I>
+     <B>system</B>(<I>const</I> <I>char</I> <I>*string</I>)
+
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>int</I>
+     <B>wsystem</B>(<I>const</I> <I>wchar_t</I> <I>*string</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>system</B>() function hands the argument <I>string</I> to the command inter-
+     preter <B><A HREF="sh.html">sh(1)</A></B>.  The calling process waits for the shell to finish execut-
+     ing the command, ignoring SIGINT and SIGQUIT, and blocking SIGCHLD.
+
+     If <I>string</I> is a NULL pointer, <B>system</B>() will return non-zero if the command
+     interpreter <B><A HREF="sh.html">sh(1)</A></B> is available, and zero if it is not.
+
+     The <B>system</B>() function returns the exit status of the shell as returned by
+     <B><A HREF="waitpid.html">waitpid(2)</A></B>,  or -1 if an error occurred when invoking <B><A HREF="fork.html">fork(2)</A></B> or
+     <B><A HREF="waitpid.html">waitpid(2)</A></B>.  A return value of 127 means the execution of the shell
+     failed.
+
+     The <B>wsystem</B>() function is identical to the <B>system</B> function with the exception
+     that it takes a wchar_t string pointer as an argument.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="sh.html">sh(1)</A></B>,  <B><A HREF="execve.html">execve(2)</A></B>,  <B><A HREF="fork.html">fork(2)</A></B>,  <B><A HREF="waitpid.html">waitpid(2)</A></B>,	<B><A HREF="popen.html">popen(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>system</B>() function conforms to ISO 9899: 1990 (``ISO C''). and is ex-
+     pected to be IEEE Std1003.2 (``POSIX.2'') compatible.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

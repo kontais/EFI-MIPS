@@ -1,0 +1,241 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GLOB.html">GLOB(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="GLOB.html">GLOB(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>glob</B>, <B>globfree</B> - generate pathnames matching a pattern
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;glob.h&gt;</B>
+
+     <I>int</I>
+     <B>glob</B>(<I>const</I> <I>char</I> <I>*pattern</I>, <I>int</I> <I>flags</I>, <I>int</I> <I>(*errfunc)(const</I> <I>char</I> <I>*,</I> <I>int)</I>,
+	     <I>glob</I><B>_</B><I>t</I> <I>*pglob</I>)
+
+     <I>void</I>
+     <B>globfree</B>(<I>glob</I><B>_</B><I>t</I> <I>*pglob</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>glob</B>() function is a pathname generator that implements the rules for
+     file name pattern matching used by the shell.
+
+     The include file <I>glob.h</I> defines the structure type <I>glob</I><B>_</B><I>t</I>, which contains
+     at least the following fields:
+
+     typedef struct {
+	     int gl_pathc;	     /* count of total paths so far */
+	     int gl_matchc;	     /* count of paths matching pattern */
+	     int gl_offs;	     /* reserved at beginning of gl_pathv */
+	     int gl_flags;	     /* returned flags */
+	     char **gl_pathv;	     /* list of paths matching pattern */
+     } glob_t;
+
+     The argument <I>pattern</I> is a pointer to a pathname pattern to be expanded.
+     The <B>glob</B>() argument matches all accessible pathnames against the pattern
+     and creates a list of the pathnames that match.  In order to have access
+     to a pathname, <B>glob</B>() requires search permission on every component of a
+     path except the last and read permission on each directory of any file-
+     name component of <I>pattern</I> that contains any of the special characters
+     `*', `?' or `['.
+
+     The <B>glob</B>() argument stores the number of matched pathnames into the
+     <I>gl</I><B>_</B><I>pathc</I> field, and a pointer to a list of pointers to pathnames into the
+     <I>gl</I><B>_</B><I>pathv</I> field.  The first pointer after the last pathname is NULL. If
+     the pattern does not match any pathnames, the returned number of matched
+     paths is set to zero.
+
+     It is the caller's responsibility to create the structure pointed to by
+     <I>pglob</I>. The <B>glob</B>() function allocates other space as needed, including the
+     memory pointed to by <I>gl</I><B>_</B><I>pathv</I>.
+
+     The argument <I>flags</I> is used to modify the behavior of <B>glob</B>().  The value
+     of <I>flags</I> is the bitwise inclusive OR of any of the following values de-
+     fined in <I>glob.h</I>:
+
+     GLOB_APPEND      Append pathnames generated to the ones from a previous
+		      call (or calls) to <B>glob</B>().  The value of <I>gl</I><B>_</B><I>pathc</I> will
+		      be the total matches found by this call and the previous
+		      call(s).	The pathnames are appended to, not merged with
+		      the pathnames returned by the previous call(s).  Between
+		      calls, the caller must not change the setting of the
+		      GLOB_DOOFFS flag, nor change the value of <I>gl</I><B>_</B><I>offs</I> when
+		      GLOB_DOOFFS is set, nor (obviously) call <B>globfree</B>() for
+		      <I>pglob</I>.
+
+     GLOB_DOOFFS      Make use of the <I>gl</I><B>_</B><I>offs</I> field.  If this flag is set,
+		      <I>gl</I><B>_</B><I>offs</I> is used to specify how many NULL pointers to
+		      prepend to the beginning of the <I>gl</I><B>_</B><I>pathv</I> field.  In oth-
+		      er words, <I>gl</I><B>_</B><I>pathv</I> will point to <I>gl</I><B>_</B><I>offs</I> NULL pointers,
+		      followed by <I>gl</I><B>_</B><I>pathc</I> pathname pointers, followed by a
+		      NULL pointer.
+
+     GLOB_ERR	      Causes <B>glob</B>() to return when it encounters a directory
+		      that it cannot open or read.  Ordinarily, <B>glob</B>() contin-
+		      ues to find matches.
+
+     GLOB_MARK	      Each pathname that is a directory that matches <I>pattern</I>
+		      has a slash appended.
+
+     GLOB_NOCHECK     If <I>pattern</I> does not match any pathname, then <B>glob</B>() re-
+		      turns a list consisting of only <I>pattern</I>, with the number
+		      of total pathnames is set to 1, and the number of
+		      matched pathnames set to 0.  If GLOB_QUOTE is set, its
+		      effect is present in the pattern returned.
+
+     GLOB_NOSORT      By default, the pathnames are sorted in ascending ASCII
+		      order; this flag prevents that sorting (speeding up
+		      <B>glob</B>()).
+
+     The following values may also be included in <I>flags</I>, however, they are
+     non-standard extensions to IEEE Std1003.2 (``POSIX.2'').
+
+     GLOB_ALTDIRFUNC  The following additional fields in the pglob structure
+		      have been initialized with alternate functions for glob
+		      to use to open, read, and close directories and to get
+		      stat information on names found in those directories.
+
+		      void *(*gl_opendir)(const char * name);
+		      struct dirent *(*gl_readdir)(void *);
+		      void (*gl_closedir)(void *);
+		      int (*gl_lstat)(const char *name, struct stat *st);
+		      int (*gl_stat)(const char *name, struct stat *st);
+
+		      This extension is provided to allow programs such as re-
+		      <B><A HREF="store.html">store(8)</A></B> to provide globbing from directories stored on
+		      tape.
+
+     GLOB_BRACE       Pre-process the pattern string to expand `{pat,pat,...}'
+		      strings like <B><A HREF="csh.html">csh(1)</A></B>.  The pattern `{}' is left unexpand-
+		      ed for historical reasons (and <B><A HREF="csh.html">csh(1)</A></B> does the same
+		      thing to ease typing of <B><A HREF="find.html">find(1)</A></B> patterns).
+
+     GLOB_MAGCHAR     Set by the <B>glob</B>() function if the pattern included glob-
+		      bing characters.	See the description of the usage of
+		      the <I>gl</I><B>_</B><I>matchc</I> structure member for more details.
+
+     GLOB_NOMAGIC     Is the same as GLOB_NOCHECK but it only appends the
+		      <I>pattern</I> if it does not contain any of the special char-
+		      acters ``*'', ``?'' or ``[''.  GLOB_NOMAGIC is provided
+		      to simplify implementing the historic <B><A HREF="csh.html">csh(1)</A></B> globbing
+		      behavior and should probably not be used anywhere else.
+
+     GLOB_QUOTE       Use the backslash (`\') character for quoting: every oc-
+		      currence of a backslash followed by a character in the
+		      pattern is replaced by that character, avoiding any spe-
+		      cial interpretation of the character.
+
+     GLOB_TILDE       Expand patterns that start with `~' to user name home
+		      directories.
+
+     If, during the search, a directory is encountered that cannot be opened
+     or read and <I>errfunc</I> is non-NULL, <B>glob</B>() calls <I>(*errfunc)(path,</I> <I>errno)</I>.
+     This may be unintuitive: a pattern like `*/Makefile' will try to <B><A HREF="stat.html">stat(2)</A></B>
+     `foo/Makefile' even if `foo' is not a directory, resulting in a call to
+     <I>errfunc</I>. The error routine can suppress this action by testing for ENOENT
+     and ENOTDIR; however, the GLOB_ERR flag will still cause an immediate re-
+     turn when this happens.
+
+     If <I>errfunc</I> returns non-zero, <B>glob</B>() stops the scan and returns GLOB_ABEND
+     after setting <I>gl</I><B>_</B><I>pathc</I> and <I>gl</I><B>_</B><I>pathv</I> to reflect any paths already matched.
+     This also happens if an error is encountered and GLOB_ERR is set in
+     <I>flags</I>, regardless of the return value of <I>errfunc</I>, if called.  If GLOB_ERR
+     is not set and either <I>errfunc</I> is NULL or <I>errfunc</I> returns zero, the error
+     is ignored.
+
+     The <B>globfree</B>() function frees any space associated with <I>pglob</I> from a pre-
+     vious call(s) to <B>glob</B>().
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     On successful completion, <B>glob</B>() returns zero.  In addition the fields of
+     <I>pglob</I> contain the values described below:
+
+     <I>gl</I><B>_</B><I>pathc</I>	   contains the total number of matched pathnames so far.
+		   This includes other matches from previous invocations of
+		   <B>glob</B>() if GLOB_APPEND was specified.
+
+     <I>gl</I><B>_</B><I>matchc</I>	   contains the number of matched pathnames in the current in-
+		   vocation of <B>glob</B>().
+
+     <I>gl</I><B>_</B><I>flags</I>	   contains a copy of the <I>flags</I> parameter with the bit
+		   GLOB_MAGCHAR set if <I>pattern</I> contained any of the special
+		   characters ``*'', ``?'' or ``['', cleared if not.
+
+     <I>gl</I><B>_</B><I>pathv</I>	   contains a pointer to a NULL-terminated list of matched
+		   pathnames.  However, if <I>gl</I><B>_</B><I>pathc</I> is zero, the contents of
+		   <I>gl</I><B>_</B><I>pathv</I> are undefined.
+
+     If <B>glob</B>() terminates due to an error, it sets errno and returns one of
+     the following non-zero constants, which are defined in the include file
+     &lt;<I>glob.h</I>&gt;:
+
+     GLOB_NOSPACE  An attempt to allocate memory failed.
+
+     GLOB_ABEND    The scan was stopped because an error was encountered and
+		   either GLOB_ERR was set or <I>(*errfunc)()</I> returned non-zero.
+
+     The arguments <I>pglob-&gt;gl</I><B>_</B><I>pathc</I> and <I>pglob-&gt;gl</I><B>_</B><I>pathv</I> are still set as speci-
+     fied above.
+
+
+</PRE>
+<H2>EXAMPLE</H2><PRE>
+     A rough equivalent of `ls -l *.c *.h' can be obtained with the following
+     code:
+
+	   glob_t g;
+
+	   g.gl_offs = 2;
+	   glob("*.c", GLOB_DOOFFS, NULL, &amp;g);
+	   glob("*.h", GLOB_DOOFFS | GLOB_APPEND, NULL, &amp;g);
+	   g.gl_pathv[0] = "ls";
+	   g.gl_pathv[1] = "-l";
+	   execvp("ls", g.gl_pathv);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="sh.html">sh(1)</A></B>,  <B><A HREF="fnmatch.html">fnmatch(3)</A></B>,  <B><A HREF="regexp.html">regexp(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>glob</B>() function is expected to be IEEE Std1003.2 (``POSIX.2'') com-
+     patible with the exception that the flags GLOB_ALTDIRFUNC, GLOB_BRACE
+     GLOB_MAGCHAR, GLOB_NOMAGIC, GLOB_QUOTE, and GLOB_TILDE, and the fields
+     <I>gl</I><B>_</B><I>matchc</I> and <I>gl</I><B>_</B><I>flags</I> should not be used by applications striving for
+     strict POSIX conformance.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>glob</B>() and <B>globfree</B>() functions first appeared in 4.4BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Patterns longer than MAXPATHLEN may cause unchecked errors.
+
+     The <B>glob</B>() argument may fail and set errno for any of the errors speci-
+     fied for the library routines <B><A HREF="stat.html">stat(2)</A></B>,  <B><A HREF="closedir.html">closedir(3)</A></B>,  <B><A HREF="opendir.html">opendir(3)</A></B>,
+     <B><A HREF="readdir.html">readdir(3)</A></B>,  <B><A HREF="malloc.html">malloc(3)</A></B>,  and <B><A HREF="free.html">free(3)</A></B>.
+
+BSD				April 16, 1994				     4
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,22 @@
+Information related to the FPSWA driver for EFI/ia64 platforms
+--------------------------------------------------------------
+(c) 2002-2003 Hewlett Packard Co
+    Contributed by Stephane Eranian <eranian@hpl.hp.com>
+
+This document is irrelevant for EFI/ia32 platforms.
+
+On all EFI/ia64 platforms, the bootloader is responsible for checking for
+the presence on the EFI system partition of an updated version of the 
+Floating-Point Software Assist (FPSWA) EFI driver (fpswa.efi). For every 
+instance found, elilo will load the driver and let EFI decide if it is 
+newer than the currently installed version. In the end at most one driver 
+is kept in memory.
+
+Elilo will look for a file called fpswa.efi in the \EFI\Intel Firmware
+(there is a space between l and F) directory on ALL accessible EFI system 
+partitions (including on removable media). It will do so even when elilo
+is downloaded from the network. It does not look for the driver in the
+ext2fs partitions.
+
+The FPSWA reference document is available from the Intel developer's web
+site at http://developer.intel.com/design/itanium.

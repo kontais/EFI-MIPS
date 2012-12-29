@@ -1,0 +1,128 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ETHERS.html">ETHERS(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="ETHERS.html">ETHERS(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ethers</B>, <B>ether_line</B>, <B>ether_aton</B>, <B>ether_ntoa</B>, <B>ether_ntohost</B>, <B>ether_hostton</B>
+     - Ethernet address conversion and lookup routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+     <B>#include</B> <B>&lt;net/ethernet.h&gt;</B>
+
+     <I>int</I>
+     <B>ether_line</B>(<I>char</I> <I>*l</I>, <I>struct</I> <I>ether</I><B>_</B><I>addr</I> <I>*e</I>, <I>char</I> <I>*hostname</I>)
+
+     <I>struct</I> <I>ether</I><B>_</B><I>addr</I> <I>*</I>
+     <B>ether_aton</B>(<I>char</I> <I>*a</I>)
+
+     <I>char</I> <I>*</I>
+     <B>ether_ntoa</B>(<I>struct</I> <I>ether</I><B>_</B><I>addr</I> <I>*n</I>)
+
+     <I>int</I>
+     <B>ether_ntohost</B>(<I>char</I> <I>*hostname</I>, <I>struct</I> <I>ether</I><B>_</B><I>addr</I> <I>*e</I>)
+
+     <I>int</I>
+     <B>ether_hostton</B>(<I>char</I> <I>*hostname</I>, <I>struct</I> <I>ether</I><B>_</B><I>addr</I> <I>*e</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions operate on ethernet addresses using an <I>ether</I><B>_</B><I>addr</I> struc-
+     ture, which is defined in the header file &lt;<I>netinet/if</I><B>_</B><I>ether.h</I>&gt;:
+
+	   /*
+	    * The number of bytes in an ethernet (MAC) address.
+	    */
+	   #define ETHER_ADDR_LEN	   6
+
+	   /*
+	    * Structure of a 48-bit Ethernet address.
+	    */
+	   struct  ether_addr {
+		   u_char octet[ETHER_ADDR_LEN];
+	   };
+
+     The function <B>ether_line</B>() scans <I>l</I>, an ASCII string in <B><A HREF="ethers.html">ethers(5)</A></B> format
+     and sets <I>e</I> to the ethernet address specified in the string and <I>h</I> to the
+     hostname. This function is used to parse lines from <I>/etc/ethers</I> into
+     their component parts.
+
+     The <B>ether_aton</B>() function converts an ASCII representation of an ethernet
+     address into an <I>ether</I><B>_</B><I>addr</I> structure. Likewise, <B>ether_ntoa</B>() converts an
+     ethernet address specified as an <I>ether</I><B>_</B><I>addr</I> structure into an ASCII
+     string.
+
+     The <B>ether_ntohost</B>() and <B>ether_hostton</B>() functions map ethernet addresses
+     to their corresponding hostnames as specified in the <I>/etc/ethers</I>
+     database.	<B>ether_ntohost</B>() converts from ethernet address to hostname,
+     and <B>ether_hostton</B>() converts from hostname to ethernet address.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <B>ether_line</B>() returns zero on success and non-zero if it was unable to
+     parse any part of the supplied line <I>l</I>. It returns the extracted ethernet
+     address in the supplied <I>ether</I><B>_</B><I>addr</I> structure <I>e</I> and the hostname in the
+     supplied string <I>h</I>.
+
+     On success, <B>ether_ntoa</B>() returns a pointer to a string containing an
+     ASCII representation of an ethernet address. If it is unable to convert
+     the supplied <I>ether</I><B>_</B><I>addr</I> structure, it returns a NULL pointer. Likewise,
+     <B>ether_aton</B>() returns a pointer to an <I>ether</I><B>_</B><I>addr</I> structure on success and
+     a NULL pointer on failure.
+
+     The <B>ether_ntohost</B>() and <B>ether_hostton</B>() functions both return zero on
+     success or non-zero if they were unable to find a match in the
+     <I>/etc/ethers</I> database.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     The user must insure that the hostname strings passed to the the
+     <B>ether_line</B>(), <B>ether_ntohost</B>() and <B>ether_hostton</B>() functions are large
+     enough to contain the returned hostnames.
+
+
+</PRE>
+<H2>NIS INTERACTION</H2><PRE>
+     If the <I>/etc/ethers</I> contains a line with a single + in it, the
+     <B>ether_ntohost</B>() and <B>ether_hostton</B>() functions will attempt to consult the
+     NIS <I>ethers.byname</I> and <I>ethers.byaddr</I> maps in addition to the data in the
+     <I>/etc/ethers</I> file.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="yp.html">yp(4)</A></B>,  <B><A HREF="ethers.5.html">ethers(5)</A></B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The <B>ether_aton</B>() and <B>ether_ntoa</B>() functions returns values that are
+     stored in static memory areas which may be overwritten the next time they
+     are called.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     This particular implementation of the <B>ethers</B> library functions were writ-
+     ten for and first appeared in FreeBSD 2.1.
+
+FreeBSD 2.1			April 12, 1995				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

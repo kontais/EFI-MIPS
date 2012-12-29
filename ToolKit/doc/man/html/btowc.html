@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>BTOWC(3)</B>               Libc Functions Manual               <B>BTOWC(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>btowc</B> - converts (unsigned char) c 
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>wint_t</I>
+     <B>btowc</B>(<I>int</I> <I>c</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>btowc</B>() function determines whether c constitues a valid (one-byte)
+multibyte character in the initial shift state. 
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>btowc</B>() function returns WEOF if c has the value EOF or if (unsigned char)c does not
+constitute a valid (one-byte) multibyte character in the initial shift state. Otherwise, it
+returns the wide-character representation of that character.
+     This function has not been actually implemented. So it will always return WEOF.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctob(3)</B>,  <B>mbsinit(3)</B>,  <B>mbrlen(3)</B>,  <B>mbrtowc(3)</B>,  <B>wcrtomb(3)</B>,
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>btowc</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+Libc                              April 7, 2000                               1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,1 @@
+-G0 -mno-abicalls 和 -fno-pic需要同时使用

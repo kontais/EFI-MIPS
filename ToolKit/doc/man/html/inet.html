@@ -1,0 +1,139 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="INET.html">INET(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="INET.html">INET(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>inet_aton</B>, <B>inet_addr</B>, <B>inet_network</B>, <B>inet_ntoa</B>, <B>inet_makeaddr</B>, <B>inet_lnaof</B>,
+     <B>inet_netof</B> - Internet address manipulation routines
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+     <B>#include</B> <B>&lt;netinet/in.h&gt;</B>
+     <B>#include</B> <B>&lt;arpa/inet.h&gt;</B>
+
+     <I>int</I>
+     <B>inet_aton</B>(<I>const</I> <I>char</I> <I>*cp</I>, <I>struct</I> <I>in</I><B>_</B><I>addr</I> <I>*pin</I>)
+
+     <I>unsigned</I> <I>long</I>
+     <B>inet_addr</B>(<I>const</I> <I>char</I> <I>*cp</I>)
+
+     <I>unsigned</I> <I>long</I>
+     <B>inet_network</B>(<I>const</I> <I>char</I> <I>*cp</I>)
+
+     <I>char</I> <I>*</I>
+     <B>inet_ntoa</B>(<I>struct</I> <I>in</I><B>_</B><I>addr</I> <I>in</I>)
+
+     <I>struct</I> <I>in</I><B>_</B><I>addr</I>
+     <B>inet_makeaddr</B>(<I>unsigned</I> <I>long</I> <I>net</I>, <I>unsigned</I> <I>long</I> <I>lna</I>)
+
+     <I>unsigned</I> <I>long</I>
+     <B>inet_lnaof</B>(<I>struct</I> <I>in</I><B>_</B><I>addr</I> <I>in</I>)
+
+     <I>unsigned</I> <I>long</I>
+     <B>inet_netof</B>(<I>struct</I> <I>in</I><B>_</B><I>addr</I> <I>in</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The routines <B>inet_aton</B>(), <B>inet_addr</B>() and <B>inet_network</B>() interpret char-
+     acter strings representing numbers expressed in the Internet standard `.'
+     notation.	The <B>inet_aton</B>() routine interprets the specified character
+     string as an Internet address, placing the address into the structure
+     provided.	It returns 1 if the string was successfully interpreted, or 0
+     if the string is invalid.	The <B>inet_addr</B>() and <B>inet_network</B>() functions
+     return numbers suitable for use as Internet addresses and Internet net-
+     work numbers, respectively.  The routine <B>inet_ntoa</B>() takes an Internet
+     address and returns an ASCII string representing the address in `.' nota-
+     tion.  The routine <B>inet_makeaddr</B>() takes an Internet network number and a
+     local network address and constructs an Internet address from it.	The
+     routines <B>inet_netof</B>() and <B>inet_lnaof</B>() break apart Internet host address-
+     es, returning the network number and local network address part, respec-
+     tively.
+
+     All Internet addresses are returned in network order (bytes ordered from
+     left to right).  All network numbers and local address parts are returned
+     as machine format integer values.
+
+
+</PRE>
+<H2>INTERNET ADDRESSES</H2><PRE>
+     Values specified using the `.' notation take one of the following forms:
+
+	   a.b.c.d
+	   a.b.c
+	   a.b
+	   a
+
+     When four parts are specified, each is interpreted as a byte of data and
+     assigned, from left to right, to the four bytes of an Internet address.
+     Note that when an Internet address is viewed as a 32-bit integer quantity
+     on the VAX the bytes referred to above appear as ``d.c.b.a''. That is,
+     VAX bytes are ordered from right to left.
+
+     When a three part address is specified, the last part is interpreted as a
+     16-bit quantity and placed in the right-most two bytes of the network ad-
+     dress.  This makes the three part address format convenient for specify-
+     ing Class B network addresses as ``128.net.host''.
+
+     When a two part address is supplied, the last part is interpreted as a
+     24-bit quantity and placed in the right most three bytes of the network
+     address.  This makes the two part address format convenient for specify-
+     ing Class A network addresses as ``net.host''.
+
+     When only one part is given, the value is stored directly in the network
+     address without any byte rearrangement.
+
+     All numbers supplied as ``parts'' in a `.' notation may be decimal, oc-
+     tal, or hexadecimal, as specified in the C language (i.e., a leading 0x
+     or 0X implies hexadecimal; otherwise, a leading 0 implies octal; other-
+     wise, the number is interpreted as decimal).
+
+     The <B>inet_aton</B>() and <B>inet_ntoa</B>() functions are semi-deprecated in favor of
+     the <B><A HREF="addr2ascii.html">addr2ascii(3)</A></B> family.	However, since those functions are not yet
+     widely implemented, portable programs cannot rely on their presence and
+     will continue to use the <B><A HREF="inet.html">inet(3)</A></B> functions for some time.
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     The constant INADDR_NONE is returned by <B>inet_addr</B>() and <B>inet_network</B>()
+     for malformed requests.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="addr2ascii.html">addr2ascii(3)</A></B>,  <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>,	<B><A HREF="getnetent.html">getnetent(3)</A></B>,  <B><A HREF="hosts.html">hosts(5)</A></B>,  <B><A HREF="networks.html">networks(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     These functions appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The value INADDR_NONE (0xffffffff) is a valid broadcast address, but
+     <B>inet_addr</B>() cannot return that value without indicating failure.  The
+     newer <B>inet_aton</B>() function does not share this problem.  The problem of
+     host byte ordering versus network byte ordering is confusing.  The string
+     returned by <B>inet_ntoa</B>() resides in a static memory area.
+
+     Inet_addr should return a <I>struct</I> <I>in</I><B>_</B><I>addr</I>.
+
+4.2 Berkeley Distribution	 June 17, 1996				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

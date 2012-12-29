@@ -1,0 +1,135 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="MULTIBYTE.html">MULTIBYTE(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="MULTIBYTE.html">MULTIBYTE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mblen</B>, <B>mbstowcs</B>, <B>mbtowc</B>, <B>wcstombs</B>, <B>wctomb</B> - multibyte character support
+     for C
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>int</I>
+     <B>mblen</B>(<I>const</I> <I>char</I> <I>*mbchar</I>, <I>size</I><B>_</B><I>t</I> <I>nbytes</I>)
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>mbstowcs</B>(<I>wchar</I><B>_</B><I>t</I> <I>*wcstring</I>, <I>const</I> <I>char</I> <I>*mbstring</I>, <I>size</I><B>_</B><I>t</I> <I>nwchars</I>)
+
+     <I>int</I>
+     <B>mbtowc</B>(<I>wchar</I><B>_</B><I>t</I> <I>*wcharp</I>, <I>const</I> <I>char</I> <I>*mbchar</I>, <I>size</I><B>_</B><I>t</I> <I>nbytes</I>)
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>wcstombs</B>(<I>char</I> <I>*mbstring</I>, <I>const</I> <I>wchar</I><B>_</B><I>t</I> <I>*wcstring</I>, <I>size</I><B>_</B><I>t</I> <I>nbytes</I>)
+
+     <I>int</I>
+     <B>wctomb</B>(<I>char</I> <I>*mbchar</I>, <I>wchar</I><B>_</B><I>t</I> <I>wchar</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The basic elements of some written natural languages such as Chinese can-
+     not be represented uniquely with single C <I>char</I>s. The C standard supports
+     two different ways of dealing with extended natural language encodings,
+     <I>wide</I> characters and <I>multibyte</I> characters.	Wide characters are an inter-
+     nal representation which allows each basic element to map to a single ob-
+     ject of type <I>wchar</I><B>_</B><I>t</I>. Multibyte characters are used for input and output
+     and code each basic element as a sequence of C <I>char</I>s. Individual basic
+     elements may map into one or more (up to MB_CHAR_MAX) bytes in a multi-
+     byte character.
+
+     The current locale (<B><A HREF="setlocale.html">setlocale(3)</A></B>)	governs the interpretation of wide and
+     multibyte characters.  The locale category LC_CTYPE specifically controls
+     this interpretation.  The <I>wchar</I><B>_</B><I>t</I> type is wide enough to hold the largest
+     value in the wide character representations for all locales.
+
+     Multibyte strings may contain `shift' indicators to switch to and from
+     particular modes within the given representation.	If explicit bytes are
+     used to signal shifting, these are not recognized as separate characters
+     but are lumped with a neighboring character.  There is always a distin-
+     guished `initial' shift state.  The <B>mbstowcs</B>() and <B>wcstombs</B>() functions
+     assume that multibyte strings are interpreted starting from the initial
+     shift state.  The <B>mblen</B>(), <B>mbtowc</B>() and <B>wctomb</B>() functions maintain stat-
+     ic shift state internally.  A call with a null <I>mbchar</I> pointer returns
+     nonzero if the current locale requires shift states, zero otherwise; if
+     shift states are required, the shift state is reset to the initial state.
+     The internal shift states are undefined after a call to <B>setlocale</B>() with
+     the LC_CTYPE or LC_ALL categories.
+
+     For convenience in processing, the wide character with value 0 (the null
+     wide character) is recognized as the wide character string terminator,
+     and the character with value 0 (the null byte) is recognized as the
+     multibyte character string terminator.  Null bytes are not permitted
+     within multibyte characters.
+
+     The <B>mblen</B>() function computes the length in bytes of a multibyte charac-
+     ter <I>mbchar</I>. Up to <I>nbytes</I> bytes are examined.
+
+     The <B>mbtowc</B>() function converts a multibyte character <I>mbchar</I> into a wide
+     character and stores the result in the object pointed to by <I>wcharp.</I> Up to
+     <I>nbytes</I> bytes are examined.
+
+     The <B>wctomb</B>() function converts a wide character <I>wchar</I> into a multibyte
+     character and stores the result in <I>mbchar</I>. The object pointed to by
+     <I>mbchar</I> must be large enough to accommodate the multibyte character.
+
+     The <B>mbstowcs</B>() function converts a multibyte character string <I>mbstring</I>
+     into a wide character string <I>wcstring</I>. No more than <I>nwchars</I> wide charac-
+     ters are stored.  A terminating null wide character is appended if there
+     is room.
+
+     The <B>wcstombs</B>() function converts a wide character string <I>wcstring</I> into a
+     multibyte character string <I>mbstring</I>. Up to <I>nbytes</I> bytes are stored in
+     <I>mbstring</I>. Partial multibyte characters at the end of the string are not
+     stored.  The multibyte character string is null terminated if there is
+     room.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If multibyte characters are not supported in the current locale, all of
+     these functions will return -1 if characters can be processed, otherwise
+     0.
+
+     If <I>mbchar</I> is NULL, the <B>mblen</B>(), <B>mbtowc</B>() and <B>wctomb</B>() functions return
+     nonzero if shift states are supported, zero otherwise.  If <I>mbchar</I> is
+     valid, then these functions return the number of bytes processed in
+     <I>mbchar</I>, or -1 if no multibyte character could be recognized or converted.
+
+     The <B>mbstowcs</B>() function returns the number of wide characters converted,
+     not counting any terminating null wide character.	The <B>wcstombs</B>() func-
+     tion returns the number of bytes converted, not counting any terminating
+     null byte.  If any invalid multibyte characters are encountered, both
+     functions return -1.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="mbrune.html">mbrune(3)</A></B>,  <B><A HREF="rune.html">rune(3)</A></B>,  <B><A HREF="setlocale.html">setlocale(3)</A></B>,  <B><A HREF="euc.html">euc(4)</A></B>,  <B><A HREF="utf2.html">utf2(4)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>mblen</B>(), <B>mbstowcs</B>(), <B>mbtowc</B>(), <B>wcstombs</B>() and <B>wctomb</B>() functions con-
+     form to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The current implementation does not support shift states.
+
+BSD				 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

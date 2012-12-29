@@ -1,0 +1,127 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CONNECT.html">CONNECT(2)</A></B>		  FreeBSD System Calls Manual		    <B><A HREF="CONNECT.html">CONNECT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>connect</B> - initiate a connection on a socket
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>connect</B>(<I>int</I> <I>s</I>, <I>const</I> <I>struct</I> <I>sockaddr</I> <I>*name</I>, <I>int</I> <I>namelen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The parameter <I>s</I> is a socket.  If it is of type SOCK_DGRAM, this call
+     specifies the peer with which the socket is to be associated; this ad-
+     dress is that to which datagrams are to be sent, and the only address
+     from which datagrams are to be received.  If the socket is of type
+     SOCK_STREAM, this call attempts to make a connection to another socket.
+     The other socket is specified by <I>name</I>, which is an address in the commu-
+     nications space of the socket.  Each communications space interprets the
+     <I>name</I> parameter in its own way.  Generally, stream sockets may successful-
+     ly <B>connect</B>() only once; datagram sockets may use <B>connect</B>() multiple times
+     to change their association.  Datagram sockets may dissolve the associa-
+     tion by connecting to an invalid address, such as a null address.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>connect</B>() is implemented as the <I>connect</I>
+     syscall.
+
+     In the threaded library, the <I>connect</I> syscall is assembled to
+     <B>_thread_sys_connect</B>() and <B>connect</B>() is implemented as a function which
+     locks <I>s</I> for read and write, then calls <B>_thread_sys_connect</B>().  If the
+     call to <B>_thread_sys_connect</B>() would block, a context switch is performed.
+     Before returning, <B>connect</B>() unlocks <I>s</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If the connection or binding succeeds, 0 is returned.  Otherwise a -1 is
+     returned, and a more specific error code is stored in <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>connect</B>() call fails if:
+
+     [EBADF]	       <I>s</I> is not a valid descriptor.
+
+     [ENOTSOCK]        <I>s</I> is a descriptor for a file, not a socket.
+
+     [EADDRNOTAVAIL]   The specified address is not available on this machine.
+
+     [EAFNOSUPPORT]    Addresses in the specified address family cannot be
+		       used with this socket.
+
+     [EISCONN]	       The socket is already connected.
+
+     [ETIMEDOUT]       Connection establishment timed out without establishing
+		       a connection.
+
+     [ECONNREFUSED]    The attempt to connect was forcefully rejected.
+
+     [ENETUNREACH]     The network isn't reachable from this host.
+
+     [EADDRINUSE]      The address is already in use.
+
+     [EFAULT]	       The <I>name</I> parameter specifies an area outside the pro-
+
+		       cess address space.
+
+     [EINPROGRESS]     The socket is non-blocking and the connection cannot be
+		       completed immediately.  It is possible to <B><A HREF="select.html">select(2)</A></B> for
+		       completion by selecting the socket for writing.
+
+     [EALREADY]        The socket is non-blocking and a previous connection
+		       attempt has not yet been completed.
+
+     The following errors are specific to connecting names in the UNIX domain.
+     These errors may not apply in future versions of the UNIX IPC domain.
+
+     [ENOTDIR]	       A component of the path prefix is not a directory.
+
+     [ENAMETOOLONG]    A component of a pathname exceeded 255 characters, or
+		       an entire path name exceeded 1023 characters.
+
+     [ENOENT]	       The named socket does not exist.
+
+     [EACCES]	       Search permission is denied for a component of the path
+		       prefix.
+
+     [EACCES]	       Write access to the named socket is denied.
+
+     [ELOOP]	       Too many symbolic links were encountered in translating
+		       the pathname.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="accept.html">accept(2)</A></B>,  <B><A HREF="getpeername.html">getpeername(2)</A></B>,  <B><A HREF="getsockname.html">getsockname(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>connect</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

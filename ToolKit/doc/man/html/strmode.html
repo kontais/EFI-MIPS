@@ -1,0 +1,116 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRMODE.html">STRMODE(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="STRMODE.html">STRMODE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strmode</B> - convert inode status information into a symbolic string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>void</I>
+     <B>strmode</B>(<I>mode</I><B>_</B><I>t</I> <I>mode</I>, <I>char</I> <I>*bp</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strmode</B>() function converts a file <I>mode</I> (the type and permission in-
+     formation associated with an inode, see <B><A HREF="stat.html">stat(2)</A></B>)  into a symbolic string
+     which is stored in the location referenced by <I>bp</I>. This stored string is
+     eleven characters in length plus a trailing NUL.
+
+     The first character is the inode type, and will be one of the following:
+
+	   -	 regular file
+	   b	 block special
+	   c	 character special
+	   d	 directory
+	   l	 symbolic link
+	   p	 fifo
+	   s	 socket
+	   w	 whiteout
+	   ?	 unknown inode type
+
+     The next nine characters encode three sets of permissions, in three char-
+     acters each.  The first three characters are the permissions for the own-
+     er of the file, the second three for the group the file belongs to, and
+     the third for the ``other'', or default, set of users.
+
+     Permission checking is done as specifically as possible.  If read permis-
+     sion is denied to the owner of a file in the first set of permissions,
+     the owner of the file will not be able to read the file.  This is true
+     even if the owner is in the file's group and the group permissions allow
+     reading or the ``other'' permissions allow reading.
+
+     If the first character of the three character set is an ``r'', the file
+     is readable for that set of users; if a dash ``-'', it is not readable.
+
+     If the second character of the three character set is a ``w'', the file
+     is writable for that set of users; if a dash ``-'', it is not writable.
+
+     The third character is the first of the following characters that apply:
+
+     S	   If the character is part of the owner permissions and the file is
+	   not executable or the directory is not searchable by the owner, and
+	   the set-user-id bit is set.
+
+     S	   If the character is part of the group permissions and the file is
+	   not executable or the directory is not searchable by the group, and
+	   the set-group-id bit is set.
+
+     T	   If the character is part of the other permissions and the file is
+	   not executable or the directory is not searchable by others, and
+	   the ``sticky'' (S_ISVTX) bit is set.
+
+     s	   If the character is part of the owner permissions and the file is
+	   executable or the directory searchable by the owner, and the set-
+
+	   user-id bit is set.
+
+     s	   If the character is part of the group permissions and the file is
+	   executable or the directory searchable by the group, and the set-
+	   group-id bit is set.
+
+     t	   If the character is part of the other permissions and the file is
+	   executable or the directory searchable by others, and the
+	   ``sticky'' (S_ISVTX) bit is set.
+
+     x	   The file is executable or the directory is searchable.
+
+     -	   None of the above apply.
+
+     The last character is a plus sign ``+'' if any there are any alternate or
+     additional access control methods associated with the inode, otherwise it
+     will be a space.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strmode</B>() function always returns 0.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="chmod.html">chmod(1)</A></B>,	<B><A HREF="find.html">find(1)</A></B>,  <B><A HREF="stat.html">stat(2)</A></B>,  <B><A HREF="getmode.html">getmode(3)</A></B>,  <B><A HREF="setmode.html">setmode(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>strmode</B>() function first appeared in 4.4BSD.
+
+BSD				 July 28, 1994				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

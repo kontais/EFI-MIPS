@@ -1,0 +1,58 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCHDIR(2)</B>		  FreeBSD System Calls Manual		      <B>WCHDIR(2)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wchdir</B> - change current working directory
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wunistd.h&gt;</B>
+
+     <I>int</I>
+     <B>wchdir</B>(<I>const</I> <I>wchar_t</I> <I>*path</I>)
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <I>path</I> argument points to the UNICODE pathname of a directory.  The
+     <B>wchdir</B>() function causes the named directory to become the current working
+     directory, that is, the starting point for path searches of pathnames not
+     beginning with a slash, `/'.
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, a value of 0 is returned.  Otherwise, a value
+     of -1 is returned and <I>errno</I> is set to indicate the error.
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Wchdir</B>() will fail and the current working directory will be unchanged if
+     one or more of the following are true:
+
+     [ENAMETOOLONG]
+		   A component of a pathname exceeded 255 characters, or an
+		   entire path name exceeded 1023 characters.
+
+     [ENOMEM]
+		   Required memory could not be allocated to complete the
+		   requested operation.
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wchdir</B>() function call is expected to conform to IEEE Std1003.1-1990
+     (``POSIX'').
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

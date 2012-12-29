@@ -1,0 +1,122 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ACCEPT.html">ACCEPT(2)</A></B>		  FreeBSD System Calls Manual		     <B><A HREF="ACCEPT.html">ACCEPT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>accept</B> - accept a connection on a socket
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>accept</B>(<I>int</I> <I>s</I>, <I>struct</I> <I>sockaddr</I> <I>*addr</I>, <I>int</I> <I>*addrlen</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The argument <I>s</I> is a socket that has been created with <B><A HREF="socket.html">socket(2)</A></B>,  bound
+     to an address with <B><A HREF="bind.html">bind(2)</A></B>,  and is listening for connections after a
+     <B><A HREF="listen.html">listen(2)</A></B>.  The <B>accept</B>() argument extracts the first connection request
+     on the queue of pending connections, creates a new socket with the same
+     properties of <I>s</I> and allocates a new file descriptor for the socket.  If
+     no pending connections are present on the queue, and the socket is not
+     marked as non-blocking, <B>accept</B>() blocks the caller until a connection is
+     present.  If the socket is marked non-blocking and no pending connections
+     are present on the queue, <B>accept</B>() returns an error as described below.
+     The accepted socket may not be used to accept more connections.  The
+     original socket <I>s</I> remains open.
+
+     The argument <I>addr</I> is a result parameter that is filled in with the ad-
+     dress of the connecting entity, as known to the communications layer.
+     The exact format of the <I>addr</I> parameter is determined by the domain in
+     which the communication is occurring.  The <I>addrlen</I> is a value-result pa-
+     rameter; it should initially contain the amount of space pointed to by
+     <I>addr</I>; on return it will contain the actual length (in bytes) of the ad-
+     dress returned.  This call is used with connection-based socket types,
+     currently with SOCK_STREAM.
+
+     It is possible to <B><A HREF="select.html">select(2)</A></B> a socket for the purposes of doing an
+     <B>accept</B>() by selecting it for read.
+
+     For certain protocols which require an explicit confirmation, such as ISO
+     or DATAKIT, <B>accept</B>() can be thought of as merely dequeueing the next con-
+     nection request and not implying confirmation.  Confirmation can be im-
+     plied by a normal read or write on the new file descriptor, and rejection
+     can be implied by closing the new socket.
+
+     One can obtain user connection request data without confirming the con-
+     nection by issuing a <B><A HREF="recv.html">recvmsg(2)</A></B> call with an <I>msg</I><B>_</B><I>iovlen</I> of 0 and a non-
+     zero <I>msg</I><B>_</B><I>controllen</I>, or by issuing a <B><A HREF="getsockopt.html">getsockopt(2)</A></B> request.  Similarly,
+     one can provide user connection rejection information by issuing a
+     <B><A HREF="send.html">sendmsg(2)</A></B> call with providing only the control information, or by call-
+     ing <B><A HREF="getsockopt.html">setsockopt(2)</A></B>.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>accept</B>() is implemented as the <I>accept</I>
+     syscall.
+
+     In the threaded library, the <I>accept</I> syscall is assembled to
+     <B>_thread_sys_accept</B>() and <B>accept</B>() is implemented as a function which
+     locks <I>s</I> for read and write, then calls <B>_thread_sys_accept</B>().  If the call
+     to <B>_thread_sys_accept</B>() would block, a context switch is performed. Be-
+     fore returning, <B>accept</B>() unlocks <I>s</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The call returns -1 on error.  If it succeeds, it returns a non-negative
+     integer that is a descriptor for the accepted socket.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>accept</B>() will fail if:
+
+     [EBADF]	  The descriptor is invalid.
+
+     [EINTR]	  The <B>accept</B>() operation was interrupted.
+
+     [EMFILE]	  The per-process descriptor table is full.
+
+     [ENFILE]	  The system file table is full.
+
+     [ENOTSOCK]   The descriptor references a file, not a socket.
+
+     [EINVAL]	  <B><A HREF="listen.html">listen(2)</A></B> has not been called on the socket descriptor.
+
+     [EFAULT]	  The <I>addr</I> parameter is not in a writable part of the user ad-
+		  dress space.
+
+     [EWOULDBLOCK]
+		  The socket is marked non-blocking and no connections are
+		  present to be accepted.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bind.html">bind(2)</A></B>,  <B><A HREF="connect.html">connect(2)</A></B>,  <B><A HREF="getpeername.html">getpeername(2)</A></B>,  <B><A HREF="listen.html">listen(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>accept</B>() function appeared in 4.2BSD.
+
+4.2 Berkeley Distribution      December 11, 1993			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

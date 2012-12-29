@@ -1,0 +1,54 @@
+#/*++
+#
+# Copyright (c) 2004 - 2005, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    DxeIplLib.inf
+#
+#  Abstract:
+#
+#    这个lib要复制到其它地方运行，所以需要是PIC代码
+#    注：这个库中同一个文件内的函数不可以相互调用，以确保不使用gp寄存器，可以
+#        通过包含多个文件，使函数在文件之间调用
+#
+#--*/
+
+[defines]
+BASE_NAME            = DxeIplLib
+COMPONENT_TYPE       = LIBRARY
+
+[sources.common]
+  PeiImageRead.c
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Efi
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Foundation/Include/Pei
+  $(EDK_SOURCE)/Foundation/Library/Pei/Include
+  $(EDK_SOURCE)/Foundation/Core/Pei/Include
+
+[libraries.common]
+
+[libraries.Mips32]
+
+[libraries.Mips32.Linux32]
+
+[nmake.common]
+  C_PIC_FLAGS=-G 0 -mno-abicalls -fpic
+  ASM_PIC_FLAGS=-G 0 -mno-abicalls -fpic

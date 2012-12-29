@@ -1,0 +1,4 @@
+#ifndef _LOONGSON_SEC_CACHE_INIT_H_
+#define _LOONGSON_SEC_CACHE_INIT_H_
+
+#endif /* _LOONGSON_SEC_CACHE_INIT_H_ */

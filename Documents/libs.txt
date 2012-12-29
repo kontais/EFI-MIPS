@@ -1,0 +1,38 @@
+  LinuxLib
+  SecMain
+  EdkLinux32ProtocolLib
+  EdkLinux32PpiLib
+  UsbDxeLib
+  GenericBdsLib
+  GraphicsLite
+  PrintLibLite
+  EfiUiLib
+  EfiScriptLib
+  PrintLib
+  EfiIfrSupportLib
+  Graphics
+  EfiRuntimeLib
+
+  EfiDriverLib
+  
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  
+  PeiHobLib
+  PeiLib
+  
+  EdkPpiLib
+  EdkFrameworkPpiLib
+  
+  HobLib
+  CompilerStub
+  CustomizedDecompress
+  CpuMips32Lib
+
+  EfiCommonLib
+  
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib

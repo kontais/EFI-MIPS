@@ -1,0 +1,93 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETENV.html">GETENV(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="GETENV.html">GETENV(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getenv</B>, <B>putenv</B>, <B>setenv</B>, <B>unsetenv</B> - environment variable functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>getenv</B>(<I>const</I> <I>char</I> <I>*name</I>)
+
+     <I>int</I>
+     <B>setenv</B>(<I>const</I> <I>char</I> <I>*name</I>, <I>const</I> <I>char</I> <I>*value</I>, <I>int</I> <I>overwrite</I>)
+
+     <I>int</I>
+     <B>putenv</B>(<I>const</I> <I>char</I> <I>*string</I>)
+
+     <I>void</I>
+     <B>unsetenv</B>(<I>const</I> <I>char</I> <I>*name</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions set, unset and fetch environment variables from the host
+     <I>environment</I> <I>list</I>. For compatibility with differing environment conven-
+     tions, the given arguments <I>name</I> and <I>value</I> may be appended and prepended,
+     respectively, with an equal sign ``=''.
+
+     The <B>getenv</B>() function obtains the current value of the environment vari-
+     able, <I>name</I>. If the variable <I>name</I> is not in the current environment, a
+     null pointer is returned.
+
+     The <B>setenv</B>() function inserts or resets the environment variable <I>name</I> in
+     the current environment list.  If the variable <I>name</I> does not exist in the
+     list, it is inserted with the given <I>value.</I> If the variable does exist,
+     the argument <I>overwrite</I> is tested; if <I>overwrite</I> <I>is</I> zero, the variable is
+     not reset, otherwise it is reset to the given <I>value</I>.
+
+     The <B>putenv</B>() function takes an argument of the form ``name=value'' and is
+     equivalent to:
+
+	   setenv(name, value, 1);
+
+     The <B>unsetenv</B>() function deletes all instances of the variable name point-
+     ed to by <I>name</I> from the list.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The functions <B>setenv</B>() and <B>putenv</B>() return zero if successful; otherwise
+     the global variable <I>errno</I> is set to indicate the error and a -1 is re-
+     turned.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ENOMEM]  The function <B>setenv</B>() or <B>putenv</B>() failed because they were un-
+	       able to allocate memory for the environment.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="csh.html">csh(1)</A></B>,  <B><A HREF="sh.html">sh(1)</A></B>,  <B><A HREF="execve.html">execve(2)</A></B>,  <B><A HREF="environ.html">environ(7)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>getenv</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The functions <B>setenv</B>() and <B>unsetenv</B>() appeared in Version 7 AT&amp;T UNIX.
+     The <B>putenv</B>() function appeared in 4.3BSD-Reno.
+
+BSD			       December 11, 1993			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

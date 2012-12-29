@@ -1,0 +1,200 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ROUTE.html">ROUTE(8)</A></B>		FreeBSD System Manager's Manual 	      <B><A HREF="ROUTE.html">ROUTE(8)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>route</B> - manually manipulate the routing tables
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>route</B> [<B>-dnqtv</B>] <I>command</I> [[<I>modifiers</I>] <I>args</I>]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Route</B> is a utility used to manually manipulate the network routing ta-
+     bles.  It normally is not needed, as a system routing table management
+     daemon such as <B><A HREF="routed.html">routed(8)</A></B>,	should tend to this task.
+
+     The <B>route</B> utility supports a limited number of general options, but a
+     rich command language, enabling the user to specify any arbitrary request
+     that could be delivered via the programmatic interface discussed in
+     <B><A HREF="route.html">route(4)</A></B>.
+
+     The following options are available:
+
+     <B>-n</B>      Bypass attempts to print host and network names symbolically when
+	     reporting actions.  (The process of translating between symbolic
+	     names and numerical equivalents can be quite time consuming, and
+	     may require correct operation of the network; thus it may be ex-
+	     pedient to forgot this, especially when attempting to repair net-
+	     working operations).
+
+     <B>-v</B>      (verbose) Print additional details.
+
+     <B>-q</B>      Suppress all output.
+
+     The <B>route</B> utility provides six commands:
+
+     <B>add</B>	 Add a route.
+     <B>flush</B>	 Remove all routes.
+     <B>delete</B>	 Delete a specific route.
+     <B>change</B>	 Change aspects of a route (such as its gateway).
+     <B>get</B>	 Lookup and display the route for a destination.
+     <B>monitor</B>	 Continuously report any changes to the routing information
+		 base, routing lookup misses, or suspected network partition-
+		 ings.
+
+     The monitor command has the syntax:
+
+	   <B>route</B> [<B>-n</B>] <B>monitor</B>
+
+     The flush command has the syntax:
+
+	   <B>route</B> [<B>-n</B>] <B>flush</B> [<I>family</I>]
+
+     If the <B>flush</B> command is specified, <B>route</B> will ``flush'' the routing ta-
+     bles of all gateway entries.  When the address family may is specified by
+     any of the <B>-osi</B>, <B>-xns</B>, <B>-atalk</B>, or <B>-inet</B> modifiers, only routes having
+     destinations with addresses in the delineated family will be deleted.
+
+     The other commands have the following syntax:
+
+	   <B>route</B> [<B>-n</B>] <I>command</I> [<B>-net</B> | <B>-host</B>] <I>destination</I> <I>gateway</I>
+
+     where <I>destination</I> is the destination host or network, <I>gateway</I> is the
+     next-hop intermediary via which packets should be routed.	Routes to a
+     particular host may be distinguished from those to a network by inter-
+     preting the Internet address specified as the <I>destination</I> <I>argument</I>. The
+     optional modifiers <B>-net</B> and <B>-host</B> force the destination to be interpreted
+     as a network or a host, respectively.  Otherwise, if the <I>destination</I> has
+     a ``local address part'' of INADDR_ANY (0.0.0.0), or if the <I>destination</I>
+     is the symbolic name of a network, then the route is assumed to be to a
+     network; otherwise, it is presumed to be a route to a host.
+
+     For example, 128.32 is interpreted as <B>-host</B> 128.0.0.32; 128.32.130 is in-
+     terpreted as <B>-host</B> 128.32.0.130; <B>-net</B> 128.32 is interpreted as
+     128.32.0.0; and <B>-net</B> 128.32.130 is interpreted as 128.32.130.0.
+
+     A <I>destination</I> of <I>default</I> is a synonym for <B>-net</B> 0.0.0.0, which is the de-
+     fault route.
+
+     If the destination is directly reachable via an interface requiring no
+     intermediary system to act as a gateway, the <B>-interface</B> modifier should
+     be specified; the gateway given is the address of this host on the common
+     network, indicating the interface to be used for transmission.  Alter-
+     nately, if the interface is point to point the name of the interface it-
+     self may be given, in which case the route remains valid even if the lo-
+     cal or remote addresses change.
+
+     The optional modifiers <B>-xns</B>, <B>-osi</B>, <B>-atalk</B>, and <B>-link</B> specify that all
+     subsequent addresses are in the XNS, OSI, or AppleTalk address families,
+     or are specified as link-level addresses, and the names must be numeric
+     specifications rather than symbolic names.
+
+     The optional <B>-netmask</B> modifier is intended to achieve the effect of an
+     OSI ESIS redirect with the netmask option, or to manually add subnet
+     routes with netmasks different from that of the implied network interface
+     (as would otherwise be communicated using the OSPF or ISIS routing proto-
+     cols).  One specifies an additional ensuing address parameter (to be in-
+     terpreted as a network mask).  The implicit network mask generated in the
+     AF_INET case can be overridden by making sure this option follows the
+     destination parameter.
+
+     Routes have associated flags which influence operation of the protocols
+     when sending to destinations matched by the routes.  These flags may be
+     set (or sometimes cleared) by indicating the following corresponding mod-
+     ifiers:
+
+     -cloning	RTF_CLONING    - generates a new route on use
+     -xresolve	RTF_XRESOLVE   - emit mesg on use (for external lookup)
+     -iface    ~RTF_GATEWAY    - destination is directly reachable
+     -static	RTF_STATIC     - manually added route
+     -nostatic ~RTF_STATIC     - pretend route added by kernel or daemon
+     -reject	RTF_REJECT     - emit an ICMP unreachable when matched
+     -blackhole RTF_BLACKHOLE  - silently discard pkts (during updates)
+     -proto1	RTF_PROTO1     - set protocol specific routing flag #1
+     -proto2	RTF_PROTO2     - set protocol specific routing flag #2
+     -llinfo	RTF_LLINFO     - validly translates proto addr to link addr
+
+     The optional modifiers <B>-rtt</B>, <B>-rttvar</B>, <B>-sendpipe</B>, <B>-recvpipe</B>, <B>-mtu</B>,
+     <B>-hopcount</B>, <B>-expire</B>, and <B>-ssthresh</B> provide initial values to quantities
+     maintained in the routing entry by transport level protocols, such as TCP
+     or TP4.  These may be individually locked by preceding each such modifier
+     to be locked by the <B>-lock</B> meta-modifier, or one can specify that all en-
+     suing metrics may be locked by the <B>-lockrest</B> meta-modifier.
+
+     In a <B>change</B> or <B>add</B> command where the destination and gateway are not suf-
+     ficient to specify the route (as in the ISO case where several interfaces
+     may have the same address), the <B>-ifp</B> or <B>-ifa</B> modifiers may be used to de-
+     termine the interface or interface address.
+
+     All symbolic names specified for a <I>destination</I> or <I>gateway</I> are looked up
+     first as a host name using <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>.  If this lookup fails, get-
+     <B><A HREF="getnetent.html">netbyname(3)</A></B> is then used to interpret the name as that of a network.
+
+     <B>Route</B> uses a routing socket and the new message types RTM_ADD,
+     RTM_DELETE, RTM_GET, and RTM_CHANGE.  As such, only the super-user may
+     modify the routing tables.
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     <B>add</B> <B>[host</B> <B>|</B> <B>network</B> <B>]</B> <B>%s:</B> <B>gateway</B> <B>%s</B> <B>flags</B> <B>%x</B>
+	     The specified route is being added to the tables.	The values
+	     printed are from the routing table entry supplied in the <B><A HREF="ioctl.html">ioctl(2)</A></B>
+	     call.  If the gateway address used was not the primary address of
+	     the gateway (the first one returned by <B><A HREF="gethostbyname.html">gethostbyname(3)</A></B>),	the
+	     gateway address is printed numerically as well as symbolically.
+
+     <B>delete</B> <B>[</B> <B>host</B> <B>|</B> <B>network</B> <B>]</B> <B>%s:</B> <B>gateway</B> <B>%s</B> <B>flags</B> <B>%x</B>
+	     As above, but when deleting an entry.
+
+     <B>%s</B> <B>%s</B> <B>done</B>
+	     When the <B>flush</B> command is specified, each routing table entry
+	     deleted is indicated with a message of this form.
+
+     <B>Network</B> <B>is</B> <B>unreachable</B>
+	     An attempt to add a route failed because the gateway listed was
+	     not on a directly-connected network.  The next-hop gateway must
+	     be given.
+
+     <B>not</B> <B>in</B> <B>table</B>
+	     A delete operation was attempted for an entry which wasn't pre-
+	     sent in the tables.
+
+     <B>routing</B> <B>table</B> <B>overflow</B>
+	     An add operation was attempted, but the system was low on re-
+	     sources and was unable to allocate memory to create the new en-
+	     try.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="netintro.html">netintro(4)</A></B>,  <B><A HREF="route.html">route(4)</A></B>,  <B><A HREF="IPXrouted.html">IPXrouted(8)</A></B>,  <B><A HREF="routed.html">routed(8)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>route</B> command appeared in 4.2BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The first paragraph may have slightly exaggerated <B><A HREF="routed.html">routed(8)</A></B>'s  abilities.
+
+4.4BSD				March 19, 1994				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

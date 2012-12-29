@@ -1,0 +1,157 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="READ.html">READ(2)</A></B> 		  FreeBSD System Calls Manual		       <B><A HREF="READ.html">READ(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>read</B>, <B>readv</B>, <B>pread</B> - read input
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/uio.h&gt;</B>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>read</B>(<I>int</I> <I>d</I>, <I>void</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>nbytes</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>readv</B>(<I>int</I> <I>d</I>, <I>const</I> <I>struct</I> <I>iovec</I> <I>*iov</I>, <I>int</I> <I>iovcnt</I>)
+
+     <I>ssize</I><B>_</B><I>t</I>
+     <B>pread</B>(<I>int</I> <I>d</I>, <I>void</I> <I>*buf</I>, <I>size</I><B>_</B><I>t</I> <I>nbytes</I>, <I>off</I><B>_</B><I>t</I> <I>offset</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Read</B>() attempts to read <I>nbytes</I> of data from the object referenced by the
+     descriptor <I>d</I> into the buffer pointed to by <I>buf</I>. <B>Readv</B>() performs the same
+     action, but scatters the input data into the <I>iovcnt</I> buffers specified by
+     the members of the <I>iov</I> array: iov[0], iov[1], ..., iov[iovcnt-1].
+     <B>Pread</B>() performs the same function, but reads from the specified position
+     in the file without modifying the file pointer.
+
+     For <B>readv</B>(), the <I>iovec</I> structure is defined as:
+
+	   struct iovec {
+		   char   *iov_base;  /* Base address. */
+		   size_t iov_len;    /* Length. */
+	   };
+
+     Each <I>iovec</I> entry specifies the base address and length of an area in mem-
+     ory where data should be placed.  <B>Readv</B>() will always fill an area com-
+     pletely before proceeding to the next.
+
+     On objects capable of seeking, the <B>read</B>() starts at a position given by
+     the pointer associated with <I>d</I> (see <B><A HREF="lseek.html">lseek(2)</A></B>).  Upon return from <B>read</B>(),
+     the pointer is incremented by the number of bytes actually read.
+
+     Objects that are not capable of seeking always read from the current po-
+     sition.  The value of the pointer associated with such an object is unde-
+     fined.
+
+     Upon successful completion, <B>read</B>(), <B>readv</B>(), and <B>pread</B>() return the num-
+     ber of bytes actually read and placed in the buffer.  The system guaran-
+     tees to read the number of bytes requested if the descriptor references a
+     normal file that has that many bytes left before the end-of-file, but in
+     no other case.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>read</B>() is implemented as the <I>read</I> syscall.
+
+     In the threaded library, the <I>read</I> syscall is assembled to
+     <B>_thread_sys_read</B>() and <B>read</B>() is implemented as a function which locks <I>d</I>
+     for read, then calls <B>_thread_sys_read</B>().  If the call to
+     <B>_thread_sys_read</B>() would block, a context switch is performed. Before re-
+     turning, <B>read</B>() unlocks <I>d</I>.
+
+     In the non-threaded library <B>readv</B>() is implemented as the <I>readv</I> syscall.
+
+     In the threaded library, the <I>readv</I> syscall is assembled to
+     <B>_thread_sys_readv</B>() and <B>readv</B>() is implemented as a function which locks
+     <I>d</I> for read, then calls <B>_thread_sys_readv</B>().  If the call to
+     <B>_thread_sys_readv</B>() would block, a context switch is performed. Before
+     returning, <B>readv</B>() unlocks <I>d</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If successful, the number of bytes actually read is returned. Upon read-
+     ing end-of-file, zero is returned.  Otherwise, a -1 is returned and the
+     global variable <I>errno</I> is set to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Read</B>(), <B>readv</B>(), and <B>pread</B>() will succeed unless:
+
+     [EBADF]	   <I>D</I> is not a valid file or socket descriptor open for read-
+		   ing.
+
+     [EFAULT]	   <I>Buf</I> points outside the allocated address space.
+
+     [EIO]	   An I/O error occurred while reading from the file system.
+
+     [EINTR]	   A read from a slow device was interrupted before any data
+		   arrived by the delivery of a signal.
+
+     [EINVAL]	   The pointer associated with <I>d</I> was negative.
+
+     [EAGAIN]	   The file was marked for non-blocking I/O, and no data were
+		   ready to be read.
+
+     In addition, <B>readv</B>() may return one of the following errors:
+
+     [EINVAL]	   <I>Iovcnt</I> was less than or equal to 0, or greater than 16.
+
+     [EINVAL]	   One of the <I>iov</I><B>_</B><I>len</I> values in the <I>iov</I> array was negative.
+
+     [EINVAL]	   The sum of the <I>iov</I><B>_</B><I>len</I> values in the <I>iov</I> array overflowed a
+		   32-bit integer.
+
+     [EFAULT]	   Part of the <I>iov</I> points outside the process's allocated ad-
+		   dress space.
+
+     The <B>pread</B>() call may also return the following errors:
+
+     [EINVAL]	   The specified file offset is invalid.
+
+     [ESPIPE]	   The file descriptor is associated with a pipe, socket, or
+		   FIFO.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="dup.html">dup(2)</A></B>,  <B><A HREF="fcntl.html">fcntl(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="pipe.html">pipe(2)</A></B>,  <B><A HREF="select.html">select(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>,  socket-
+     <B><A HREF="pair.html">pair(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>read</B>() function call is expected to conform to IEEE Std1003.1-1990
+     (``POSIX''). The <B>readv</B>() and <B>pread</B>() functions are expected to conform to
+     X/Open Portability Guide Issue 4.2 (``XPG4.2'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>pread</B>() function call appeared in AT&amp;T System V.4 UNIX.  The <B>readv</B>()
+     function call appeared in 4.2BSD. A <B>read</B>() function call appeared in Ver-
+     sion 6 AT&amp;T UNIX.
+
+4th Berkeley Distribution      February 26, 1994			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

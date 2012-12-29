@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SWAB.html">SWAB(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="SWAB.html">SWAB(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>swab</B> - swap adjacent bytes
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>void</I>
+     <B>swab</B>(<I>const</I> <I>void</I> <I>*src</I>, <I>void</I> <I>*dst</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The function <B>swab</B>() copies <I>len</I> bytes from the location referenced by <I>src</I>
+     to the location referenced by <I>dst</I>, swapping adjacent bytes.
+
+     The argument <I>len</I> must be even number.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bzero.html">bzero(3)</A></B>,	<B><A HREF="memset.html">memset(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>swab</B>() function appeared in Version 7 AT&amp;T UNIX.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

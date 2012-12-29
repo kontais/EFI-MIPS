@@ -1,0 +1,159 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="GETOPT.html">GETOPT(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="GETOPT.html">GETOPT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>getopt</B> - get option character from command line argument list
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>extern</I> <I>char</I> <I>*optarg;</I>
+     <I>extern</I> <I>int</I> <I>optind;</I>
+     <I>extern</I> <I>int</I> <I>optopt;</I>
+     <I>extern</I> <I>int</I> <I>opterr;</I>
+     <I>extern</I> <I>int</I> <I>optreset;</I>
+
+     <I>int</I>
+     <B>getopt</B>(<I>int</I> <I>argc</I>, <I>char</I> <I>*</I> <I>const</I> <I>*argv</I>, <I>const</I> <I>char</I> <I>*optstring</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>getopt</B>() function incrementally parses a command line argument list
+     <I>argv</I> and returns the next <I>known</I> option character.	An option character is
+     <I>known</I> if it has been specified in the string of accepted option charac-
+     ters, <I>optstring</I>.
+
+     The option string <I>optstring</I> may contain the following elements: individu-
+     al characters, and characters followed by a colon to indicate an option
+     argument is to follow.  For example, an option string "x" recognizes an
+     option ``<B>-x</B>'', and an option string "x:" recognizes an option and argu-
+     ment ``<B>-x</B> <I>argument</I>''. It does not matter to <B>getopt</B>() if a following argu-
+     ment has leading white space.
+
+     On return from <B>getopt</B>(), <I>optarg</I> points to an option argument, if it is
+     anticipated, and the variable <I>optind</I> contains the index to the next <I>argv</I>
+     argument for a subsequent call to <B>getopt</B>().  The variable <I>optopt</I> saves
+     the last <I>known</I> option character returned by <B>getopt</B>().
+
+     The variable <I>opterr</I> and <I>optind</I> are both initialized to 1.	The <I>optind</I>
+     variable may be set to another value before a set of calls to <B>getopt</B>() in
+     order to skip over more or less argv entries.
+
+     In order to use <B>getopt</B>() to evaluate multiple sets of arguments, or to
+     evaluate a single set of arguments multiple times, the variable <I>optreset</I>
+     must be set to 1 before the second and each additional set of calls to
+     <B>getopt</B>(), and the variable <I>optind</I> must be reinitialized.
+
+     The <B>getopt</B>() function returns -1 when the argument list is exhausted, or
+     `?' if a non-recognized option is encountered.  The interpretation of op-
+     tions in the argument list may be canceled by the option `--' (double
+     dash) which causes <B>getopt</B>() to signal the end of argument processing and
+     return -1.  When all options have been processed (i.e., up to the first
+     non-option argument), <B>getopt</B>() returns -1.
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     If the <B>getopt</B>() function encounters a character not found in the string
+     <I>optarg</I> or detects a missing option argument it writes an error message to
+     the <I>stderr</I> and returns `?'. Setting <I>opterr</I> to a zero will disable these
+     error messages.  If <I>optstring</I> has a leading `:' then a missing option ar-
+     gument causes a `:' to be returned in addition to suppressing any error
+     messages.
+
+     Option arguments are allowed to begin with ``-''; this is reasonable but
+     reduces the amount of error checking possible.
+
+
+</PRE>
+<H2>EXTENSIONS</H2><PRE>
+     The <I>optreset</I> variable was added to make it possible to call the <B>getopt</B>()
+     function multiple times.  This is an extension to the IEEE Std1003.2
+     (``POSIX.2'') specification.
+
+
+</PRE>
+<H2>EXAMPLE</H2><PRE>
+     extern char *optarg;
+     extern int optind;
+     int bflag, ch, fd;
+
+     bflag = 0;
+     while ((ch = getopt(argc, argv, "bf:")) != -1)
+	     switch (ch) {
+	     case 'b':
+		     bflag = 1;
+		     break;
+	     case 'f':
+		     if ((fd = open(optarg, O_RDONLY, 0)) &lt; 0) {
+			     (void)fprintf(stderr,
+				 "myname: %s: %s\n", optarg, strerror(errno));
+			     <B><A HREF="exit.html">exit(1)</A></B>;
+		     }
+		     break;
+	     case '?':
+	     default:
+		     usage();
+	     }
+     argc -= optind;
+     argv += optind;
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>getopt</B>() function appeared 4.3BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The <B>getopt</B>() function was once specified to return EOF instead of -1.
+     This was changed by IEEE Std1003.2-1992 (``POSIX.2'') to decouple
+     <B>getopt</B>() from <I>&lt;stdio.h&gt;</I>.
+
+     A single dash ``-'' may be specified as a character in <I>optstring</I>, however
+     it should <I>never</I> have an argument associated with it.  This allows
+     <B>getopt</B>() to be used with programs that expect ``-'' as an option flag.
+     This practice is wrong, and should not be used in any current develop-
+     ment.  It is provided for backward compatibility <I>only</I>. By default, a sin-
+     gle dash causes <B>getopt</B>() to return -1.  This is, we believe, compatible
+     with System V.
+
+     It is also possible to handle digits as option letters.  This allows
+     <B>getopt</B>() to be used with programs that expect a number (``-3'') as an op-
+     tion.  This practice is wrong, and should not be used in any current de-
+     velopment.  It is provided for backward compatibility <I>only</I>. The following
+     code fragment works in most cases.
+
+	   int length;
+	   char *p;
+
+	   while ((ch = getopt(argc, argv, "0123456789")) != -1)
+		   switch (ch) {
+		   case '0': case '1': case '2': case '3': case '4':
+		   case '5': case '6': case '7': case '8': case '9':
+			   p = argv[optind - 1];
+			   if (p[0] == '-' &amp;&amp; p[1] == ch &amp;&amp; !p[2])
+				   length = atoi(++p);
+			   else
+				   length = atoi(argv[optind] + 1);
+			   break;
+		   }
+
+4.3 Berkeley Distribution	April 27, 1995				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

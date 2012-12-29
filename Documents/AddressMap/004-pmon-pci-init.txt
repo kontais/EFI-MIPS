@@ -1,0 +1,86 @@
+Bonito                             UNCACHED
+  0x00000000   256M RAM           (0xa0000000)
+  0x10000000    63M PCI MEM Lo0   (0xb0000000)
+  0x13f00000     1M Video Acc
+  0x14000000    64M PCI MEM Lo1
+  0x18000000    64M PCI MEM Lo2
+  
+  0x1fc00000    BOOT ROM
+  0x1fd00000    PCI IO            (0xbfd00000)
+
+  0x20000000    PCI MEM Hi
+
+***上电默认****
+CPU (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff) -> PCI (0x0000_0000_1000_0000 - 0x0000_0000_1fff_ffff)  CPU窗口1
+Master0窗口1的大小为256M，映射到PCI， 即CPU物理地址的256M-512M映射到PCI，具体映射的方法由PCIMAP来决定。(PCI MEM Lo0/1/2)
+***上电默认****
+
+initmips -> dbginit
+
+
+tgt_devinit
+.._pci_businit  //总线初始化
+...._pci_hwinit  //硬件配置
+      _pci_head->pa.pa_iot->bus_base  = 0xbfd00000;
+      _pci_head->pa.pa_memt->bus_base = 0xb0000000;
+   
+      _pci_head->bridge.secbus = _pci_bushead;
+
+      _pci_bushead->minpcimemaddr  = 0x04000000;  // 64M, PCI设备分配空间起始地址，0-64M保存给VGA
+      _pci_bushead->nextpcimemaddr = 0x0c000000;  // 192M = 64M*3 // 这个有问题，应该只有128M
+
+      PCIMap
+        CPU空间                        PCI空间
+      PCI MEM Lo0  0x10000000 => PCIMap trans_Lo0 0x00000000
+      PCI MEM Lo1  0x14000000 => PCIMap trans_Lo0 0x04000000
+      PCI MEM Lo2  0x18000000 => PCIMap trans_Lo0 0x08000000
+
+     _pci_bushead->minpciioaddr  = 0x0b000;  // 64K PCI IO, 其中0x00000-0x0b000分配级ISA IO
+     _pci_bushead->nextpciioaddr = 0x10000;
+
+     _pci_bushead->pci_mem_base  = 0xb0000000;
+     _pci_bushead->pci_io_base   = 0xbfd00000;
+
+     PCI DMA访问内存
+	PCIX Base Address Register0 = 0x80000000;  // 0x1fe00010
+	PCIX Base Address Register0 = 0x0;         // 0x1fe00014
+        ---还需要如下配置---
+          PCI_Hit0_Sel (0x1fe00150)
+          PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) 
+                -> DDR (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0
+...._pci_scan_dev
+......_pci_query_dev
+........_pci_query_dev_func
+         reg = 0x10 - 0x28
+         _pci_conf_write(tag, reg, 0xffffffff);
+         IO  _insertsort_window(&pd->parent->bridge.iospace)
+         MEM _insertsort_window(&pd->parent->bridge.memspace)
+         reg = 0x30 ROM
+         _pci_conf_write(tag, reg, 0xfffffffe);
+         MEM _insertsort_window(&pd->parent->bridge.memspace)
+...._setup_pcibuses
+......_pci_setup_windows
+........_pci_allocate_mem
+          address = (dev->bridge.secbus->minpcimemaddr + size - 1) & ~(size - 1);
+          _pci_head->bridge.secbus = _pci_bushead;
+
+        pcireg_t base = _pci_conf_read(pd->pa.pa_tag, pm->reg);
+        base = pm->address | (base & ~PCI_MAPREG_MEM_ADDR_MASK);
+        _pci_conf_write(pd->pa.pa_tag, pm->reg, base);
+
+........_pci_allocate_io
+          address1 = (dev->bridge.secbus->minpciioaddr + size) & ~(size - 1);
+        _pci_conf_write(pd->pa.pa_tag, pm->reg, pm->address | PCI_MAPREG_TYPE_IO);
+
+init_net
+  tgt_devconfig
+    _pci_devinit
+
+
+vga_init
+  fbaddress  =_pci_conf_read(vga_dev->pa.pa_tag,0x10);
+    fb_init
+      pGD->frameAdrs = 0xb0000000 | fbbase;
+
+
+

@@ -1,0 +1,81 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRERROR.html">STRERROR(3)</A></B>	       FreeBSD Library Functions Manual 	   <B><A HREF="STRERROR.html">STRERROR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>perror</B>, <B>strerror</B>, <B>sys_errlist</B>, <B>sys_nerr</B> - system error messages
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>void</I>
+     <B>perror</B>(<I>const</I> <I>char</I> <I>*string</I>)
+
+     <I>extern</I> <I>const</I> <I>char</I> <I>*</I> <I>const</I> <I>sys</I><B>_</B><I>errlist[];</I>
+     <I>extern</I> <I>const</I> <I>int</I> <I>sys</I><B>_</B><I>nerr;</I>
+
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strerror</B>(<I>int</I> <I>errnum</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strerror</B>() and <B>perror</B>() functions look up the error message string
+     corresponding to an error number.
+
+     The <B>strerror</B>() function accepts an error number argument <I>errnum</I> and re-
+     turns a pointer to the corresponding message string.
+
+     The <B>perror</B>() function finds the error message corresponding to the cur-
+     rent value of the global variable <I>errno</I> (<B><A HREF="intro.html">intro(2)</A></B>)  and writes it, fol-
+     lowed by a newline, to the standard error file descriptor.  If the argu-
+     ment <I>string</I> is non-NULL and does not point to the null character, this
+     string is prepended to the message string and separated from it by a
+     colon and space (`: '); otherwise, only the error message string is
+     printed.
+
+     If <I>errnum</I> is not a recognized error number, the error message string will
+     contain ``Unknown error: '' followed by the error number in decimal.
+
+     The message strings can be accessed directly using the external array
+     <I>sys</I><B>_</B><I>errlist</I>. The external value <I>sys</I><B>_</B><I>nerr</I> contains a count of the messages
+     in <I>sys</I><B>_</B><I>errlist</I>. The use of these variables is deprecated; <B>strerror</B>()
+     should be used instead.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="intro.html">intro(2)</A></B>,	<B><A HREF="psignal.html">psignal(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>strerror</B>() and <B>perror</B>() functions first appeared in 4.4BSD.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     For unknown error numbers, the <B>strerror</B>() function will return its result
+     in a static buffer which may be overwritten by subsequent calls.
+
+     Programs that use the deprecated <I>sys</I><B>_</B><I>errlist</I> variable often fail to com-
+     pile because they declare it inconsistently.
+
+4th Berkeley Distribution	 June 9, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

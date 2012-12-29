@@ -1,0 +1,106 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRTOK.html">STRTOK(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STRTOK.html">STRTOK(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strtok,</B> <B>strtok_r</B> - string tokens
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strtok</B>(<I>char</I> <I>*str</I>, <I>const</I> <I>char</I> <I>*sep</I>)
+
+     <I>char</I> <I>*</I>
+     <B>strtok_r</B>(<I>char</I> <I>*str</I>, <I>const</I> <I>char</I> <I>*sep</I>, <I>char</I> <I>**last</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>This</B> <B>interface</B> <B>is</B> <B>obsoleted</B> <B>by</B> <B>strsep(3).</B>
+
+     The <B>strtok</B>() function is used to isolate sequential tokens in a null-ter-
+     minated string, <I>str</I>. These tokens are separated in the string by at least
+     one of the characters in <I>sep</I>. The first time that <B>strtok</B>() is called, <I>str</I>
+     should be specified; subsequent calls, wishing to obtain further tokens
+     from the same string, should pass a null pointer instead.	The separator
+     string, <I>sep</I>, must be supplied each time, and may change between calls.
+
+     The <B>strtok_r</B>() function is a reentrant version of <B>strtok</B>().  The context
+     pointer <I>last</I> must be provided on each call.  <B>strtok_r</B>() may also be used
+     to nest two parsing loops within one another, as long as separate context
+     pointers are used.
+
+     The <B>strtok</B>() and <B>strtok_r</B>() functions return a pointer to the beginning
+     of each subsequent token in the string, after replacing the token itself
+     with a NUL character.  When no more tokens remain, a null pointer is re-
+     turned.
+
+
+</PRE>
+<H2>EXAMPLE</H2><PRE>
+     The following uses <B>strtok_r</B>(<I>()</I>) to parse two strings using separate con-
+     texts:
+
+     char test[80], blah[80];
+     char *sep = "\/:;=-";
+     char *word, *phrase, *brkt, *brkb;
+
+     strcpy(test, "This;is.a:test:of=the/string\tokenizer-function.");
+
+     for (word = strtok_r(test, sep, &amp;brkt);
+	  word;
+	  word = strtok_r(NULL, sep, &amp;brkt))
+     {
+	 strcpy(blah, "blah:blat:blab:blag");
+
+	 for (phrase = strtok_r(blah, sep, &amp;brkb);
+	      phrase;
+	      phrase = strtok_r(NULL, sep, &amp;brkb))
+	 {
+	     printf("So far we're at %s:%s0, word, phrase);
+	 }
+     }
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="index.html">index(3)</A></B>,	<B><A HREF="memchr.html">memchr(3)</A></B>,  <B><A HREF="rindex.html">rindex(3)</A></B>,	<B><A HREF="strchr.html">strchr(3)</A></B>,  <B><A HREF="strcspn.html">strcspn(3)</A></B>,  <B><A HREF="strpbrk.html">strpbrk(3)</A></B>,
+     <B><A HREF="strrchr.html">strrchr(3)</A></B>,  <B><A HREF="strsep.html">strsep(3)</A></B>,  <B><A HREF="strspn.html">strspn(3)</A></B>,  <B><A HREF="strstr.html">strstr(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strtok</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The System V <B>strtok</B>(), if handed a string containing only delimiter char-
+     acters, will not alter the next starting point, so that a call to
+     <B>strtok</B>() with a different (or empty) delimiter string may return a non-
+     NULL value.  Since this implementation always alters the next starting
+     point, such a sequence of calls would always return NULL.
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+     Wes Peters, Softweyr LLC: &lt;wes@softweyr.com&gt;
+     Based on the FreeBSD 3.0 implementation.
+
+FreeBSD 3.0		       November 27, 1998			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

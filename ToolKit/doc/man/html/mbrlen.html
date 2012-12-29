@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>MBRLEN(3)</B>              Libc Functions Manual              <B>MBRLEN(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mbrlen</B> - gets length of a multibyte character string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>mbrlen</B> (<I> const char * s </I>, <I> size_t n </I> , <I> mbstate_t * pst </I> );
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>mbrlen</B>() function is equivalent to the call: mbrtowc(NULL, s, n, ps
+     != NULL ? ps : &amp;internal) where internal is the mbstate_t object for the
+     mbrlen function, except that the expression designated by ps is evaluated
+     only once.ate.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>mbrlen</B>() function returns a value between zero and n, inclusive,
+     (size_t)-2,or (size_t)-1.
+     This function has not been actually implemented. So it will always return -1.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>btowc(3)</B>,  <B>wctob(3)</B>,  <B>mbsinit(3)</B>,  <B>mbrtowc(3)</B>,  <B>wcrtomb(3)</B>,
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>mbrlen</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+Libc                              April 7, 2000                               1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

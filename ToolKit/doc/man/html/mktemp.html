@@ -1,0 +1,112 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="MKTEMP.html">MKTEMP(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="MKTEMP.html">MKTEMP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>mktemp</B> - make temporary file name (unique)
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>mktemp</B>(<I>char</I> <I>*template</I>)
+
+     <I>int</I>
+     <B>mkstemp</B>(<I>char</I> <I>*template</I>)
+
+     <I>char</I> <I>*</I>
+     <B>mkdtemp</B>(<I>char</I> <I>*template</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>mktemp</B>() function takes the given file name template and overwrites a
+     portion of it to create a file name.  This file name is unique and suit-
+     able for use by the application.  The template may be any file name with
+     some number of `Xs' appended to it, for example <I>/tmp/temp.XXXX</I>. The
+     trailing `Xs' are replaced with the current process number and/or a
+     unique letter combination.  The number of unique file names <B>mktemp</B>() can
+     return depends on the number of `Xs' provided; six `Xs' will result in
+     <B>mktemp</B>() testing roughly 26 ** 6 combinations.
+
+     The <B>mkstemp</B>() function makes the same replacement to the template and
+     creates the template file, mode 0600, returning a file descriptor opened
+     for reading and writing.  This avoids the race between testing for a
+     file's existence and opening it for use.
+
+     The <B>mkdtemp</B>() function makes the same replacement to the template as in
+     <B><A HREF="mktemp.html">mktemp(3)</A></B> and creates the template directory, mode 0700.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>mktemp</B>() and <B>mkdtemp</B>() functions return a pointer to the template on
+     success and NULL on failure.  The <B>mkstemp</B>() function returns -1 if no
+     suitable file could be created.  If either call fails an error code is
+     placed in the global variable <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>mkstemp</B>() and <B>mkdtemp</B>() functions may set <I>errno</I> to one of the follow-
+     ing values:
+
+     [ENOTDIR]	The pathname portion of the template is not an existing direc-
+		tory.
+
+     The <B>mkstemp</B>() and <B>mkdtemp</B>() functions may also set <I>errno</I> to any value
+     specified by the <B><A HREF="stat.html">stat(2)</A></B> function.
+
+     The <B>mkstemp</B>() function may also set <I>errno</I> to any value specified by the
+     <B><A HREF="open.html">open(2)</A></B> function.
+
+     The <B>mkdtemp</B>() function may also set <I>errno</I> to any value specified by the
+     <B><A HREF="mkdir.html">mkdir(2)</A></B> function.
+
+
+</PRE>
+<H2>NOTES</H2><PRE>
+     A common problem that results in a core dump is that the programmer pass-
+     es in a read-only string to <B>mktemp</B>(), <B>mkstemp</B>() or <B>mkdtemp</B>().  This is
+     common with programs that were developed before ISO 9899: 1990 (``ISO
+     C'') compilers were common.  For example, calling <B>mkstemp</B>() with an argu-
+     ment of "/tmp/tempfile.XXXXXX" will result in a core dump due to
+     <B>mkstemp</B>() attempting to modify the string constant that was given.  If
+     the program in question makes heavy use of that type of function call,
+     you do have the option of compiling the program so that it will store
+     string constants in a writable segment of memory.	See <B><A HREF="gcc.html">gcc(1)</A></B> for more
+     information.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     An attacker can guess the filenames produced by <B>mktemp</B>().	Whenever it is
+     possible <B>mkstemp</B>() should be used instead.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="chmod.html">chmod(2)</A></B>,	<B><A HREF="getpid.html">getpid(2)</A></B>,  <B><A HREF="mkdir.html">mkdir(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="stat.html">stat(2)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>mktemp</B>() function appeared in Version 7 AT&amp;T UNIX.  The <B>mkdtemp</B>() func-
+     tion first appeared in OpenBSD 2.2.
+
+BSD			       February 11, 1998			     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

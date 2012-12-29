@@ -1,0 +1,61 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ATEXIT.html">ATEXIT(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="ATEXIT.html">ATEXIT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>atexit</B> - register a function to be called on exit
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>int</I>
+     <B>atexit</B>(<I>void</I> <I>(*function)(void)</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>atexit</B>() function registers the given <I>function</I> to be called at pro-
+     gram exit, whether via <B><A HREF="exit.html">exit(3)</A></B> or via return from the program's <I>main</I>.
+     Functions so registered are called in reverse order; no arguments are
+     passed.  At least 32 functions can always be registered, and more are al-
+     lowed as long as sufficient memory can be allocated.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>atexit</B>() function returns the value 0 if successful; otherwise the
+     value -1 is returned and the global variable <I>errno</I> is set to indicate the
+     error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ENOMEM]  No memory was available to add the function to the list.  The
+	       existing list of functions is unmodified.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="exit.html">exit(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>atexit</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

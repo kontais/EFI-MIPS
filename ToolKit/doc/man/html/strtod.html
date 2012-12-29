@@ -1,0 +1,97 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRTOD.html">STRTOD(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STRTOD.html">STRTOD(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strtod</B> - convert ASCII string to double
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>double</I>
+     <B>strtod</B>(<I>const</I> <I>char</I> <I>*nptr</I>, <I>char</I> <I>**endptr</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strtod</B>() function converts the initial portion of the string pointed
+     to by <I>nptr</I> to <I>double</I> representation.
+
+     The expected form of the string is an optional plus (``+'') or minus sign
+     (``-'') followed by a sequence of digits optionally containing a decimal-
+     point character, optionally followed by an exponent.  An exponent con-
+     sists of an ``E'' or ``e'', followed by an optional plus or minus sign,
+     followed by a sequence of digits.
+
+     Leading white-space characters in the string (as defined by the iss-
+     <B><A HREF="isspace.html">pace(3)</A></B> function) are skipped.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strtod</B>() function returns the converted value, if any.
+
+     If <I>endptr</I> is not NULL, a pointer to the character after the last charac-
+     ter used in the conversion is stored in the location referenced by
+     <I>endptr</I>.
+
+     If no conversion is performed, zero is returned and the value of <I>nptr</I> is
+     stored in the location referenced by <I>endptr</I>.
+
+     If the correct value would cause overflow, plus or minus HUGE_VAL is re-
+     turned (according to the sign of the value), and ERANGE is stored in
+     <I>errno</I>. If the correct value would cause underflow, zero is returned and
+     ERANGE is stored in <I>errno</I>.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ERANGE]  Overflow or underflow occurred.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="atof.html">atof(3)</A></B>,  <B><A HREF="atoi.html">atoi(3)</A></B>,  <B><A HREF="atol.html">atol(3)</A></B>,  <B><A HREF="strtol.html">strtol(3)</A></B>,  <B><A HREF="strtoul.html">strtoul(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strtod</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>AUTHORS</H2><PRE>
+     The author of this software is David M. Gay.
+
+     Copyright (c) 1991 by AT&amp;T.
+
+     Permission to use, copy, modify, and distribute this software for any
+     purpose without fee is hereby granted, provided that this entire notice
+     is included in all copies of any software which is or includes a copy or
+     modification of this software and in all copies of the supporting docu-
+     mentation for such software.
+
+     THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR IMPLIED
+     WARRANTY.	IN PARTICULAR, NEITHER THE AUTHOR NOR AT&amp;T MAKES ANY REPRESEN-
+     TATION OR WARRANTY OF ANY KIND CONCERNING THE MERCHANTABILITY OF THIS
+     SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR PURPOSE.
+
+     Contact your vendor for a free copy of the source code to <B>strtod</B>() and
+     accompanying functions.
+
+BSD				 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

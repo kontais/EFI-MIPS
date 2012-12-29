@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSXFRM(3)</B>             FreeBSD Library Functions Manual             <B>WCSXFRM(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcsxfrm</B> - transform a string under locale
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wchar.h&gt;</B>
+
+     <I>size</I><B>_</B><I>t</I>
+     <B>wcsxfrm</B>(<I>wchar</I><B>_</B><I>t</I> <I>*dst</I>, <I>const</I> <I>wchar</I><B>_</B><I>t</I> <I>*src</I>, <I>size</I><B>_</B><I>t</I> <I>n</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcsxfrm</B>() function transforms a null-terminated string pointed to by
+     <I>src</I> according to the current locale collation if any, then copies the
+     transformed string into <I>dst</I>. Not more than <I>n</I> characters are copied into
+     <I>dst</I>, including the terminating null character added.  If <I>n</I> is set to 0
+     (it helps to determine an actual size needed for transformation), <I>dst</I> is
+     permitted to be a NULL pointer.
+
+     Comparing two strings using <B>strcmp</B>() after <B>wcsxfrm</B>() is equal to compar-
+     ing two original strings with <B>wcscoll</B>().
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>wcsxfrm</B>() returns the length of the trans-
+     formed string not including the terminating null character. If this value
+     is <I>n</I> or more, the contents of <I>dst</I> are indeterminate.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>setlocale(3)</B>,  <B>wcscmp(3)</B>,  <B>wcscoll(3)</B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>wcsxfrm</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD                              June 4, 1993                                1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

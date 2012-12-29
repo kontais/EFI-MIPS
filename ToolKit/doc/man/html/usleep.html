@@ -1,0 +1,69 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="USLEEP.html">USLEEP(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="USLEEP.html">USLEEP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>usleep</B> - suspend process execution for an interval measured in microsec-
+     onds
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>usleep</B>(<I>unsigned</I> <I>int</I> <I>microseconds</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>usleep</B>() function suspends execution of the calling process until ei-
+     ther <I>microseconds</I> microseconds have elapsed or a signal is delivered to
+     the process and its action is to invoke a signal-catching function or to
+     terminate the process.  System activity may lengthen the sleep by an in-
+     determinate amount.
+
+     This function is implemented using <B><A HREF="nanosleep.html">nanosleep(2)</A></B> by pausing for
+     <I>microseconds</I> microseconds or until a signal occurs.  Consequently, in
+     this implementation, sleeping has no effect on the state of process
+     timers, and there is no special handling for SIGALRM.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>usleep</B>() function returns the value 0 if successful; otherwise the
+     value -1 is returned and the global variable <I>errno</I> is set to indicate the
+     error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>usleep</B>() function will fail if:
+
+     [EINTR]  A signal was delivered to the process and its action was to in-
+	      voke a signal-catching function.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="nanosleep.html">nanosleep(2)</A></B>,  <B><A HREF="sleep.html">sleep(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>usleep</B>() function appeared in 4.3BSD.
+
+4.3 Berkeley Distribution	 Feb 13, 1998				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

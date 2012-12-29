@@ -1,0 +1,277 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FCNTL.html">FCNTL(2)</A></B>		  FreeBSD System Calls Manual		      <B><A HREF="FCNTL.html">FCNTL(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fcntl</B> - file control
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;fcntl.h&gt;</B>
+
+     <I>int</I>
+     <B>fcntl</B>(<I>int</I> <I>fd</I>, <I>int</I> <I>cmd</I>, <I>...</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Fcntl</B>() provides for control over descriptors.  The argument <I>fd</I> is a de-
+     scriptor to be operated on by <I>cmd</I> as described below.  Depending on the
+     value of <I>cmd</I>, <B>fcntl</B> can take an additional third argument <I>int</I> <I>arg</I>.
+
+     F_DUPFD	Return a new descriptor as follows:
+
+		    <B>o</B>	Lowest numbered available descriptor greater than or
+			equal to <I>arg</I>.
+		    <B>o</B>	Same object references as the original descriptor.
+		    <B>o</B>	New descriptor shares the same file offset if the ob-
+			ject was a file.
+		    <B>o</B>	Same access mode (read, write or read/write).
+		    <B>o</B>	Same file status flags (i.e., both file descriptors
+			share the same file status flags).
+		    <B>o</B>	The close-on-exec flag associated with the new file
+			descriptor is set to remain open across <B><A HREF="execve.html">execve(2)</A></B> sys-
+			tem calls.
+
+     F_GETFD	Get the close-on-exec flag associated with the file descriptor
+		<I>fd</I>. If the low-order bit of the returned value is 0, the file
+		will remain open across <B>exec</B>(), otherwise the file will be
+		closed upon execution of <B>exec</B>() (<I>arg</I> is ignored).
+
+     F_SETFD	Set the close-on-exec flag associated with <I>fd</I> to the low order
+		bit of <I>arg</I> (0 or 1 as above).
+
+     F_GETFL	Get descriptor status flags, as described below (<I>arg</I> is ig-
+		nored).
+
+     F_SETFL	Set descriptor status flags to <I>arg</I>.
+
+     F_GETOWN	Get the process ID or process group currently receiving SIGIO
+		and SIGURG signals; process groups are returned as negative
+		values (<I>arg</I> is ignored).
+
+     F_SETOWN	Set the process or process group to receive SIGIO and SIGURG
+		signals; process groups are specified by supplying <I>arg</I> as neg-
+		ative, otherwise <I>arg</I> is interpreted as a process ID.
+
+     The flags for the F_GETFL and F_SETFL flags are as follows:
+
+     O_NONBLOCK   Non-blocking I/O; if no data is available to a <B><A HREF="read.html">read(2)</A></B> call,
+		  or if a <B><A HREF="write.html">write(2)</A></B> operation would block, the read or write
+		  call returns -1 with the error EAGAIN.
+
+     O_APPEND	  Force each write to append at the end of file; corresponds
+		  to the O_APPEND flag of <B><A HREF="open.html">open(2)</A></B>.
+
+     O_ASYNC	  Enable the SIGIO signal to be sent to the process group when
+		  I/O is possible, e.g., upon availability of data to be read.
+
+     Several commands are available for doing advisory file locking; they all
+     operate on the following structure:
+
+     struct flock {
+	     off_t   l_start;	     /* starting offset */
+	     off_t   l_len;	     /* len = 0 means until end of file */
+	     pid_t   l_pid;	     /* lock owner */
+	     short   l_type;	     /* lock type: read/write, etc. */
+	     short   l_whence;	     /* type of l_start */
+     };
+     The commands available for advisory record locking are as follows:
+
+     F_GETLK	Get the first lock that blocks the lock description pointed to
+		by the third argument, <I>arg</I>, taken as a pointer to a <I>struct</I>
+		<I>flock</I> (see above).  The information retrieved overwrites the
+		information passed to <B>fcntl</B>() in the <I>flock</I> structure.  If no
+		lock is found that would prevent this lock from being created,
+		the structure is left unchanged by this function call except
+		for the lock type which is set to F_UNLCK.
+
+     F_SETLK	Set or clear a file segment lock according to the lock de-
+		scription pointed to by the third argument, <I>arg</I>, taken as a
+		pointer to a <I>struct</I> <I>flock</I> (see above).	F_SETLK is used to es-
+		tablish shared (or read) locks (F_RDLCK) or exclusive (or
+		write) locks, (F_WRLCK), as well as remove either type of lock
+		(F_UNLCK). If a shared or exclusive lock cannot be set,
+		<B>fcntl</B>() returns immediately with EAGAIN.
+
+     F_SETLKW	This command is the same as F_SETLK except that if a shared or
+		exclusive lock is blocked by other locks, the process waits
+		until the request can be satisfied.  If a signal that is to be
+		caught is received while <B>fcntl</B>() is waiting for a region, the
+		<B>fcntl</B>() will be interrupted if the signal handler has not
+		specified the SA_RESTART (see <B><A HREF="sigaction.html">sigaction(2)</A></B>).
+
+     When a shared lock has been set on a segment of a file, other processes
+     can set shared locks on that segment or a portion of it.  A shared lock
+     prevents any other process from setting an exclusive lock on any portion
+     of the protected area.  A request for a shared lock fails if the file de-
+     scriptor was not opened with read access.
+
+     An exclusive lock prevents any other process from setting a shared lock
+     or an exclusive lock on any portion of the protected area.  A request for
+     an exclusive lock fails if the file was not opened with write access.
+
+     The value of <I>l</I><B>_</B><I>whence</I> is SEEK_SET, SEEK_CUR, or SEEK_END to indicate that
+     the relative offset, <I>l</I><B>_</B><I>start</I> bytes, will be measured from the start of
+     the file, current position, or end of the file, respectively.  The value
+     of <I>l</I><B>_</B><I>len</I> is the number of consecutive bytes to be locked.	If <I>l</I><B>_</B><I>len</I> is
+     negative, the result is undefined.  The <I>l</I><B>_</B><I>pid</I> field is only used with
+     F_GETLK to return the process ID of the process holding a blocking lock.
+     After a successful F_GETLK request, the value of <I>l</I><B>_</B><I>whence</I> is SEEK_SET.
+
+     Locks may start and extend beyond the current end of a file, but may not
+     start or extend before the beginning of the file.	A lock is set to ex-
+     tend to the largest possible value of the file offset for that file if
+     <I>l</I><B>_</B><I>len</I> is set to zero. If <I>l</I><B>_</B><I>whence</I> and <I>l</I><B>_</B><I>start</I> point to the beginning of
+     the file, and <I>l</I><B>_</B><I>len</I> is zero, the entire file is locked.  If an applica-
+     tion wishes only to do entire file locking, the <B><A HREF="flock.html">flock(2)</A></B> system call is
+     much more efficient.
+
+     There is at most one type of lock set for each byte in the file.  Before
+     a successful return from an F_SETLK or an F_SETLKW request when the call-
+     ing process has previously existing locks on bytes in the region speci-
+     fied by the request, the previous lock type for each byte in the speci-
+     fied region is replaced by the new lock type.  As specified above under
+     the descriptions of shared locks and exclusive locks, an F_SETLK or an
+     F_SETLKW request fails or blocks respectively when another process has
+     existing locks on bytes in the specified region and the type of any of
+     those locks conflicts with the type specified in the request.
+
+     This interface follows the completely stupid semantics of System V and
+     IEEE Std1003.1-1988 (``POSIX'') that require that all locks associated
+     with a file for a given process are removed when <I>any</I> file descriptor for
+     that file is closed by that process.  This semantic means that applica-
+     tions must be aware of any files that a subroutine library may access.
+     For example if an application for updating the password file locks the
+     password file database while making the update, and then calls getpw-
+     <B><A HREF="nam.html">nam(3)</A></B> to retrieve a record, the lock will be lost because <B><A HREF="getpwnam.html">getpwnam(3)</A></B>
+     opens, reads, and closes the password database.  The database close will
+     release all locks that the process has associated with the database, even
+     if the library routine never requested a lock on the database.  Another
+     minor semantic problem with this interface is that locks are not inherit-
+     ed by a child process created using the <B><A HREF="fork.html">fork(2)</A></B> function.	The <B><A HREF="flock.html">flock(2)</A></B>
+     interface has much more rational last close semantics and allows locks to
+     be inherited by child processes.  <B><A HREF="Flock.html">Flock(2)</A></B> is recommended for applica-
+     tions that want to ensure the integrity of their locks when using library
+     routines or wish to pass locks to their children.	Note that <B><A HREF="flock.html">flock(2)</A></B> and
+     <B><A HREF="fcntl.html">fcntl(2)</A></B> locks may be safely used concurrently.
+
+     All locks associated with a file for a given process are removed when the
+     process terminates.
+
+     A potential for deadlock occurs if a process controlling a locked region
+     is put to sleep by attempting to lock the locked region of another pro-
+     cess.  This implementation detects that sleeping until a locked region is
+     unlocked would cause a deadlock and fails with an EDEADLK error.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>fcntl</B>() is implemented as the <I>fcntl</I> syscall.
+
+     In the threaded library, the <I>fcntl</I> syscall is assembled to
+     <B>_thread_sys_fcntl</B>() and <B>fcntl</B>() is implemented as a function which dis-
+     ables thread rescheduling, locks <I>fd</I> for read and write, then calls
+     <B>_thread_sys_fcntl</B>().  Before returning, <B>fcntl</B>() unlocks <I>fd</I> and enables
+     thread rescheduling.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, the value returned depends on <I>cmd</I> as follows:
+
+	   F_DUPFD    A new file descriptor.
+
+	   F_GETFD    Value of flag (only the low-order bit is defined).
+
+	   F_GETFL    Value of flags.
+
+	   F_GETOWN   Value of file descriptor owner.
+
+	   other      Value other than -1.
+
+     Otherwise, a value of -1 is returned and <I>errno</I> is set to indicate the er-
+     ror.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Fcntl</B>() will fail if:
+
+     [EAGAIN]	   The argument <I>cmd</I> is F_SETLK, the type of lock <I>(l</I><B>_</B><I>type)</I> is a
+		   shared lock (F_RDLCK) or exclusive lock (F_WRLCK), and the
+		   segment of a file to be locked is already exclusive-locked
+		   by another process; or the type is an exclusive lock and
+		   some portion of the segment of a file to be locked is al-
+
+		   ready shared-locked or exclusive-locked by another process.
+
+     [EBADF]	   <I>Fildes</I> is not a valid open file descriptor.
+
+		   The argument <I>cmd</I> is F_SETLK or F_SETLKW, the type of lock
+		   <I>(l</I><B>_</B><I>type)</I> is a shared lock (F_RDLCK), and <I>fildes</I> is not a
+		   valid file descriptor open for reading.
+
+		   The argument <I>cmd</I> is F_SETLK or F_SETLKW, the type of lock
+		   <I>(l</I><B>_</B><I>type)</I> is an exclusive lock (F_WRLCK), and <I>fildes</I> is not
+		   a valid file descriptor open for writing.
+
+     [EDEADLK]	   The argument <I>cmd</I> is F_SETLKW, and a deadlock condition was
+		   detected.
+
+     [EINTR]	   The argument <I>cmd</I> is F_SETLKW, and the function was inter-
+		   rupted by a signal.
+
+     [EINVAL]	   <I>Cmd</I> is F_DUPFD and <I>arg</I> is negative or greater than the max-
+		   imum allowable number (see <B><A HREF="getdtablesize.html">getdtablesize(2)</A></B>).
+
+		   The argument <I>cmd</I> is F_GETLK, F_SETLK, or F_SETLKW and the
+		   data to which <I>arg</I> points is not valid, or <I>fildes</I> refers to
+		   a file that does not support locking.
+
+     [EMFILE]	   The argument <I>cmd</I> is F_DUPFD and the maximum number of file
+		   descriptors permitted for the process are already in use,
+		   or no file descriptors greater than or equal to <I>arg</I> are
+		   available.
+
+     [ENOLCK]	   The argument <I>cmd</I> is F_SETLK or F_SETLKW, and satisfying the
+		   lock or unlock request would result in the number of locked
+		   regions in the system exceeding a system-imposed limit.
+
+     [EPERM]	   <I>Cmd</I> is F_SETOWN and the process ID or process group given
+		   as an argument is in a different session than the caller.
+
+     [ESRCH]	   <I>Cmd</I> is F_SETOWN and the process ID given as argument is not
+		   in use.
+
+     In addition, if <I>fd</I> refers to a descriptor open on a terminal device (as
+     opposed to a descriptor open on a socket), a <I>cmd</I> of F_SETOWN can fail for
+     the same reasons as in <B><A HREF="tcsetpgrp.html">tcsetpgrp(3)</A></B>,  and a <I>cmd</I> of F_GETOWN for the rea-
+     sons as stated in <B><A HREF="tcgetpgrp.html">tcgetpgrp(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="close.html">close(2)</A></B>,	<B><A HREF="execve.html">execve(2)</A></B>,  <B><A HREF="flock.html">flock(2)</A></B>,  <B><A HREF="getdtablesize.html">getdtablesize(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="sigvec.html">sigvec(2)</A></B>,
+      <B><A HREF="tcgetpgrp.html">tcgetpgrp(3)</A></B>,  <B><A HREF="tcsetpgrp.html">tcsetpgrp(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>fcntl</B>() function call appeared in 4.2BSD.
+
+4.2 Berkeley Distribution      January 12, 1994 			     4
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

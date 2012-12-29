@@ -1,0 +1,594 @@
+2011-1-10 signed off by Jason Fleischli <jason.fleischli@hp.com>
+	* Uptake of SUSE patches
+	- add sysfs support for efi vars (formerly /proc/efi/vars)
+	- fix strncpy overflow
+	- fix bzimage alloc
+	- cleanups
+	- support longer command line
+	- yet some more mac fixes
+	- align elilo with latest kernel boot protocol format.
+	- new memory management strategy for initrd and kernel image loading.
+	* add force text mode command line option.
+	* replace error output on GOP handle failed, downgraded to normal
+	  print status with more informative output.
+
+2009-10-22 signed off by Jason Fleischli <jason.fleischli@hp.com>
+	* elilo 3.12 release commit
+	* Added additional #defines for debug levels to reduce the output
+	* Added Mac console patch rework from Julien Blache @ debian
+	  this fixes the invisible console output from elilo on Macs
+	* Moved static ELILO_VERSION variable from elilo.c to elilo.h
+	  so that elilo will print its version string and arch on startup.
+	* Fixed bug 2825044 ExitBootServices error handling, correctly deal
+	  with changed memory map key if memory map changes from under elilo.
+	* Added memory map key to map debug output.
+	* Fixed bug 2874380 netbooting just flat broken. fixed ia64, x86_64
+	  ia32, fixed handling of server side support of tfpt options (get file size) 
+	  elilo now attempts to get file size before attempting read of file
+	  to set the buffers up correctly and deal with tftp servers that dont
+	  support options extensions a little better.
+	* netboot, fixed bad blocksize handling
+	* netboot, fixed filename length for elilo-x86_64.conf type on tftp
+	  server.
+	* increased bzimage kernel max length sizes to 4mb on i386 and 8mb on
+	  x86_64... this is a legacy design hold over from original design and
+	  needs to be re-written to do dynamic size memory management based on
+	  the size of the actual vmlinuz image, as ia64/gzip does. 
+2008-04-02 signed off by Jason Fleischli <jason.fleischli@hp.com>
+	* elilo 3.10 release commit
+	* Bumped version string to 3.10
+	* added PTR_FMT 32bit & 64bit pointer translation for correct output
+	* elilo hang bugfix x86_64 non-standard kernels with non-traditional start address 
+	  elilo will pull the start address from the kernel elf header for 2.6
+	  or newer kernels, map memory and use that start address, else use standard
+	  1MB default start address. And handle case of overlapping kernels
+	  and initrds in memory. Patch contributor Stuart Hayes @ Dell,
+	  thanks Stuart!
+	* ported kernel start adress fix to ia32
+	* eliminated all possible compiler warnings except those actually
+	  caused by gnu-efi that cant be fixed here.
+	* Debug output improvement, added pauses with visual feedback when
+	  user sets debug & verbose options.
+	* bugfix added missing find_bits function definition back into ia32
+	  subtree
+	* bugfix loader_probe now correctly errors out if no loaders
+	  registered.
+
+2008-01-11 signed off by Jason Fleischli <jason.fleischli@hp.com>
+	* Various compile warning cleanups.
+
+2008-01-03 signed off by Jason Fleischli <jason.fleischli@hp.com>
+	* Patch contribution from Scott Davilla <davilla@4pi.com>
+	  when x is zero for the first call to add_memory_region, e820_map[-1] 
+	  will access memory outside the bounds of e820_map. While this does 
+	  not result in any problems as there is a UINT32 unused_8[41] block 
+	  above the e820_map[0] location that should have been zeroed by the 
+	  bootloader, the code should not access outside the bounds of 
+	  structures. 
+
+2008-01-03 Jason Fleischli <jason.fleischli@hp.com>
+	* initrd.c -- Let the allocator decide where to grab the memory from 
+	  the efi memory map. Current start_addr=image->start_addr forces the 
+	  same efi region everytime, and has a 7mb limit. ramdisk (initrd.img) 
+	  files larger than 7MB wouldnt fit into the memory region assumed by 
+	  the image->start_addr resulting in an elilo hang. Leaving start_addr 
+	  NULL at initialization forces alloc_pages to get a memory region 
+	  sufficient for the size of the initrd image.
+
+2007-12-19 Jason Fleischli <jason.fleischli@hp.com>
+	* bumping version string to 3.8
+
+2007-12-19 Jason Fleischli <jason.fleischli@hp.com>
+	* MORE PATCHES FROM INTEL FOR IA32 X86_64.
+	* Fix compile warning for cmdline_addr assignment.
+	* Fix an issue caused by uninitialized e820_nr_map in fill_e820map.
+	* On some machines, there are too many EFI memory map entries, so that,
+	  the number of E820 map entries converted from EFI memory map exceeds
+	  the limit (128). This patch fixes this bug by merging consecutive
+	  memory map entries with the same type.
+	* CL_MAGIC is not supported by 32-bit boot protocol. So, the kernel
+	  command line passing code is changed accordingly.
+	* EFI-2.0 boot support patches have been accepted into Linux kernel
+	  2.6.24-rc4 and EFI runtime service patches have been accepted by
+	  Linux kernel 2.6.24-rc4-mm1. There are some changes during the 
+	  merging, so there are some updates for elilo ia32/x86_64 too.
+	* The x86_64 boot parameters of Linux kernel is rearranged to line up
+	  with ia32 boot parameters.
+	* The boot loader signature of IA32 and x86_64 is redefined to
+	  make it possible for Linux kernel to distinguish whether the 
+	  underlying firmware is EFI 32 or EFI 64.
+	* The EFI framebuffer type ID is changed in Linux kernel to
+	  conform to Linux kernel framebuffer type ID grouping rules. So the 
+	  EFI framebuffer type ID setting code in ELILO is changed accordingly.
+	* E820 memory map is added to IA32 to make it possible for
+	  Linux kernel not to depend on EFI memory map on EFI 32.
+
+2007-09-27 Jason Fleischli <jason.fleischli@hp.com>
+	* updating changelog for last commit that was omitted
+	* incorporating AGriffis patches to enhance parsing
+	  passes root= option to kernel options and accounts for -- option
+	  designation.
+
+2007-07-19 Jason Fleischli <jason.fleischli@hp.com>
+	* Integrated x86_64 support patches from Chandramouli Narayanan
+	  <mouli@linux.intel.com> changes summarized in following bullets.
+	* alloc.c -- adds patch contributors credit to copyright
+	* alloc.c -- adds uefi_call_wrapper around BS->function calls
+	* alloc.c -- adds call to Print on VERB_PRT
+	* alternate.c -- adds patch contributors credit around copyright
+	* alternate.c -- adds uefi_call_wrapper around RT->function calls
+	* simple.c -- adds patch contributors credit to copyright
+	* simple.c -- adds uefi_call_wrapper around ip->ReadKeyStroke
+	* textmenu.c -- adds patch contributors credit to copyright
+	* textmenu.c -- adds uefi_call_wrapper around ClearScreen &
+	  SetTextAttr
+	* textmenu.c -- adds uefi_call_wrapper around ip->ReadKeyStroke
+	* elilo.c -- adds patch contributors credit to copyright
+	* elilo.c -- fixes version number for ELILO_VERSION macro to current
+	* elilo.c -- adds uefi_call_wrapper around BS->function calls
+	* elilo.c -- adds uefi_call_wrapper around RT->function calls
+	* fileops.c -- adds patch contributors credit to copyright
+	* fileops.c -- adds uefi_call_wrapper around BS->function calls
+	* fileops.c -- adds uefi_call_wrapper around RT->function calls
+	* fileops.c -- adds uefi_call_wrapper around blkio->function calls
+	* localfs.c -- adds patch contributors credit to copyright
+	* localfs.c -- changed EFI_HANDLE *dev declaration to non-pointer type
+	* localfs.c -- adds uefi_call_wrapper around lfs->volume->functions
+	* localfs.c -- adds uefi_call_wrapper around BS->function calls
+	* netfs.c -- adds patch contributors credit to copyright
+	* netfs.c -- adds uefi_call_wrapper around nfs->pxe->function calls
+	* netfs.c -- adds uefi_call_wrapper around BS->function calls
+	* getopt.c -- changed int to char in StrChr() function
+	* Make.defaults -- adds patch contributors credit to copyright
+	* Make.defaults -- adds cflag for efi function wrapper
+	* Makefile -- adds patch contributors credit to copyright
+	* Makefile -- x86_64 subdir and a new rule for .S
+	* util.c -- adds patch contributors credit to copyright
+	* util.c -- adds uefi_call_wrapper to systab->functions
+	* util.c -- adds uefi_call_wrapper to conin->functions
+	* util.c -- adds uefi_call_wrapper to BS->functions
+	* util.c -- doubles ELILO_MEMMAP_SIZE_DEFAULT in get_memmap() function
+	* bootparams.c -- uses ia32 params for x86_64 addition.. hmmmm?
+	* config.c -- adds patch contributors credit to copyright
+	* config.c -- adds define reference for x86_64.conf
+	* config.c -- in config_error() removes use of va_list which maps to
+	  the gnu C-lib iface __gnuc_va_list. Replaces the use of _IPrint on
+	  the va_list with direct use of IPrint(systab->ConOut, msg);
+	  *maintainer note, this probably introduces a bug, in light of this
+	  note from the patch submitter --> "On some x86_64 systems with
+	  EFI1.10 firmware I tested, early boot messages did not appear on console. 
+	  However, I didn't encounter this behavior on x86_64 systems with UEFI2.0 
+	  firmware"
+	* elf.h -- adds #def for x86_64
+	* glue_netfs.c -- adds patch contributors credit to copyright
+	* glue_netfs.c -- adds define for x86_64.conf
+	* sysdeps.h -- adds patch contributors credit to copyright
+	* sysdeps.h -- add include reference for new x86_64 subdir
+	* x86_64/ -- new subdir - all based on elilo/ia32 subdir
+	* x86_64/bin_to_h.c -- new file, stream fed binary to hex converter
+	* x86_64/bzimage.c -- new file, binary compressed kernel support
+	* x86_64/gzip.c -- new file, embedded gzip
+	* x86_64/gzip_loader.c -- new file, embedded gzip
+	* x86_64/gzip.h -- new file, embedded gzip
+	* x86_64/inflate.c -- new file, a pkzip method 8 embedded decompressor
+	* x86_64/Makefile -- new file
+	* x86_64/plain_loader.c -- new file, for loading non-compressed kernels
+	* x86_64/private.h -- new file
+	* x86_64/rmswitch.S -- new file, RealMode assembly module
+	* x86_64/sysdeps.h -- new file, system stuff for x86_64, e820 mapping
+	  added.
+	* x86_64/sysdeps.c -- new file, system stuff for x86_64
+	* elilo.txt -- documentation update, add Intel to copyright
+	* README.gnu-efi -- documentation update for x86_64
+
+2006-01-27 Alex Williamson <alex.williamson@hp.com>
+	* Found a couple more places where vmcode isn't zeroed, causing the
+	  option to get carried over to labels it shouldn't.
+
+2006-01-09 Brett Johnson <brett@hp.com>
+	* Released 3.6
+
+2005-12-22 Alex Williamson <alex.williamson@hp.com>
+	* Fixed vmcode_name initialization in textmenu chooser
+
+2005-12-01 Alex Williamson <alex.williamson@hp.com>
+	* Applied patch from Fred Yang <fred.yang@intel.com> to support the
+	  vmm= boot option.  This option specifies the kernel image for a
+	  virtual machine monitor (aka hypervisor).  The vmm= and image=
+	  options are used together to load both the hypervisor kernel and
+	  the guest domain kernel into memory.  If a vmm= option is not
+	  specified, elilo defaults to the old behavior of loading and booting
+	  to the image= kernel.
+	* Added support for compressed image= files when used with the vmm=
+	  option.  If the image= file is detected to be gzip compressed, the
+	  image will be uncompressed into memory before it is provided to the
+	  hypervisor.  Any combination of compressed and uncompressed images
+	  can be used for the image and vmm options.
+
+2005-09-15 Brett Johnson <brett@hp.com>
+	* Applied patch from Tristan Gingold to add dcache flush and sync with
+	  icache to gzip and plain loaders.  This ommision was just noticed now
+	  due to the much larger caches in Montecito, and the smaller size of
+	  Xen (as compared to the linux kernel).
+
+2004-09-27 Brett Johnson <brett@hp.com>
+	* Increase the hardcoded size of the texmenu chooser menu from 16 to 64
+
+2004-09-23 Brett Johnson <brett@hp.com>
+	* Fix for 924147.  Thanks to Stephanie Schaaf <sas@sgi.com> for a patch
+	  that the fix is based on.
+
+2004-02-19 Brett Johnson <brett@hp.com>
+	* Fixed bug where default image initrd would carry over to another
+	  image that was selected interactively (iff the newly selected image
+	  did not have an initrd).
+	* Added support for subnet-specific config files in netfs.
+
+2004-02-17 Brett Johnson <brett@hp.com>
+	* integrated ia32 compressed kernel support from Matt Tolentino
+	  <matthew.e.tolentino@intel.com>
+
+2003-08-20 Stephane Eranian <eranian@hpl.hp.com>
+	* released 3.4
+
+2003-08-19 Stephane Eranian <eranian@hpl.hp.com>
+	* integrated ia32 updates from Matt
+	  Tolentino <matthew.e.tolentino@intel.com>
+
+2003-08-13 Stephane Eranian <eranian@hpl.hp.com>
+	* updated elilo.txt and netbooting.txt
+	* fix a bug in choosers/simple.c:print_infos().
+	  it needs to check if config file path is absolute
+	  when printing filename.
+	* move definitions of CHAR_SLASH CHAR_BACKSLASH to elilo.h
+	* fix a bug in read_config() where it would try other
+	  filename even when the user explicitely specified one
+	  via -C, now it fails it that file cannot be opened.
+	* updated simple chooser set of builtin command keys
+	* command keys are only valid if first on the line
+	* increase default buffer size and increment when netbooting
+
+2003-06-04 Stephane Eranian <eranian@hpl.hp.com>
+	* fix fs/netfs.c to work with recent version
+	  of EFI (14.61 or higher) which do not have the 
+	  TFTP problem anymore. fix submitted by Guy Laborde
+
+2003-04-21 Stephane Eranian <eranian@hpl.hp.com>
+	* ext2fs support is turned off by default to avoid
+	  problems with ext3-formatted partitions.
+	* added gcc version check. MUST use 3.0 or higher
+
+2003-03-03 Stephane Eranian <eranian@hpl.hp.com>
+	* added check on dev_tab in fs/*fs.c:*_uninstall()
+
+2003-02-07 Stephane Eranian <eranian@hpl.hp.com>
+	* clean up in glue_localfs.c w.r.t. CHAR16 in set_default_path()
+	* added support for extracting basename of bootloader path
+	  when using BOOTP (DHCP) only. The prefix is then used for all files
+	  open via netfs. Suggestion and initial patch by Guy Laborde from HP.
+
+2003-01-28 Stephane Eranian <eranian@hpl.hp.com>
+	* fix the set_default_path() routine in glue_localfs.c. It would not
+	  correctly get the basename of the devpath. This caused the
+	  elilo.conf not to be found sometimes.
+
+2003-01-21 Stephane Eranian <eranian@hpl.hp.com>
+	* fix bug in glue_netfs.c convert_ip2decstr() which caused some IP
+	  addresses to be incorrectly converted to strings.
+
+2002-11-01 Stephane Eranian <eranian@hpl.hp.com>
+	* fix bug in -r option for IA64. There is no argument to this option.
+
+2002-10-15 Stephane Eranian <eranian@hpl.hp.com>
+	* fixed a double free bug for the kernel memory in case of abort.
+	  (bug spotted by Levent Akyl from Intel)
+	* released 3.3a
+
+2002-09-14 Stephane Eranian <eranian@hpl.hp.com>
+	* applied patch from Andreas Schwab <schwab@suse.de> to eliloalt.c.
+	  eliloalt dynamically selects a variable in /proc/efi/vars.
+
+2002-09-12 Stephane Eranian <eranian@hpl.hp.com>
+	* removed extra free() from fs/ext2fs.c:ext2fs_init_state().
+	  Bug report and fix by NOMURA Jun'ichi <j-nomura@ce.jp.nec.com>
+	* rewrote fs/ext2fs.c:read_bytes() to large memory stack buffer which
+	  was bigger than the 128KB limit of EFI causing some weird fimrware
+	  errors. bug reported by OMURA Jun'ichi <j-nomura@ce.jp.nec.com>
+	* on IA-64 forbid the use of f32-f127 by the compiler (EFI spec)
+
+2002-09-10 Stephane Eranian <eranian@hpl.hp.com>
+ 	* fix a bug in argify() that was causing an EFI assertion 
+	  when aborting at the elilo prompt when netbooted.
+
+2002-08-26 Stephane Eranian <eranian@hpl.hp.com>
+	* fixed devschemes/simple.c to use SPrint() instead of its own buggy
+	  conversion code (spotted by Richard Hirst).
+	* fix bug in argify() when there was no NULL character in the string.
+	* released 3.3
+
+2002-08-19 Stephane Eranian <eranian@hpl.hp.com>
+	* added fpswa.txt in the docs directory
+	* updated elilo.txt
+
+2002-08-15 Stephane Eranian <eranian@hpl.hp.com>
+	* added -F file option for IA-64 to allow a specific fpswa driver to be loaded
+	* fixed fpswa.c to try and load the driver from all accessible partitions
+	* added support to load (plain or gzipped) big-endian ELF/ia64 binaries using p_paddr.
+	* fixed problem in fs/netfs.c causing large (>4MB) binaries to fail the Mftp() call
+
+2002-06-13 Stephane Eranian <eranian@hpl.hp.com>
+	* Changed the despecialization character for the variables from \\ to &
+	  to avoid conflicts with \\ as a path separator
+
+2002-06-11 Stephane Eranian <eranian@hpl.hp.com>
+	* fixed the return value in efi_main(). elilo was always returning
+	  success even in case of failure. Bug reported by Egan Ford <egan@sense.net>
+	* applied patch from Richard Hirst <rhirst@linuxcare.com> to fix an
+	  initialization bug in choosers/textmenu.c 
+	* applied patch from Richard Hirst <rhirst@linuxcare.com> to make elilo
+	  compliant with EFI spec with regards to where it looks for files.
+	  With this patch, elilo will look in the directory it was loaded
+	  from, not on the root of the partition anymore.
+
+2002-03-04 Stephane Eranian <eranian@hpl.hp.com>
+	* released version 3.2
+	* cleanup some GNU extension in fs/ext2fs.c (variable size array)
+	* updated all documentation. Added netbooting.txt, simple_chooser.txt,
+	  eliloalt.txt, elilovar.txt
+
+2002-02-21 Stephane Eranian <eranian@hpl.hp.com>
+	* added a Linux utility program (elilovar in tools) to set/read/delete 
+	  the EliloAlt EFI variable used to specify an alternate kernel to boot.
+	* rename DBG_PRINT() to DBG_PRT, PRINT_ERR() to ERR_PRT()
+	* added support for hostname,domain name extraction in fs/netfs.c
+	* fixed all known bugs in alternate.c
+	* integrated patch from SGI to fix load offset for relocatable kernels (Jack Steiner, Brent Casavant)
+
+2002-02-21 Michael Johnston <michael.johnston@intel.com> and Chris Ahna <christopher.j.ahna@intel.com>
+	* major update to ia32 support: can now boot 2.4.x,  and 2.2.x kernels
+
+2002-02-20 Stephane Eranian <eranian@hpl.hp.com>
+	* fixed missing netfs_fd_free() in case of file not found in netfs.c
+
+2002-02-19 Stephane Eranian <eranian@hpl.hp.com>
+	* added support for substitution variables (vars.c)
+	* changed the bootparam structure size back to 4kB
+	* added support to simple to print final command line option with tab key
+	* got rid of all the \r characters in strings use only \n (adjust emulator)
+	* added EFICRT0 variable in Makefile to indicate location of loader script+crt0
+
+2002-02-14 Stephane Eranian <eranian@hpl.hp.com>
+	* added support for message= option to simple chooser
+	* added support for description= option to simple chooser
+
+2002-02-13 Stephane Eranian <eranian@hpl.hp.com>
+	* choosers/textmenu.c: new textmenu chooser (by rhirst@linuxcare.com) used by Debian
+	* config.c: added support for dynamic global/per-image option management
+	* ia64/plain_loader.c,ia64/gzip.c: fix load_offset (<bcasavan@sgi.com>)
+	* added cmd line (-E) and config option (noedd30) to not set EDD30 EFI variable to 
+	  true if not already TRUE (request by Matt_Domsch@dell.com)
+	* added support for multiple devname schemes and probing
+
+2002-01-31 Stephane Eranian <eranian@hpl.hp.com>
+	* cleaned up alternate.c
+	* added support for ctrl-U (clear line) in chooser/simple.c 
+
+2002-01-25 Stephane Eranian <eranian@hpl.hp.com>
+	* added support for architecture specific config file (elilo-ia64.conf, elilo-ia32.conf).
+
+2002-01-13 Stephane Eranian <eranian@hpl.hp.com>
+	* removed call to Reset() in ext2fs.c
+
+2001-08-17 Stephane Eranian <eranian@hpl.hp.com>
+	* released 3.1
+	* added support for command line architecture specific options:
+	  sysdeps_get_cmdline_opts(), sysdeps_print_cmdline_opts(),
+	  syspdeps_getopt()
+	* added IA-64 command line option (-r) for relocation
+	* fix behavior when kernel specified on command line but prompt
+	  mode was specified in config file. In this case, we now autoboot
+	  and ignore the prompt directive.
+	* updated elilo.txt
+
+2001-08-15  Brent Casavant <bcasavan@sgi.com>
+	* fix a bug in config.c:find_option() where it would do
+	  a strXcmp() on a NULL string.
+
+2001-08-01  Stephane Eranian <eranian@hpl.hp.com>
+	* fixed bug in fs/netfs.c where it would not handle the small buffer 
+	  error correctly. The retry path was not allocating a bigger buffer.
+	* Global config options are now used if the user specifies a non-label
+	  load target, i.e. a kernel image file.
+	* added support for architecture dependent config file image options (sys_img_options_t).
+	* added support for setjmp/longjmp.
+	* added support for aborting during a compressed load
+	* added support for user to abort a load of a compressed file.
+	* added 2 new ia-64 only config file options allowing kernel relocation: 
+	  'relocatable' as a global or per image option.
+	* added support for kernel relocation on memory error. Based on code from 
+	  Brent Casavant <bcasavan@sgi.com>.
+	* added slash/backslash conversion for filenames on vfat filesystems.
+
+2001-07-23  Stephane Eranian <eranian@hpl.hp.com>
+	* fixed error in netfs.c where the kernel name was not correctly set in
+	  netfs_query_layer()
+	* fixed to wait_timeout() to correct the problem with the interactive prompt when
+	  return is hit directly when no text
+	* fixed command line argument destruction problem, now we make a copy of them. This
+	  was affecting elilo when called directly from bootmanager with NVRAM options.
+
+2001-06-28  Stephane Eranian <eranian@hpl.hp.com>
+	* removed W2U() hack to get from wide-char to unicode. Use -fshort-wchar option instead.
+	* split gnu-efi package in two different packages: the libary+include+crt and the bootloader.
+	* restructured the fileops module. Now use direct function calls.
+	* added support for accessing files on different devices.
+	* fixed a buffer leak in simple_chooser.c. Renamed simple_chooser.c to simple.c.
+	* created a strops.c file to incorporate all string operations functions.
+	* added support for ext2fs filesystem.
+	* restructured code to allow additional filesystems to be added easily.
+	* cleaned up add-on chooser interface.
+	* restructured code to use the EFI protocol interface to install filesystems.
+	* added compile-time options to turn on and off specific filesystems.
+	* added support for architecture specific configuration options (elilo.conf).
+	* added fpswa option to IA-64 to designate a fpswa driver file.
+	* incoporated IA-32 support from Mike Johnston <michael.johnston@intel.com>
+	* incorporated rewritten gzip.c:flush_window() from Tony Luck <tony.luck@intel.com>
+	* added interface for custom device naming schemes (devnames directory).
+        * added support for 2 possible config file (now just on netboot). The first
+          (primary) choice uses a host specific filename based on the IP address. Suggestion
+	  from Egan Ford <egan@sense.net>.
+
+2001-04-06  Stephane Eranian <eranian@hpl.hp.com>
+
+	* incorporated patches from David and Michael Johnston at Intel
+	  to get the package to compile for IA-32 linux target.
+
+	* Fixed ELILO to compile for Ia-32 (does not execute yet, though):
+	  Makefile and start_kernel() function.
+
+2001-04-06  Andreas Schwab <schwab@suse.de>
+
+	* Fixed config.c  to
+	  get the timeout directive to do something. implemented the global
+	  root= directive.
+
+	* Fix the efi_main() to deal with the -C option properly
+
+2001-04-05  Stephane Eranian <eranian@hpl.hp.com>
+
+	* update efi library to latest EFI toolkit 1.02 as distributed
+	  by Intel. Fixed header + library files to compile with GCC
+
+	* merged ELI and LILO (as of gnu-efi-1.1) together, mostly
+	  taking the config file feature of ELI.
+
+	* renamed LILO to ELILO to make the distinction
+
+	* restructured code to make it easier to understand and maintain
+
+	* fixed FPSWA driver checking and loading: we try all possible
+	  files and let the driver itself figure out if it is the most
+	  recent.
+	* added support for compression (gzip) but keep support for plain
+	  ELF image. ELILO autodetects the format
+
+	* change the way the kernel is invoked. Now we call it in 
+	  physical memory mode. This breaks the dependency between the
+	  kernel code and the loader. No more lilo_start.c madness.
+
+	* changed the way the boot_params are passed. We don't use the 
+	  ZERO_PAGE_ADDR trick anymore. Instead we use EFI runtime memory.
+	  The address of the structure is passed to the kernel in r28
+	  by our convention.
+
+	* released as gnu-efi-2.0
+
+2001-04-03  David Mosberger  <davidm@hpl.hp.com>
+
+	* gnuefi/reloc_ia32.c (_relocate): Change return type from "void"
+	to "int".  Return error status if relocation fails for some
+	reason.
+
+	* gnuefi/elf_ia32_efi.lds: Drop unneeded ".rel.reloc" section.
+
+	* gnuefi/crt0-efi-ia32.S (_start): Exit if _relocate() returns with
+	non-zero exit status.
+
+	* inc/ia32/efibind.h [__GNUC__]: Force 8-byte alignment for 64-bit
+	types as that is what EFI appears to be expecting, despite the
+	"#pragma pack()" at the beginning of the file!
+
+2001-03-29  David Mosberger  <davidm@hpl.hp.com>
+
+	* gnuefi/reloc_ia32.c: Add a couple of defines to work around
+	libc/efilib collision on uint64_t et al.
+	(_relocate): Use ELF32_R_TYPE() instead of ELFW(R_TYPE)().
+
+	* gnuefi/crt0-efi-ia32.S (dummy): Add a dummy relocation entry.
+
+2001-03-29  David Mosberger  <davidm@hpl.hp.com>
+
+        * gnuefi/reloc_ia32.c: Add a couple of defines to work around
+        libc/efilib collision on uint64_t et al.
+        (_relocate): Use ELF32_R_TYPE() instead of ELFW(R_TYPE)().
+
+        * gnuefi/crt0-efi-ia32.S (dummy): Add a dummy relocation entry.
+
+2000-10-26  David Mosberger  <davidm@hpl.hp.com>
+ 
+ 	* gnuefi/elf_ia64_efi.lds: Mention .rela.sdata.
+ 
+ 	* Make.defaults (CFLAGS): Remove -nostdinc flags so we can pick
+ 	up the C compiler's stdarg.h.
+ 
+ 	* inc/stdarg.h: Remove this file.  It's not correct for gcc (nor
+ 	most other optimizing compilers).
+
+2000-10-10  Stephane Eranian <eranian@hpl.hp.com>
+
+	* cleaned up the error message and printing of those.
+	* added support to load the FPSWA from a file in case support is not
+	  present in the firmware already
+	* fixed split_args() to do the right thing when you have leading spaces
+	  before kernel name
+	* changed the argify() function to rely on \0 instead of LoadOptionSize
+	  as the field seems to be broken with current firmware
+	* bumped version to 1.0
+
+2000-10-04  David Mosberger  <davidm@hpl.hp.com>
+ 
+	* gnuefi/reloc_ia64.S: Reserve space for up to 750 function descriptors.
+
+	* gnuefi/elf_ia64_efi.lds: Add .sdata section for small data and
+	put __gp in the "middle" of it.
+
+	* gnuefi/crt0-efi-ia64.S (_start): Use movl/add to load
+	gp-relative addresses that could be out of the range of the addl
+	offset.
+	* gnuefi/reloc_ia64.S (_relocate): Ditto.
+
+	* apps/Makefile: Remove standard rules and include Make.rules instead.
+	* lilo/Makefile: Ditto.
+
+	* Make.rules: New file.
+
+2000-08-04  Stephane Eranian <eranian@hpl.hp.com>
+	* released version 0.9
+	* incorporated ACPI changes for Asuza by NEC < kouchi@hpc.bs1.fc.nec.co.jp>
+	* added support for initrd (-i option) original ELI code from Bill Nottingham <notting@redhat.com>)
+	* lots of cleanups 
+	* got rid of #ifdef LILO_DEBUG and uses macro instead
+	* fix a few extra memory leaks in create_boot_params()
+	* added exit capability just before starting the kernel
+
+2000-06-22  David Mosberger  <davidm@hpl.hp.com>
+
+	* gnuefi/elf_ia64_efi.lds: Add .srodata, .ctors, .IA64.unwind,
+	.IA64.unwind_info to .data section and .rela.ctors to .rela
+	section.
+
+2000-04-03  David Mosberger  <davidm@hpl.hp.com>
+
+	* lilo/lilo.c (LILO_VERSION): Up version number to 0.9.
+
+	* gnuefi/elf_ia64_efi.lds: Include .IA_64.unwind and
+	.IA_64.unwind_info in .data segment to avoid EFI load error
+	"ImageAddress: pointer outside of image" error due to the .dynsym
+	relocations against these sections.
+
+	* ChangeLog: Moved from lilo/ChangeLogs.
+
+	* gnuefi/reloc_ia64.S: fixed typo: .space directive had constant
+	100 hardcoded instead of using MAX_FUNCTION_DESCRIPTORS
+	macro. Duh.
+
+Fri Mar 17 15:19:18 PST 2000 Stephane Eranian <eranian@hpl.hp.com>
+
+	* Released 0.8
+	* replace the  getopt.c with new version free with better license
+	* created a documentation file
+	* fix a couple of memory leaks
+	* code cleanups
+	* created a separate directory for lilo in the gnu-efi package.
+	* added support for the BOOT_IMAGE argument to kernel
+	* default is to build natively now

@@ -1,0 +1,92 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRTOL.html">STRTOL(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="STRTOL.html">STRTOL(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strtol,</B> <B>strtoq</B> - convert string value to a long or quad_t integer
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+     <B>#include</B> <B>&lt;limits.h&gt;</B>
+
+     <I>long</I>
+     <B>strtol</B>(<I>const</I> <I>char</I> <I>*nptr</I>, <I>char</I> <I>**endptr</I>, <I>int</I> <I>base</I>)
+
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+     <B>#include</B> <B>&lt;limits.h&gt;</B>
+
+     <I>quad</I><B>_</B><I>t</I>
+     <B>strtoq</B>(<I>const</I> <I>char</I> <I>*nptr</I>, <I>char</I> <I>**endptr</I>, <I>int</I> <I>base</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strtol</B>() function converts the string in <I>nptr</I> to a <I>long</I> value.  The
+     <B>strtoq</B>() function converts the string in <I>nptr</I> to a <I>quad</I><B>_</B><I>t</I> value.  The
+     conversion is done according to the given <I>base</I>, which must be between 2
+     and 36 inclusive, or be the special value 0.
+
+     The string may begin with an arbitrary amount of white space (as deter-
+     mined by <B><A HREF="isspace.html">isspace(3)</A></B>)  followed by a single optional `+' or `-' sign.  If
+     <I>base</I> is zero or 16, the string may then include a `0x' prefix, and the
+     number will be read in base 16; otherwise, a zero <I>base</I> is taken as 10
+     (decimal) unless the next character is `0', in which case it is taken as
+     8 (octal).
+
+     The remainder of the string is converted to a <I>long</I> value in the obvious
+     manner, stopping at the first character which is not a valid digit in the
+     given base.  (In bases above 10, the letter `A' in either upper or lower
+     case represents 10, `B' represents 11, and so forth, with `Z' represent-
+     ing 35.)
+
+     If <I>endptr</I> is non nil, <B>strtol</B>() stores the address of the first invalid
+     character in <I>*endptr</I>. If there were no digits at all, however, <B>strtol</B>()
+     stores the original value of <I>nptr</I> in <I>*endptr</I>. (Thus, if <I>*nptr</I> is not `\0'
+     but <I>**endptr</I> is `\0' on return, the entire string was valid.)
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strtol</B>() function returns the result of the conversion, unless the
+     value would underflow or overflow.  If an underflow occurs, <B>strtol</B>() re-
+     turns LONG_MIN. If an overflow occurs, <B>strtol</B>() returns LONG_MAX. In both
+     cases, <I>errno</I> is set to ERANGE.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [ERANGE]  The given string was out of range; the value converted has been
+	       clamped.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="atof.html">atof(3)</A></B>,  <B><A HREF="atoi.html">atoi(3)</A></B>,  <B><A HREF="atol.html">atol(3)</A></B>,  <B><A HREF="strtod.html">strtod(3)</A></B>,  <B><A HREF="strtoul.html">strtoul(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strtol</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Ignores the current locale.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

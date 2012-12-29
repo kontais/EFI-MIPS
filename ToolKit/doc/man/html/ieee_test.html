@@ -1,0 +1,72 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="IEEE_TEST.html">IEEE_TEST(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="IEEE_TEST.html">IEEE_TEST(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>logb</B>, <B>logbf</B>, <B>scalb</B>, <B>scalbf</B>, <B>significand</B>, <B>significandf</B> - IEEE test func-
+     tions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>logb</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>logbf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>scalb</B>(<I>double</I> <I>x</I>, <I>double</I> <I>n</I>)
+
+     <I>float</I>
+     <B>scalbf</B>(<I>float</I> <I>x</I>, <I>float</I> <I>n</I>)
+
+     <I>double</I>
+     <B>significand</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>significandf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions allow users to test conformance to IEEE Std754-1985.
+     Their use is not otherwise recommended.
+
+     <B>logb</B>(<I>x</I>) and <B>logbf</B>(<I>x</I>) return <I>x</I>'s exponent <I>n</I>, a signed integer converted to
+     double-precision floating-point.  <B>logb</B>(<I>+-infinity</I>) = +infinity; <B>logb(0)</B> =
+     -infinity with a division by zero exception.
+
+     <B>scalbn</B>(<I>x</I>, <I>n</I>) and <B>scalbnf</B>(<I>x</I>, <I>n</I>) return <I>x</I>*(2**<I>n</I>) computed by exponent ma-
+     nipulation.
+
+     <B>significand</B>(<I>x</I>) and <B>significandf</B>(<I>x</I>) return <I>sig</I>, where <I>x</I> := <I>sig</I> * 2**<I>n</I> with
+     1 &lt;= <I>sig</I> &lt; 2.  <B>significand</B>(<I>x</I>) and <B>significandf</B>(<I>x</I>) are not defined when <I>x</I>
+     is 0, +-infinity, or <I>NaN</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ieee.html">ieee(3)</A></B>,  <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     IEEE Std754-1985
+
+BSD				March 10, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

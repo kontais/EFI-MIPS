@@ -1,0 +1,61 @@
+Information about the textmenu chooser
+--------------------------------------
+Copyright (C) 2002-2003 Hewlett-Packard Co.
+Contributed by <rhirst@linuxcare.com>
+
+Last updated: 02/02/14
+
+Chooser name: textmenu
+Command line option: -C textmenu
+Config file option: chooser=textmenu
+
+The textmenu chooser provides a facility whereby you can draw a colour
+boot screen, using line-drawing characters to give the impression of a
+dialog box, with a scrollable menu from which a boot image can be chosen
+via cursor up/down keys.  A one-line input field is provided for additional
+parameter input.  Menu entries are taken from the description= fields in
+the config file.
+
+The message file format is based on that used for syslinux/isolinux on ia32
+platforms, which is copyright H. Peter Anvin.  It is basically a text file
+containing text and graphic characters, along with some control codes to
+specify colour attributes, menu, and prompt field positions.  There are two
+classes of message files; the main file, specified via message=, which
+includes menu and prompt field markers, and the additional help files which
+are invoked via function keys.  Graphic characters are taken from the
+standard IBM VGA character set, and using an appropriate font makes file
+creation easier.  Under Linux you can find a VGA font in the dosemu package.
+Included in the elilo source is sys2ansi.pl (taken from syslinux), which can
+be used to translate colour attributes such that they display correctly in an
+xterm.
+
+Valid control codes:
+
+0x01 ^A	Mark top left or bottom right of menu area.  Current attributes
+	at top left marker are used for inactive menu entries, current
+	attributes when bottom right marker is found are used for the
+	currently active menu attributes.
+
+0x02 ^B	Mark left- or right-hand end of the prompt field.  Current attributes
+	at the left had end are used to display and parameters entered.
+
+0x0A ^J	Linefeed, does implied carriage return.
+
+0x0C ^L	Clear screen
+
+0x0D ^M	Carriage return; ignored so files can be 'DOS' or 'UNIX' format.
+
+0x0F ^O	Attribute specfication; Two hex digits should follow this code, the
+	first being the background colour required, the second the foreground.
+
+	0 = black		8 = dark grey
+	1 = dark blue		9 = bright blue
+	2 = dark green		a = bright green
+	3 = dark cyan		b = bright cyan
+	4 = dark red		c = bright red
+	5 = dark purple		d = bright purple
+	6 = brown		e = yellow
+	7 = light grey		f = white
+
+An example of a config file and message file are included in the examples 
+directory.

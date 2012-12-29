@@ -1,0 +1,68 @@
+#/*++
+#
+# Copyright (c) 2004 - 2005, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution.  The full text of the license may be found at        
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    PlatformBds.inf
+#
+#  Abstract:
+#
+#    Component description file for Bds module.
+#
+#--*/
+
+[defines]
+BASE_NAME            = Cs5536Lib
+#FILE_GUID            = A6F691AC-31C8-4444-854C-E2C1A6950F92
+COMPONENT_TYPE       = LIBRARY
+
+[sources.common]
+  cs5536_io.c
+  cs5536_io.h
+  cs5536_vsm.c
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Application
+ 
+  .
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Sample/Chipset/NorthBridge/Bonito
+  $(EDK_SOURCE)/Sample/Chipset/SouthBridge/Cs5536
+
+  $(DEST_DIR)
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
+  $(EDK_SOURCE)/Sample/Chipset/NorthBridge/Bonito
+  
+[libraries.common]
+  EfiDriverLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+[libraries.Mips32]  
+  CpuMips32Lib
+    
+[nmake.common]

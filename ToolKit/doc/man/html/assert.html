@@ -1,0 +1,59 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ASSERT.html">ASSERT(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="ASSERT.html">ASSERT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>assert</B> - expression verification macro
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;assert.h&gt;</B>
+
+     <B>assert</B>(<I>expression</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>assert</B>() macro tests the given <I>expression</I> and if it is false, the
+     calling process is terminated.  A diagnostic message is written to <I>stderr</I>
+     and the function <B><A HREF="abort.html">abort(3)</A></B> is called, effectively terminating the program.
+
+     If <I>expression</I> is true, the <B>assert</B>() macro does nothing.
+
+     The <B>assert</B>() macro may be removed at compile time by defining NDEBUG as a
+     macro (e.g., by using the <B><A HREF="cc.html">cc(1)</A></B> option <B>-D</B>NDEBUG).
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     The following diagnostic message is written to <I>stderr</I> if <I>expression</I> is
+     false:
+
+	   "assertion \"%s\" failed: file \"%s\", line %d0, \
+			       "expression", __FILE__, __LINE__);
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="abort.html">abort(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     An <B>assert</B> macro appeared in Version 6 AT&amp;T UNIX.
+
+BSD			       January 26, 1999 			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,154 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TTY.html">TTY(4)</A></B>		       FreeBSD Kernel Interfaces Manual 		<B><A HREF="TTY.html">TTY(4)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>tty</B> - general terminal interface
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/ioctl.h&gt;</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     This section describes the interface to the terminal drivers in the sys-
+     tem.
+
+   <B>Terminal</B> <B>Special</B> <B>Files</B>
+     Each hardware terminal port on the system usually has a terminal special
+     device file (for example, ``tty00:, tty01:, etc.'').
+
+     The remainder of this man page is concerned with describing details of
+     using and controlling terminal devices at a low level, such as that
+     possibly required by a program wishing to provide features similar to
+     those provided by the system.
+
+   <B>Line</B> <B>disciplines</B>
+     A terminal file is used like any other file in the system in that it can
+     be opened, read, and written to using standard system calls.  For each
+     existing terminal file, there is a software processing module called a
+     <I>line</I> <I>discipline</I> is associated with it.  The <I>line</I> <I>discipline</I> essentially
+     glues the low level device driver code with the high level generic inter-
+     face routines (such as <B><A HREF="read.html">read(2)</A></B> and <B><A HREF="write.html">write(2)</A></B>),  and is responsible for im-
+     plementing the semantics associated with the device.  When a terminal
+     file is first opened by a program, the default <I>line</I> <I>discipline</I> called the
+     termios line discipline is associated with the file.  This is the primary
+     line discipline that is used in most cases and provides the semantics
+     that users normally associate with a terminal.  When the termios line
+     discipline is in effect, the terminal file behaves and is operated ac-
+     cording to the rules described in <B><A HREF="termios.html">termios(4)</A></B>.  Please refer to that man
+     page for a full description of the terminal semantics.  The operations
+     described here generally represent features common across all <I>line</I>
+     <I>disciplines</I>, however some of these calls may not make sense in conjunc-
+     tion with a line discipline other than termios, and some may not be sup-
+     ported by the underlying hardware (or lack thereof, as in the case of
+     ptys).
+
+   <B>Terminal</B> <B>File</B> <B>Operations</B>
+     All of the following operations are invoked using the <B><A HREF="ioctl.html">ioctl(2)</A></B> system
+     call.  Refer to that man page for a description of the <I>request</I> and <I>argp</I>
+     parameters.  In addition to the ioctl <I>requests</I> defined here, the specific
+     line discipline in effect will define other <I>requests</I> specific to it (ac-
+     tually <B><A HREF="termios.html">termios(4)</A></B> defines them as function calls, not ioctl <I>requests</I>.)
+     The following section lists the available ioctl requests.	The name of
+     the request, a description of its purpose, and the typed <I>argp</I> parameter
+     (if any) are listed.  For example, the first entry says
+
+	   <I>TIOCGETD</I> <I>int</I> <I>*ldisc</I>
+
+     and would be called on the terminal associated with file descriptor zero
+     by the following code fragment:
+
+	     int ldisc;
+
+	     ioctl(0, TIOCGETD, &amp;ldisc);
+
+   <B>Terminal</B> <B>File</B> <B>Request</B> <B>Descriptions</B>
+
+     TIOCGETD <I>int</I> <I>*ldisc</I>
+		 Return the current line discipline in the integer pointed to
+		 by <I>ldisc</I>.
+
+     TIOCSDTR <I>void</I>
+		 Assert data terminal ready (DTR).
+
+     TIOCCDTR <I>void</I>
+		 Clear data terminal ready (DTR).
+
+     TIOCGETA <I>struct</I> <I>termios</I> <I>*term</I>
+		 Place the current value of the termios state associated with
+		 the device in the termios structure pointed to by <I>term</I>. This
+		 is the underlying call that implements the <B><A HREF="termios.html">termios(4)</A></B>
+		 <B>tcgetattr</B>() call.
+
+     TIOCSETA <I>struct</I> <I>termios</I> <I>*term</I>
+		 Set the termios state associated with the device immediately.
+		 This is the underlying call that implements the <B><A HREF="termios.html">termios(4)</A></B>
+
+		 <B>tcsetattr</B>() call with the TCSANOW option.
+
+     TIOCSETAW <I>struct</I> <I>termios</I> <I>*term</I>
+		 First wait for any output to complete, then set the termios
+		 state associated with the device.  This is the underlying
+		 call that implements the <B><A HREF="termios.html">termios(4)</A></B> <B>tcsetattr</B>() call with the
+		 TCSADRAIN option.
+
+     TIOCSETAF <I>struct</I> <I>termios</I> <I>*term</I>
+		 First wait for any output to complete, clear any pending in-
+		 put, then set the termios state associated with the device.
+		 This is the underlying call that implements the <B><A HREF="termios.html">termios(4)</A></B>
+		 <B>tcsetattr</B>() call with the TCSAFLUSH option.
+
+     TIOCMODS <I>int</I> <I>*state</I>
+     TIOCMSET <I>int</I> <I>*state</I>
+		 The integer pointed to by <I>state</I> contains bits that correspond
+		 to modem state.  Following is a list of defined variables and
+		 the modem state they represent:
+
+		 TIOCM_LE   Line Enable.
+		 TIOCM_DTR  Data Terminal Ready.
+		 TIOCM_RTS  Request To Send.
+		 TIOCM_CTS  Clear To Send.
+		 TIOCM_CAR  Carrier Detect.
+		 TIOCM_CD   Carrier Detect (synonym).
+		 TIOCM_RNG  Ring Indication.
+		 TIOCM_RI   Ring Indication (synonym).
+		 TIOCM_DSR  Data Set Ready.
+
+		 This call sets the terminal modem state to that represented
+		 by <I>state</I>. Not all terminals may support this.
+
+     TIOCMODG <I>int</I> <I>*state</I>
+     TIOCMGET <I>int</I> <I>*state</I>
+		 Return the current state of the terminal modem lines as rep-
+		 resented above in the integer pointed to by <I>state</I>.
+
+     TIOCMBIS <I>int</I> <I>*state</I>
+		 The bits in the integer pointed to by <I>state</I> represent modem
+		 state as described above, however the state is OR-ed in with
+		 the current state.
+
+     TIOCMBIC <I>int</I> <I>*state</I>
+		 The bits in the integer pointed to by <I>state</I> represent modem
+		 state as described above, however each bit which is on in
+		 <I>state</I> is cleared in the terminal.
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ioctl.html">ioctl(2)</A></B>,  <B><A HREF="termios.html">termios(4)</A></B>
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

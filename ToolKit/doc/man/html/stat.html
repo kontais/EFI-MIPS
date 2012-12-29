@@ -1,0 +1,205 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STAT.html">STAT(2)</A></B> 		  FreeBSD System Calls Manual		       <B><A HREF="STAT.html">STAT(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>stat</B>, <B>lstat</B>, <B>fstat</B> - get file status
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/stat.h&gt;</B>
+
+     <I>int</I>
+     <B>stat</B>(<I>const</I> <I>char</I> <I>*path</I>, <I>struct</I> <I>stat</I> <I>*sb</I>)
+
+     <I>int</I>
+     <B>lstat</B>(<I>const</I> <I>char</I> <I>*path</I>, <I>struct</I> <I>stat</I> <I>*sb</I>)
+
+     <I>int</I>
+     <B>fstat</B>(<I>int</I> <I>fd</I>, <I>struct</I> <I>stat</I> <I>*sb</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>stat</B>() function obtains information about the file pointed to by
+     <I>path</I>. Read, write or execute permission of the named file is not re-
+     quired, but all directories listed in the path name leading to the file
+     must be searchable.
+
+     <B>Lstat</B>() is like <B>stat</B>() except in the case where the named file is a sym-
+     bolic link, in which case <B>lstat</B>() returns information about the link,
+     while <B>stat</B>() returns information about the file the link references.  Un-
+     like other filesystem objects, symbolic links do not have an owner,
+     group, access mode, times, etc.  Instead, these attributes are taken from
+     the directory that contains the link.  The only attributes returned from
+     an <B>lstat</B>() that refer to the symbolic link itself are the file type
+     (S_IFLNK), size, blocks, and link count (always 1).
+
+     The <B>fstat</B>() obtains the same information about an open file known by the
+     file descriptor <I>fd</I>.
+
+     The <I>sb</I> argument is a pointer to a <B>stat</B>() structure as defined by
+     &lt;<I>sys/stat.h</I>&gt; (shown below) and into which information is placed concern-
+     ing the file.
+
+     struct stat {
+	 dev_t	   st_dev;		 /* inode's device */
+	 ino_t	   st_ino;		 /* inode's number */
+	 mode_t    st_mode;		 /* inode protection mode */
+	 nlink_t   st_nlink;		 /* number of hard links */
+	 uid_t	   st_uid;		 /* user ID of the file's owner */
+	 gid_t	   st_gid;		 /* group ID of the file's group */
+	 dev_t	   st_rdev;		 /* device type */
+     #ifndef _POSIX_SOURCE
+	 struct timespec st_atimespec;	/* time of last access */
+	 struct timespec st_mtimespec;	/* time of last data modification */
+	 struct timespec st_ctimespec;	/* time of last file status change */
+     #else
+	 time_t    st_atime;		 /* time of last access */
+	 long	   st_atimensec;	 /* nsec of last access */
+	 time_t    st_mtime;		 /* time of last data modification */
+	 long	   st_mtimensec;	 /* nsec of last data modification */
+	 time_t    st_ctime;		 /* time of last file status change */
+	 long	   st_ctimensec;	 /* nsec of last file status change */
+     #endif
+	 off_t	   st_size;		 /* file size, in bytes */
+	 int64_t   st_blocks;		 /* blocks allocated for file */
+	 u_int32_t st_blksize;		 /* optimal blocksize for I/O */
+	 u_int32_t st_flags;		 /* user defined flags for file */
+	 u_int32_t st_gen;		 /* file generation number */
+     };
+
+     The time-related fields of <I>struct</I> <I>stat</I> are as follows:
+
+     st_atime	  Time when file data last accessed.  Changed by the <B><A HREF="mknod.html">mknod(2)</A></B>,
+		   <B><A HREF="utimes.html">utimes(2)</A></B> and <B><A HREF="read.html">read(2)</A></B> system calls.
+
+     st_mtime	  Time when file data last modified.  Changed by the <B><A HREF="mknod.html">mknod(2)</A></B>,
+		   <B><A HREF="utimes.html">utimes(2)</A></B> and <B><A HREF="write.html">write(2)</A></B> system calls.
+
+     st_ctime	  Time when file status was last changed (inode data modifica-
+		  tion).  Changed by the <B><A HREF="chmod.html">chmod(2)</A></B>,  <B><A HREF="chown.html">chown(2)</A></B>,  <B><A HREF="link.html">link(2)</A></B>,
+		  <B><A HREF="mknod.html">mknod(2)</A></B>,  <B><A HREF="rename.html">rename(2)</A></B>,  <B><A HREF="unlink.html">unlink(2)</A></B>,  <B><A HREF="utimes.html">utimes(2)</A></B> and <B><A HREF="write.html">write(2)</A></B>
+		  system calls.
+
+     If _POSIX_SOURCE is not defined, the time-related fields are defined as:
+
+     #ifndef _POSIX_SOURCE
+     #define st_atime st_atimespec.tv_sec
+     #define st_mtime st_mtimespec.tv_sec
+     #define st_ctime st_ctimespec.tv_sec
+     #endif
+
+     The size-related fields of the <I>struct</I> <I>stat</I> are as follows:
+
+     st_blksize     The optimal I/O block size for the file.
+
+     st_blocks	    The actual number of blocks allocated for the file in
+		    512-byte units.  As short symbolic links are stored in the
+		    inode, this number may be zero.
+
+     The status information word <I>st</I><B>_</B><I>mode</I> has the following bits:
+
+     #define S_IFMT 0170000	      /* type of file */
+     #define	    S_IFIFO  0010000  /* named pipe (fifo) */
+     #define	    S_IFCHR  0020000  /* character special */
+     #define	    S_IFDIR  0040000  /* directory */
+     #define	    S_IFBLK  0060000  /* block special */
+     #define	    S_IFREG  0100000  /* regular */
+     #define	    S_IFLNK  0120000  /* symbolic link */
+     #define	    S_IFSOCK 0140000  /* socket */
+     #define	    S_IFWHT  0160000  /* whiteout */
+     #define S_ISUID 0004000  /* set user id on execution */
+     #define S_ISGID 0002000  /* set group id on execution */
+     #define S_ISVTX 0001000  /* save swapped text even after use */
+     #define S_IRUSR 0000400  /* read permission, owner */
+     #define S_IWUSR 0000200  /* write permission, owner */
+     #define S_IXUSR 0000100  /* execute/search permission, owner */
+
+     For a list of access modes, see &lt;<I>sys/stat.h</I>&gt;, <B><A HREF="access.html">access(2)</A></B> and <B><A HREF="chmod.html">chmod(2)</A></B>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion a value of 0 is returned.  Otherwise, a value
+     of -1 is returned and <I>errno</I> is set to indicate the error.
+
+
+</PRE>
+<H2>COMPATIBILITY</H2><PRE>
+     Previous versions of the system used different types for the st_dev,
+     st_uid, st_gid, st_rdev, st_size, st_blksize and st_blocks fields.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Stat</B>() and <B>lstat</B>() will fail if:
+
+     [ENOTDIR]	     A component of the path prefix is not a directory.
+
+     [ENAMETOOLONG]  A component of a pathname exceeded 255 characters, or an
+
+		     entire path name exceeded 1023 characters.
+
+     [ENOENT]	     The named file does not exist.
+
+     [EACCES]	     Search permission is denied for a component of the path
+		     prefix.
+
+     [ELOOP]	     Too many symbolic links were encountered in translating
+		     the pathname.
+
+     [EFAULT]	     <I>Sb</I> or <I>name</I> points to an invalid address.
+
+     [EIO]	     An I/O error occurred while reading from or writing to
+		     the file system.
+
+     <B>Fstat</B>() will fail if:
+
+     [EBADF]   <I>fd</I> is not a valid open file descriptor.
+
+     [EFAULT]  <I>Sb</I> points to an invalid address.
+
+     [EIO]     An I/O error occurred while reading from or writing to the file
+	       system.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="access.html">access(2)</A></B>,  <B><A HREF="chmod.html">chmod(2)</A></B>,  <B><A HREF="chown.html">chown(2)</A></B>,  <B><A HREF="utimes.html">utimes(2)</A></B>,  <B><A HREF="symlink.html">symlink(7)</A></B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     Applying <B>fstat</B>() to a socket (and thus to a pipe) returns a zeroed
+     buffer, except for the blocksize field, and a unique device and inode
+     number.
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>stat</B>() and <B>fstat</B>() function calls are expected to conform to IEEE
+     Std1003.1-1990 (``POSIX'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>stat</B>() and a <B>fstat</B>() function call appeared in Version 7 AT&amp;T UNIX.  A
+     <B>lstat</B>() function call appeared in 4.2BSD.
+
+4th Berkeley Distribution	  May 1, 1995				     3
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,81 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SQRT.html">SQRT(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="SQRT.html">SQRT(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>cbrt</B>, <B>cbrtf</B>, <B>sqrt</B>, <B>sqrtf</B> - cube root and square root functions
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;math.h&gt;</B>
+
+     <I>double</I>
+     <B>cbrt</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>cbrtf</B>(<I>float</I> <I>x</I>)
+
+     <I>double</I>
+     <B>sqrt</B>(<I>double</I> <I>x</I>)
+
+     <I>float</I>
+     <B>sqrtf</B>(<I>float</I> <I>x</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>cbrt</B>() and the <B>cbrtf</B>() functions compute the cube root of <I>x</I>.
+
+     The <B>sqrt</B>() and the <B>sqrtf</B>() functions compute the non-negative square root
+     of x.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>cbrt</B>() and the <B>cbrtf</B>() functions return the requested cube root.  The
+     <B>sqrt</B>() and the <B>sqrtf</B>() functions return the requested square root unless
+     an error occurs.  On the VAX or Tahoe processor an attempt to take the
+     <B>sqrt</B>() of negative <I>x</I> causes an error; in this event, the global variable
+     <I>errno</I> is set to EDOM and a reserved operand fault is generated.
+
+
+</PRE>
+<H2>ERROR (due to Roundoff etc.)</H2><PRE>
+     The <B>cbrt</B>() function is accurate to within 0.7 <I>ulps</I>.
+
+     The <B>sqrt</B>() function on a VAX is accurate to within 0.501 <I>ulps</I>. Sqrt on a
+     machine that conforms to IEEE 754 is correctly rounded in accordance with
+     the rounding mode in force; the error is less than half an <I>ulp</I> in the de-
+     fault mode (round-to-nearest).  An <I>ulp</I> is one <I>U</I>nit in the <I>L</I>ast <I>P</I>lace car-
+     ried.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="math.html">math(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>sqrt</B> function conforms to ISO 9899: 1990 (``ISO C'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>cbrt</B> function appeared in 4.3BSD.
+
+BSD				  May 6, 1991				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

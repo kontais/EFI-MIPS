@@ -1,0 +1,71 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FFLUSH.html">FFLUSH(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="FFLUSH.html">FFLUSH(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fflush</B>, <B>fpurge</B> - flush a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fflush</B>(<I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>fpurge</B>(<I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The function <B>fflush</B>() forces a write of all buffered data for the given
+     output or update <I>stream</I> via the stream's underlying write function.  The
+     open status of the stream is unaffected.
+
+     If the <I>stream</I> argument is NULL, <B>fflush</B>() flushes <I>all</I> open output streams.
+
+     The function <B>fpurge</B>() erases any input or output buffered in the given
+     <I>stream</I>. For output streams this discards any unwritten output.  For input
+     streams this discards any input read from the underlying object but not
+     yet obtained via <B><A HREF="getc.html">getc(3)</A></B>;	this includes any text pushed back via ungetc.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion 0 is returned.	Otherwise, EOF is returned and
+     the global variable <I>errno</I> is set to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EBADF]  <I>Stream</I> is not an open stream, or, in the case of <B>fflush</B>(), not a
+	      stream open for writing.
+
+     The function <B>fflush</B>() may also fail and set <I>errno</I> for any of the errors
+     specified for the routine <B><A HREF="write.html">write(2)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="write.html">write(2)</A></B>,	<B><A HREF="fclose.html">fclose(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="setbuf.html">setbuf(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>fflush</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

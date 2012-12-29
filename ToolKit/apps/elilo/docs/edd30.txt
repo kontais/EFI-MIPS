@@ -1,0 +1,102 @@
+Information related to EDD3.0 and ELILO
+---------------------------------------
+Last updated: 02/02/14
+
+As of elilo-3.0, the filesystem/device naming scheme takes advantage 
+of the EDD3.0 support present in the underlying EFI/BIOS firmware layers.
+
+The EDD3.0 support is supposedly turned on by default in all version of the
+EFI firmware on IA-64 (and possibly IA-32). 
+
+Support can be enabled or disabled dynamically using an EFI environment 
+variable called "EDD30". The GUID of the variable is as follows:
+
+#define EDD30_GUID \
+{0x964e5b21, 0x6459, 0x11d2, { 0x8e, 0x39, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b}}
+
+This is a boolean variable. When true, support is enabled. 
+You can check if support is enabled by typing:
+
+	Shell> edd30
+	Usage edd30 [On | Off]
+  	Used to support OS Loader debug
+	EDD30 DevicePath Mode is On
+
+at this EFI shell prompt. You can enable support by forcing the variable
+to TRUE. This can be accomplished by typing:
+
+	Shell> edd30 on
+	EDD30 DevicePath Mode is On
+
+Alternatively an EFI application can use RT->SetVariable() to set the
+value of the EDD30 variable.
+
+If the variable was set to false, then to take advantage of EDD3.0 
+support after switching the variablle to TRUE, the system MUST be 
+rebooted as EDD affects the core of EFI naming scheme.
+
+Elilo will check if the variable is defined and valid. If it is set
+to true, then the device name schemes that rely on it will work properly.
+That's the case for the 'simple' scheme. If the variable is not set to true
+or does not exist, elilo will use a generic builtin scheme with names
+such as dev001, dev002 and so on. The "EDD30" variable is like a system 
+variable therefore it is expected not to be overloaded by users for others 
+purposes.  Elilo is fully functional even when EDD30 is off.
+
+By default, if EDD30 is off, elilo will try and set the variable to TRUE.
+However, some controllers do not support EDD30 and forcing the variable
+may cause problems. Therefore as of elilo-3.2, there is an option to 
+avoid forcing the variable. In the config file, you can use 'noedd30' option
+and on the command line, you can use the -E option.
+
+When the variable is forced back to TRUE, th effect will only be seen after
+a reboot. Shall you decide not to reboot immediately, elilo
+will system still operate using the generic naming scheme.
+
+When EDD3.0 is enabled the output of the EFI shell 'map' command looks similar
+to this:
+
+Device mapping table
+  fs0  : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part1,Sig00000000)
+  fs1  : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part1,Sig00000000)
+  fs2  : Acpi(PNP0A03,0)/Pci(3|1)/Ata(Secondary,Master)/CDROM(Entry1)
+  blk0 : Acpi(PNP0A03,0)/Pci(3|1)/Ata(Primary,Master)
+  blk1 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)
+  blk2 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part1,Sig00000000)
+  blk3 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part2,Sig00000000)
+  blk4 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun0,Lun0)/HD(Part3,Sig00000000)
+  blk5 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)
+  blk6 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part1,Sig00000000)
+  blk7 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part2,Sig00000000)
+  blk8 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part3,Sig00000000)
+  blk9 : Acpi(PNP0A03,2)/Pci(0|0)/Scsi(Pun6,Lun0)/HD(Part3,Sig00000000)/HD(Part1,Sig00000200)
+  blkA : Acpi(PNP0A03,0)/Pci(3|1)/Ata(Secondary,Master)
+  blkB : Acpi(PNP0A03,0)/Pci(3|1)/Ata(Secondary,Master)/CDROM(Entry1)
+Shell> 
+
+The same system with EDD3.0 disabled will look like this:
+Device mapping table
+  fs0  : VenHw(Unknown Device:80)/HD(Part1,Sig00000000)
+  fs1  : VenHw(Unknown Device:81)/HD(Part1,Sig00000000)
+  fs2  : VenHw(Unknown Device:FF)/CDROM(Entry1)
+  blk0 : VenHw(Unknown Device:00)
+  blk1 : VenHw(Unknown Device:80)
+  blk2 : VenHw(Unknown Device:80)/HD(Part1,Sig00000000)
+  blk3 : VenHw(Unknown Device:80)/HD(Part2,Sig00000000)
+  blk4 : VenHw(Unknown Device:80)/HD(Part3,Sig00000000)
+  blk5 : VenHw(Unknown Device:81)
+  blk6 : VenHw(Unknown Device:81)/HD(Part1,Sig00000000)
+  blk7 : VenHw(Unknown Device:81)/HD(Part2,Sig00000000)
+  blk8 : VenHw(Unknown Device:81)/HD(Part3,Sig00000000)
+  blk9 : VenHw(Unknown Device:81)/HD(Part3,Sig00000000)/HD(Part1,Sig00000200)
+  blkA : VenHw(Unknown Device:FF)
+  blkB : VenHw(Unknown Device:FF)/CDROM(Entry1)
+Shell> 
+
+
+EDD3.0 is an industry standard and the working draft can be downloaded from the
+following web site:
+	http://www.t13.org/
+
+The document reference is D1386 (Enhanced Disk Drive Services 3.0).
+

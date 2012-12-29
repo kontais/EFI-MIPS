@@ -1,0 +1,89 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="LISTEN.html">LISTEN(2)</A></B>		  FreeBSD System Calls Manual		     <B><A HREF="LISTEN.html">LISTEN(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>listen</B> - listen for connections on a socket
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+
+     <I>int</I>
+     <B>listen</B>(<I>int</I> <I>s</I>, <I>int</I> <I>backlog</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     To accept connections, a socket is first created with <B><A HREF="socket.html">socket(2)</A></B>,  a will-
+     ingness to accept incoming connections and a queue limit for incoming
+     connections are specified with <B>listen</B>(), and then the connections are ac-
+     cepted with <B><A HREF="accept.html">accept(2)</A></B>.  The <B>listen</B>() call applies only to sockets of type
+     SOCK_STREAM or SOCK_SEQPACKET.
+
+     The <I>backlog</I> parameter defines the maximum length the queue of pending
+     connections may grow to.  If a connection request arrives with the queue
+     full the client may receive an error with an indication of ECONNREFUSED,
+     or, if the underlying protocol supports retransmission, the request may
+     be ignored so that retries may succeed.
+
+     The <B><A HREF="sysctl.html">sysctl(3)</A></B> MIB variable ``kern.ipc.somaxconn'' specifies a hard limit
+     on <I>backlog</I>; if a  value greater than kern.ipc.somaxconn or less than zero
+     is specified, <I>backlog</I> is silently forced to kern.ipc.somaxconn.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>listen</B>() is implemented as the <I>listen</I>
+     syscall.
+
+     In the threaded library, the <I>listen</I> syscall is assembled to
+     <B>_thread_sys_listen</B>() and <B>listen</B>() is implemented as a function which
+     locks <I>s</I> for read and write, then calls <B>_thread_sys_listen</B>().  Before re-
+     turning, <B>listen</B>() unlocks <I>s</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     A 0 return value indicates success; -1 indicates an error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Listen</B>() will fail if:
+
+     [EBADF]	   The argument <I>s</I> is not a valid descriptor.
+
+     [ENOTSOCK]    The argument <I>s</I> is not a socket.
+
+     [EOPNOTSUPP]  The socket is not of a type that supports the operation
+		   <B>listen</B>().
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="accept.html">accept(2)</A></B>,  <B><A HREF="connect.html">connect(2)</A></B>,  <B><A HREF="socket.html">socket(2)</A></B>,  <B><A HREF="sysctl.html">sysctl(3)</A></B>,  <B><A HREF="sysctl.html">sysctl(8)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>listen</B>() function call appeared in 4.2BSD. The ability to configure
+     the maximum <I>backlog</I> at run-time, and to use a negative <I>backlog</I> to request
+     the maximum allowable value, was introduced in FreeBSD 2.2.
+
+4.2 Berkeley Distribution      November 3, 1995 			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

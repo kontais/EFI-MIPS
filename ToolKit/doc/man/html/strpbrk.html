@@ -1,0 +1,48 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRPBRK.html">STRPBRK(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="STRPBRK.html">STRPBRK(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strpbrk</B> - locate multiple characters in string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strpbrk</B>(<I>const</I> <I>char</I> <I>*s</I>, <I>const</I> <I>char</I> <I>*charset</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strpbrk</B>() function locates in the null-terminated string <I>s</I> the first
+     occurrence of any character in the string <I>charset</I> and returns a pointer
+     to this character.  If no characters from <I>charset</I> occur anywhere in <I>s</I>
+     <B>strpbrk</B>() returns NULL.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="index.html">index(3)</A></B>,	<B><A HREF="memchr.html">memchr(3)</A></B>,  <B><A HREF="rindex.html">rindex(3)</A></B>,	<B><A HREF="strchr.html">strchr(3)</A></B>,  <B><A HREF="strcspn.html">strcspn(3)</A></B>,  <B><A HREF="strrchr.html">strrchr(3)</A></B>,
+     <B><A HREF="strsep.html">strsep(3)</A></B>,  <B><A HREF="strspn.html">strspn(3)</A></B>,  <B><A HREF="strstr.html">strstr(3)</A></B>,  <B><A HREF="strtok.html">strtok(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strpbrk</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

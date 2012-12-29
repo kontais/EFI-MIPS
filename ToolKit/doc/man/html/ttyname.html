@@ -1,0 +1,87 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TTYNAME.html">TTYNAME(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="TTYNAME.html">TTYNAME(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ttyname</B>, <B>isatty</B>, <B>ttyslot</B> - get name of associated terminal (tty) from
+     file descriptor
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>ttyname</B>(<I>int</I> <I>fd</I>)
+
+     <I>int</I>
+     <B>isatty</B>(<I>int</I> <I>fd</I>)
+
+     <I>int</I>
+     <B>ttyslot</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     These functions operate on the system file descriptors for terminal type
+     devices. These descriptors are not related to the standard I/O FILE type-
+     def, but refer to the special device files found in <I>/dev</I> and named
+     <I>/dev/ttyxx</I> and for which an entry exists in the initialization file
+     <I>/etc/ttys.</I> (See <B><A HREF="ttys.html">ttys(5)</A></B>.)
+
+     The <B>isatty</B>() function determines if the file descriptor <I>fd</I> refers to a
+     valid terminal type device.
+
+     The <B>ttyname</B>() function gets the related device name of a file descriptor
+     for which <B>isatty</B>() is true
+
+     The <B>ttyslot</B>() function fetches the current process' control terminal num-
+     ber from the <B><A HREF="ttys.html">ttys(5)</A></B> file entry.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>ttyname</B>() function returns the null terminated name if the device is
+     found and <B>isatty</B>() is true; otherwise a NULL pointer is returned.
+
+     The <B>ttyslot</B>() function returns the unit number of the device file if
+     found; otherwise the value zero is returned.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+     /dev/*
+     /etc/ttys
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ioctl.html">ioctl(2)</A></B>,	<B><A HREF="ttys.html">ttys(5)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>isatty</B>(), <B>ttyname</B>(), and <B>ttyslot</B>() function appeared in Version 7 AT&amp;T
+     UNIX.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The <B>ttyname</B>() function leaves its result in an internal static object and
+     returns a pointer to that object. Subsequent calls to <B>ttyname</B>() will mod-
+     ify the same object.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

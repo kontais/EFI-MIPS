@@ -1,0 +1,35 @@
+11.1.1
+
+PCIX控制器
+
+
+龙芯2F的PCIX控制器支持三个64位窗口，由{BAR1,BAR0}, {BAR3,BAR2}, {BAR5,BAR4}三对寄存器窗口0,1,2的基址。
+窗口大小，使能以及其它细节由另外三个对应寄存器PCI_Hit0_Sel, PCI_Hit1_Sel, PCI_Hit2_Sel控制。
+
+11.2.1
+
+
+PCI (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff) -> DDR (0x0000_0000_8000_0000 - 0x0000_0000_ffff_ffff)  PCI窗口0  OpenBSD采用
+
+/*
+ * PCI to local mapping: [2G, 2G+256M] -> RAM [0-256M]
+ */
+*(VUINT32*) 0xffffffffbfe00010 = 0x80000000;  PCI_BASE0 基址为2G
+*(VUINT32*) 0xffffffffbfe00014 = 0;           // 64bit 高位
+*(VUINT32*) 0xffffffffbfe00150 = 0x8000000c; 大小为2G, PCI64, 预取使能，允许突发传输。 PCI_Hit0_Sel_L  使能
+*(VUINT32*) 0xffffffffbfe00154 = 0xffffffff;                                           PCI_Hit0_Sel_H
+
+PCI (0x0000_0000_0080_0000 - 0x0000_0000_00ff_ffff) -> DDR (0x0000_0000_0080_0000 - 0x0000_0000_00ff_ffff)  PCI窗口1  OpenBSD未采用
+
+/*
+ * PCI to local mapping: [8M-16M] -> RAM [8M-16M]
+ */
+*(VUINT32*) 0xffffffffbfe00018 = 0x00800000;  PCI_BASE1 基址为8M
+*(VUINT32*) 0xffffffffbfe0001c = 0;           64bit高位
+*(VUINT32*) 0xffffffffbfe00158 = 0xff80000c; 大小为8M   PCI_Hit1_Sel_L  使能
+*(VUINT32*) 0xffffffffbfe0015c = 0xffffffff;            PCI_Hit1_Sel_H
+
+
+
+
+bfe000154, bfe000158  为PCI窗口0/1控制位，在BONITO寄存器中

@@ -1,0 +1,57 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="REMOVE.html">REMOVE(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="REMOVE.html">REMOVE(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>remove</B> - remove directory entry
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>remove</B>(<I>const</I> <I>char</I> <I>*path</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>remove</B>() function is an alias for the <B><A HREF="unlink.html">unlink(2)</A></B> system call.  It
+     deletes the file referenced by <I>path</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, <B>remove</B>() returns 0.  Otherwise, -1 is re-
+     turned and the global variable <I>errno</I> is set to indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     The <B>remove</B>() function may fail and set <I>errno</I> for any of the errors speci-
+     fied for the routine <B><A HREF="unlink.html">unlink(2)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="unlink.html">unlink(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>remove</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

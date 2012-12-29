@@ -1,0 +1,9 @@
+YeeLoong.dsc
+  NV_STORAGE_BASE_ADDRESS   = 0x813E0000
+  EFI_NUM_BLOCKS          = 0x3e
+
+SecMain.h
+  #define FD_SIZE                   0x400000
+
+FlashLayout.h
+  #define FIRMWARE_BLOCK_NUMBER                         0x3E

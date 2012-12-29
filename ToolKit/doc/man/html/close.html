@@ -1,0 +1,103 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="CLOSE.html">CLOSE(2)</A></B>		  FreeBSD System Calls Manual		      <B><A HREF="CLOSE.html">CLOSE(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>close</B> - delete a descriptor
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>int</I>
+     <B>close</B>(<I>int</I> <I>d</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>close</B>() call deletes a descriptor from the per-process object refer-
+     ence table.  If this is the last reference to the underlying object, the
+     object will be deactivated.  For example, on the last close of a file the
+     current <I>seek</I> pointer associated with the file is lost; on the last close
+     of a <B><A HREF="socket.html">socket(2)</A></B> associated naming information and queued data are discard-
+     ed; on the last close of a file holding an advisory lock the lock is re-
+     leased (see further <B><A HREF="flock.html">flock(2)</A></B>).  However, the semantics of System V and
+     IEEE Std1003.1-1988 (``POSIX'') dictate that all <B><A HREF="fcntl.html">fcntl(2)</A></B> advisory record
+     locks associated with a file for a given process are removed when <I>any</I>
+     file descriptor for that file is closed by that process.
+
+     When a process exits, all associated file descriptors are freed, but
+     since there is a limit on active descriptors per processes, the <B>close</B>()
+     function call is useful when a large quantity of file descriptors are be-
+     ing handled.
+
+     When a process forks (see <B><A HREF="fork.html">fork(2)</A></B>),  all descriptors for the new child
+     process reference the same objects as they did in the parent before the
+     fork.  If a new process is then to be run using <B><A HREF="execve.html">execve(2)</A></B>,  the process
+     would normally inherit these descriptors.	Most of the descriptors can be
+     rearranged with <B><A HREF="dup.html">dup2(2)</A></B> or deleted with <B>close</B>() before the <B><A HREF="execve.html">execve(2)</A></B> is
+     attempted, but if some of these descriptors will still be needed if the
+     execve fails, it is necessary to arrange for them to be closed if the ex-
+     ecve succeeds.  For this reason, the call ``fcntl(d, F_SETFD, 1)'' is
+     provided, which arranges that a descriptor will be closed after a suc-
+     cessful execve; the call ``fcntl(d, F_SETFD, 0)'' restores the default,
+     which is to not close the descriptor.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>close</B>() is implemented as the <I>close</I> syscall.
+
+     In the threaded library, the <I>close</I> syscall is assembled to
+     <B>_thread_sys_close</B>() and <B>close</B>() is implemented as a function which locks
+     <I>d</I> for read and write, then calls <B>_thread_sys_close</B>().  Before returning,
+     <B>close</B>() unlocks <I>d</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion, a value of 0 is returned.  Otherwise, a value
+     of -1 is returned and the global integer variable <I>errno</I> is set to indi-
+     cate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Close</B>() will fail if:
+
+     [EBADF]	   <I>D</I> is not an active descriptor.
+
+     [EINTR]	   An interrupt was received.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="accept.html">accept(2)</A></B>,  <B><A HREF="execve.html">execve(2)</A></B>,  <B><A HREF="fcntl.html">fcntl(2)</A></B>,	<B><A HREF="flock.html">flock(2)</A></B>,  <B><A HREF="open.html">open(2)</A></B>,  <B><A HREF="pipe.html">pipe(2)</A></B>,
+     <B><A HREF="socket.html">socket(2)</A></B>,  <B><A HREF="socketpair.html">socketpair(2)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>close</B>() function call is expected to conform to IEEE Std1003.1-1990
+     (``POSIX'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>close</B>() function call appeared in Version 7 AT&amp;T UNIX.
+
+4th Berkeley Distribution	April 19, 1994				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

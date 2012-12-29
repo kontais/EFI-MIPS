@@ -1,0 +1,54 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>ISWCNTRL(3)</B>	       FreeBSD Library Functions Manual 	    <B>ISWCNTRL(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>iswcntrl</B> - control wide character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>int</I>
+     <B>iswcntrl</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>iswcntrl</B>() function tests for any wide control character.  In the ASCII
+     character set, this includes the following characters:
+
+     000 nul	   001 soh	 002 stx       003 etx	     004 eot
+     005 enq	   006 ack	 007 bel       010 bs	     011 ht
+     012 nl	   013 vt	 014 np        015 cr	     016 so
+     017 si	   020 dle	 021 dc1       022 dc2	     023 dc3
+     024 dc4	   025 nak	 026 syn       027 etb	     030 can
+     031 em	   032 sub	 033 esc       034 fs	     035 gs
+     036 rs	   037 us	 177 del
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>iswcntrl</B>() function returns zero if the wide character tests false and re-
+     turns non-zero if the wide character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctype(3)</B>,	<B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

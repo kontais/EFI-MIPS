@@ -1,0 +1,86 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="IOCTL.html">IOCTL(2)</A></B>		  FreeBSD System Calls Manual		      <B><A HREF="IOCTL.html">IOCTL(2)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ioctl</B> - control device
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/ioctl.h&gt;</B>
+
+     <I>int</I>
+     <B>ioctl</B>(<I>int</I> <I>d</I>, <I>unsigned</I> <I>long</I> <I>request</I>, <I>...</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>ioctl</B>() function manipulates the underlying device parameters of spe-
+     cial files.  In particular, many operating characteristics of character
+     special files (e.g. terminals) may be controlled with <B>ioctl</B>() requests.
+     The argument <I>d</I> must be an open file descriptor.
+
+     The third argument to <B>ioctl</B> is traditionally named <I>char</I> <I>*argp</I>. Most uses
+     of <B>ioctl</B> in FreeBSD 3.0 however, require the third argument to be a
+     <I>caddr</I><B>_</B><I>t</I> or an <I>int</I>.
+
+     An  ioctl <I>request</I> has encoded in it whether the argument is an ``in'' pa-
+     rameter or ``out'' parameter, and the size of the argument <I>argp</I> in bytes.
+     Macros and defines used in specifying an ioctl <I>request</I> are located in the
+     file &lt;<I>sys/ioctl.h</I>&gt;.
+
+
+</PRE>
+<H2>IMPLEMENTATION NOTES</H2><PRE>
+     In the non-threaded library <B>ioctl</B>() is implemented as the <I>ioctl</I> syscall.
+
+     In the threaded library, the <I>ioctl</I> syscall is assembled to
+     <B>_thread_sys_ioctl</B>() and <B>ioctl</B>() is implemented as a function which locks
+     <I>d</I> for read and write, then calls <B>_thread_sys_ioctl</B>().  Before returning,
+     <B>ioctl</B>() unlocks <I>d</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If an error has occurred, a value of -1 is returned and <I>errno</I> is set to
+     indicate the error.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     <B>Ioctl</B>() will fail if:
+
+     [EBADF]   <I>d</I> is not a valid descriptor.
+
+     [ENOTTY]  <I>d</I> is not associated with a character special device.
+
+     [ENOTTY]  The specified request does not apply to the kind of object that
+	       the descriptor <I>d</I> references.
+
+     [EINVAL]  <I>Request</I> or <I>argp</I> is not valid.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="mt.html">mt(1)</A></B>,  <B><A HREF="execve.html">execve(2)</A></B>,  <B><A HREF="fcntl.html">fcntl(2)</A></B>,  <B><A HREF="intro.html">intro(4)</A></B>,  <B><A HREF="tty.html">tty(4)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     An <B>ioctl</B>() function call appeared in Version 7 AT&amp;T UNIX.
+
+4th Berkeley Distribution      December 11, 1993			     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

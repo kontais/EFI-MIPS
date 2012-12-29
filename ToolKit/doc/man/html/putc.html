@@ -1,0 +1,78 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="PUTC.html">PUTC(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="PUTC.html">PUTC(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fputc</B>, <B>putc</B>, <B>putchar</B>, <B>putw</B> - output a character or word to a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>int</I>
+     <B>fputc</B>(<I>int</I> <I>c</I>, <I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>putc</B>(<I>int</I> <I>c</I>, <I>FILE</I> <I>*stream</I>)
+
+     <I>int</I>
+     <B>putchar</B>(<I>int</I> <I>c</I>)
+
+     <I>int</I>
+     <B>putw</B>(<I>int</I> <I>w</I>, <I>FILE</I> <I>*stream</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fputc</B>() function writes the character <I>c</I> (converted to an ``unsigned
+     char'') to the output stream pointed to by <I>stream</I>.
+
+     The <B>putc</B>() macro acts essentially identically to <B>fputc</B>(), but is a macro
+     that expands in-line. It may evaluate <I>stream</I> more than once, so arguments
+     given to <B>putc</B>() should not be expressions with potential side effects.
+
+     The <B>putchar</B>() macro is identical to <B>putc</B>() with an output stream of
+     <I>stdout</I>.
+
+     The <B>putw</B>() function writes the specified <I>int</I> to the named output <I>stream</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The functions, <B>fputc</B>(), <B>putc</B>() and <B>putchar</B>() return the character writ-
+     ten.  If an error occurs, the value EOF is returned.  The <B>putw</B>() function
+     returns 0 on success; EOF is returned if a write error occurs, or if an
+     attempt is made to write a read-only stream.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ferror.html">ferror(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="getc.html">getc(3)</A></B>,  <B><A HREF="stdio.html">stdio(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The functions <B>fputc</B>(), <B>putc</B>(), and <B>putchar</B>(), conform to ISO 9899: 1990
+     (``ISO C''). A function <B>putw</B>() function appeared in Version 6 AT&amp;T UNIX.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The size and byte order of an <I>int</I> varies from one machine to another, and
+     <B>putw</B>() is not recommended for portable applications.
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

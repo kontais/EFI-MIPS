@@ -1,0 +1,49 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>ISWSPACE(3)</B>	       FreeBSD Library Functions Manual 	    <B>ISWSPACE(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>iswspace</B> - white-space wide character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>int</I>
+     <B>iswspace</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>iswspace</B>() function tests for the standard white-space wide characters.  In
+     the ASCII character set, this includes the following characters:
+
+     011 ht	   012 nl	 013 vt        014 np	     015 cr
+     040 sp
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>iswspace</B>() function returns zero if the wide character tests false and re-
+     turns non-zero if the wide character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctype(3)</B>,	<B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

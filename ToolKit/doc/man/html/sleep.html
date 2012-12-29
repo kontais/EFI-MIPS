@@ -1,0 +1,66 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SLEEP.html">SLEEP(3)</A></B>	       FreeBSD Library Functions Manual 	      <B><A HREF="SLEEP.html">SLEEP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>sleep</B> - suspend process execution for an interval measured in seconds
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;unistd.h&gt;</B>
+
+     <I>unsigned</I> <I>int</I>
+     <B>sleep</B>(<I>unsigned</I> <I>int</I> <I>seconds</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>sleep</B>() function suspends execution of the calling process until ei-
+     ther <I>seconds</I> seconds have elapsed or a signal is delivered to the process
+     and its action is to invoke a signal-catching function or to terminate
+     the process.  System activity may lengthen the sleep by an indeterminate
+     amount.
+
+     This function is implemented using <B><A HREF="nanosleep.html">nanosleep(2)</A></B> by pausing for <I>seconds</I>
+     seconds or until a signal occurs.	Consequently, in this implementation,
+     sleeping has no effect on the state of process timers, and there is no
+     special handling for SIGALRM.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     If the <B>sleep</B>() function returns because the requested time has elapsed,
+     the value returned will be zero.  If the <B>sleep</B>() function returns due to
+     the delivery of a signal, the value returned will be the unslept amount
+     (the requested time minus the time actually slept) in seconds.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="nanosleep.html">nanosleep(2)</A></B>,  <B><A HREF="usleep.html">usleep(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>sleep</B>() function conforms to IEEE Std1003.1-1990 (``POSIX'').
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>sleep</B>() function appeared in Version 7 AT&amp;T UNIX.
+
+BSD				 Feb 13, 1998				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

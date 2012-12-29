@@ -1,0 +1,24 @@
+EDK_TOOLS_OUTPUT  EDK工具集合，指到$(BUILD_DIR)\Tools
+                  如FWIMAGE生成到$(EDK_TOOLS_OUTPUT)\FwImage
+
+                  
+                  
+
+
+EDK_TOOLS_PATH 指定要导入到EDK_SOURCE里编译器相关程序
+               会产生一个EDK_TOOLS_BIN，将要带入EDK_SOURCE里的程序放在EDK_TOOLS_BIN即可。
+               EDK_TOOLS_PATH没有定义时，这个目录默认是EDK根目录/Tools/Bin，定义时是
+               $(EDK_TOOLS_PATH)\Bin，每个平台的Makefile(如sample\platform\nt32\build\Makefile)
+               会将其中的所有文件COPY到EDK_TOOLS_OUTPUT
+
+EFI_BINARY       =$(EDK_TOOLS_OUTPUT)\Bin
+                 在工具集合里为什么还要创建一个Bin
+EFI_PLATFORM_BIN =$(EFI_BINARY)\$(PROJECT_NAME)$(BUILD_TARGET_DIRECTORY) 
+                 Tools/Bin/YeeLoongBuild/
+
+
+EFI_BINARY_TOOLS (默认没有定义)
+                 如果EFI_BINARY_TOOLS为YES，直接将$(EFI_PLATFORM_BIN)\Tools\$(TARGET_NAME).exe
+                 COPY到EDK工具集合目录
+                 不然就正常编译，编译后把生成在工具集合里的程序COPY到
+                 $(EFI_PLATFORM_BIN)\Tools\$(TARGET_NAME).exe

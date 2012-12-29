@@ -1,0 +1,542 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="ED.html">ED(1)</A></B>			FreeBSD General Commands Manual 		 <B><A HREF="ED.html">ED(1)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>ed</B> - text editor
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>ed</B> [<B>-</B>] [<B>-sx</B>] [<B>-p</B> <I>string</I>] [<I>file</I>]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>Ed</B> is a line-oriented text editor.  It is used to create, display, modify
+     and otherwise manipulate text files.
+
+     If invoked with a <I>file</I> argument, then a copy of <I>file</I> is read into the ed-
+     itor's buffer.  Changes are made to this copy and not directly to <I>file</I>
+     itself.  Upon quitting <B>ed</B>, any changes not explicitly saved  with a <I>w</I>
+     command are lost.
+
+     Editing is done in two distinct modes: <I>command</I> and <I>input</I>. When first in-
+     voked, <B>ed</B> is in command mode.  In this mode commands are read from the
+     standard input and executed to manipulate the contents of the editor
+     buffer.  A typical command might look like:
+
+     <B>,s</B>/<I>old</I>/<I>new</I>/<B>g</B>
+
+     which replaces all occurrences of the string <I>old</I> with <I>new</I>.
+
+     When an input command, such as <I>a</I> (append), <I>i</I> (insert) or <I>c</I> (change), is
+     given, <B>ed</B> enters input mode.  This is the primary means of adding text to
+     a file.  In this mode, no commands are available; instead, the standard
+     input is written directly to the editor buffer.  Lines consist of text up
+     to and including a <I>newline</I> character.  Input mode is terminated by enter-
+     ing a single period (.) on a line.
+
+     All <B>ed</B> commands operate on whole lines or ranges of lines; e.g., the <I>d</I>
+     command deletes lines; the <I>m</I> command moves lines, and so on.  It is pos-
+     sible to modify only a portion of a line by means of replacement, as in
+     the example above.  However even here, the <I>s</I> command is applied to whole
+     lines at a time.
+
+     In general, <B>ed</B> commands consist of zero or more line addresses, followed
+     by a single character command and possibly additional parameters; i.e.,
+     commands have the structure:
+
+     [address [,address]]command[parameters]
+
+     The address(es) indicate the line or range of lines to be affected by the
+     command.  If fewer addresses are given than the command accepts, then de-
+     fault addresses are supplied.
+
+
+</PRE>
+<H2>OPTIONS</H2><PRE>
+     The following options are available:
+
+     <B>-s</B>      Suppress diagnostics. This should be used if <B>ed</B>'s standard input
+	     is from a script.
+
+     <B>-x</B>      Prompt for an encryption key to be used in subsequent reads and
+	     writes (see the <I>x</I> command).
+
+     <B>-p</B> <I>string</I>
+	     Specify a command prompt.	This may be toggled on and off with
+	     the <I>P</I> command.
+
+     <I>file</I>    Specify the name of a file to read.  If <I>file</I> is prefixed with a
+	     bang (!), then it is interpreted as a shell command.  In this
+	     case, what is read is the standard output of <I>file</I> executed via
+	     <B><A HREF="sh.html">sh(1)</A></B>.  To read a file whose name begins with a bang, prefix the
+	     name with a backslash (\).  The default filename is set to <I>file</I>
+	     only if it is not prefixed with a bang.
+
+
+</PRE>
+<H2>LINE ADDRESSING</H2><PRE>
+     An address represents the number of a line in the buffer.	<B>Ed</B> maintains a
+     <I>current</I> <I>address</I> which is typically supplied to commands as the default
+     address when none is specified.  When a file is first read,  the current
+     address is set to the last line of the file.  In general, the current ad-
+     dress is set to the last line affected by a command.
+
+     A line address is constructed from one of the bases in the list below,
+     optionally followed by a numeric offset.  The offset may include any com-
+     bination of digits, operators (i.e., <I>+</I>, <I>-</I> and <I>^</I>) and whitespace.  Ad-
+     dresses are read from left to right, and their values are computed rela-
+     tive to the current address.
+
+     One exception to the rule that addresses represent line numbers is the
+     address <I>0</I> (zero).	This means "before the first line," and is legal wher-
+     ever it makes sense.
+
+     An address range is two addresses separated either by a comma or semi-
+     colon. The value of the first address in a range cannot exceed the value
+     of the second.  If only one address is given in a range, then the second
+     address is set to the given address.  If an <I>n</I>-tuple of addresses is given
+     where <I>n</I> <I>&gt;</I> <I>2</I>, then the corresponding range is determined by the last two
+     addresses in the <I>n</I>-tuple. If only one address is expected, then the last
+     address is used.
+
+     Each address in a comma-delimited range is interpreted relative to the
+     current address.  In a semi-colon-delimited range, the first address is
+     used to set the current address, and the second address is interpreted
+     relative to the first.
+
+     The following address symbols are recognized:
+
+     .	     The current line (address) in the buffer.
+
+     $	     The last line in the buffer.
+
+     n	     The <I>n</I>th, line in the buffer where <I>n</I> is a number in the range
+	     <I>[0,$]</I>.
+
+     - or ^  The previous line.  This is equivalent to <I>-1</I> and may be repeated
+	     with cumulative effect.
+
+     -n or ^n
+	     The <I>n</I>th previous line, where <I>n</I> is a non-negative number.
+
+     +	     The next line.  This is equivalent to <I>+1</I> and may be repeated with
+	     cumulative effect.
+
+     +n      The <I>n</I>th next line, where <I>n</I> is a non-negative number.
+
+     , or %  The first through last lines in the buffer.  This is equivalent
+	     to the address range <I>1,$</I>.
+
+     ;	     The current through last lines in the buffer.  This is equivalent
+	     to the address range <I>.,$</I>.
+
+     /re/    The next line containing the regular expression <I>re</I>. The search
+	     wraps to the beginning of the buffer and continues down to the
+	     current line, if necessary.  // repeats the last search.
+
+     ?re?    The previous line containing the regular expression <I>re</I>. The
+	     search wraps to the end of the buffer and continues up to the
+	     current line, if necessary.  ?? repeats the last search.
+
+     'lc     The line previously marked by a <I>k</I> (mark) command, where <I>lc</I> is a
+	     lower case letter.
+
+
+</PRE>
+<H2>REGULAR EXPRESSIONS</H2><PRE>
+     Regular expressions are patterns used in selecting text.  For example,
+     the command:
+
+     <B>g</B>/<I>string</I>/
+
+     prints all lines containing <I>string</I>. Regular expressions are also used by
+     the <I>s</I> command for selecting old text to be replaced with new.
+
+     In addition to a specifying string literals, regular expressions can rep-
+     resent classes of strings.  Strings thus represented are said to be
+     matched by the corresponding regular expression.  If it is possible for a
+     regular expression to match several strings in a line, then the left-most
+     longest match is the one selected.
+
+     The following symbols are used in constructing regular expressions:
+
+     c	     Any character <I>c</I> not listed below, including `{', '}', `(', `)',
+	     `&lt;' and `&gt;', matches itself.
+
+     \c      Any backslash-escaped character <I>c</I>, except for `{', '}', `(', `)',
+	     `&lt;' and `&gt;', matches itself.
+
+     .	     Match any single character.
+
+     [char-class]
+	     Match any single character in <I>char-class</I>. To include a  `]' in
+	     <I>char-class</I>, it must be the first character.  A range of charac-
+	     ters may be specified by separating the end characters of the
+	     range with a `-', e.g., `a-z' specifies the lower case charac-
+	     ters.  The following literal expressions can also be used in
+	     <I>char-class</I> to specify sets of characters:
+
+	       [:alnum:]  [:cntrl:]  [:lower:]	[:space:]
+	       [:alpha:]  [:digit:]  [:print:]	[:upper:]
+	       [:blank:]  [:graph:]  [:punct:]	[:xdigit:]
+
+	     If `-' appears as the first or last character of <I>char-class</I>, then
+	     it matches itself.  All other characters in <I>char-class</I> match
+	     themselves.
+
+	     Patterns in <I>char-class</I> of the form:
+
+	       [.<I>col-elm</I>.] or,	 [=<I>col-elm</I>=]
+
+	     where <I>col-elm</I> is a <I>collating</I> <I>element</I> are interpreted according to
+	     <B><A HREF="locale.html">locale(5)</A></B> (not currently supported).  See <B><A HREF="regex.html">regex(3)</A></B> for an expla-
+	     nation of these constructs.
+
+     [^char-class]
+	     Match any single character, other than newline, not in <I>char-</I>
+	     <I>class</I>. <I>Char-class</I> is defined as above.
+
+     ^	     If <I>^</I> is the first character of a regular expression, then it an-
+	     chors the regular expression to the beginning of a line.  Other-
+	     wise, it matches itself.
+
+     $	     If <I>$</I> is the last character of a regular expression, it anchors
+	     the regular expression to the end of a line.  Otherwise, it
+
+	     matches itself.
+
+     \&lt;      Anchor the single character regular expression or subexpression
+	     immediately following it to the beginning of a word.  (This may
+	     not be available)
+
+     \&gt;      Anchor the single character regular expression or subexpression
+	     immediately following it to the end of a word.  (This may not be
+	     available)
+
+     \(re\)  Define a subexpression <I>re</I>. Subexpressions may be nested.  A sub-
+	     sequent backreference of the form \n, where <I>n</I> is a number in the
+	     range [1,9], expands to the text matched by the <I>n</I>th subexpres-
+	     sion.  For example, the regular expression `\(.*\)\1' matches any
+	     string consisting of identical adjacent substrings.  Subexpres-
+	     sions are ordered relative to their left delimiter.
+
+     *	     Match the single character regular expression or subexpression
+	     immediately preceding it zero or more times.  If <I>*</I> is the first
+	     character of a regular expression or subexpression, then it
+	     matches itself.  The <I>*</I> operator sometimes yields unexpected re-
+	     sults.  For example, the regular expression `b*' matches the be-
+	     ginning of the string `abbb' (as opposed to the substring `bbb'),
+	     since a null match is the only left-most match.
+
+     \{n,m\} or \{n,\} or \{n\}
+	     Match the single character regular expression or subexpression
+	     immediately preceding it at least <I>n</I> and at most <I>m</I> times.  If <I>m</I> is
+	     omitted, then it matches at least <I>n</I> times.  If the comma is also
+	     omitted, then it matches exactly <I>n</I> times.
+
+     Additional regular expression operators may be defined depending on the
+     particular <B><A HREF="regex.html">regex(3)</A></B> implementation.
+
+
+</PRE>
+<H2>COMMANDS</H2><PRE>
+     All <B>ed</B> commands are single characters, though some require additional pa-
+     rameters.	If a command's parameters extend over several lines, then each
+     line except for the last must be terminated with a backslash (\).
+
+     In general, at most one command is allowed per line.  However, most com-
+     mands accept a print suffix, which is any of <I>p</I> (print), <I>l</I> (list) , or <I>n</I>
+     (enumerate), to print the last line affected by the command.
+
+     An interrupt (typically ^C) has the effect of aborting the current com-
+     mand and returning the editor to command mode.
+
+     <B>Ed</B> recognizes the following commands.  The commands are shown together
+     with the default address or address range supplied if none is specified
+     (in parenthesis).
+
+     (.)a    Append text to the buffer after the addressed line.  Text is en-
+	     tered in input mode.  The current address is set to last line en-
+	     tered.
+
+     (.,.)c  Change lines in the buffer.  The addressed lines are deleted from
+	     the buffer, and text is appended in their place.  Text is entered
+	     in input mode.  The current address is set to last line entered.
+
+     (.,.)d  Delete the addressed lines from the buffer.  If there is a line
+	     after the deleted range, then the current address is set to this
+	     line. Otherwise the current address is set to the line before the
+	     deleted range.
+
+     e <I>file</I>  Edit <I>file</I>, and sets the default filename.	If <I>file</I> is not speci-
+	     fied, then the  default filename is used.	Any lines in the
+	     buffer are deleted before the new file is read.  The current ad-
+
+	     dress is set to the last line read.
+
+     e <I>!command</I>
+	     Edit the standard output of <I>!command</I>, (see <I>!command</I> below).  The
+	     default filename is unchanged.  Any lines in the buffer are
+	     deleted before the output of <I>command</I> is read.  The current ad-
+	     dress is set to the last line read.
+
+     E <I>file</I>  Edit <I>file</I> unconditionally.  This is similar to the <I>e</I> command, ex-
+	     cept that unwritten changes are discarded without warning.  The
+	     current address is set to the last line read.
+
+     f <I>file</I>  Set the default filename to <I>file</I>. If <I>file</I> is not specified, then
+	     the default unescaped filename is printed.
+
+     (1,$)g/re/command-list
+	     Apply <I>command-list</I> to each of the addressed lines matching a reg-
+	     ular expression <I>re</I>. The current address is set to the line cur-
+	     rently matched before <I>command-list</I> is executed.  At the end of
+	     the <I>g</I> command, the current address is set to the last line af-
+	     fected by <I>command-list</I>.
+
+	     Each command in <I>command-list</I> must be on a separate line, and ev-
+	     ery line except for the last must be terminated by a backslash
+	     (\).  Any commands are allowed, except for <I>g</I>, <I>G</I>, <I>v</I>, and <I>V</I>. A new-
+	     line alone in <I>command-list</I> is equivalent to a <I>p</I> command.
+
+     (1,$)G/re/
+	     Interactively edit the addressed lines matching a regular expres-
+	     sion <I>re</I>. For each matching line, the line is printed, the current
+	     address is set, and the user is prompted to enter a <I>command-list</I>.
+	     At the end of the <I>G</I> command, the current address is set to the
+	     last line affected by (the last) <I>command-list</I>.
+
+	     The format of <I>command-list</I> is the same as that of the <I>g</I> command.
+	     A newline alone acts as a null command list.  A single `&amp;' re-
+	     peats the last non-null command list.
+
+     H	     Toggle the printing of error explanations.  By default, explana-
+	     tions are not printed.  It is recommended that ed scripts begin
+	     with this command to aid in debugging.
+
+     h	     Print an explanation of the last error.
+
+     (.)i    Insert text in the buffer before the current line.  Text is en-
+	     tered in input mode.  The current address is set to the last line
+	     entered.
+
+     (.,.+1)j
+	     Join the addressed lines.	The addressed lines are deleted from
+	     the buffer and replaced by a single line containing their joined
+	     text.  The current address is set to the resultant line.
+
+     (.)klc  Mark a line with a lower case letter <I>lc</I>. The  line can then be
+	     addressed as <I>'lc</I> (i.e., a single quote followed by <I>lc</I> ) in subse-
+	     quent commands.  The mark is not cleared until the line is delet-
+	     ed or otherwise modified.
+
+     (.,.)l  Print the addressed lines unambiguously.  If a single line fills
+	     for than one screen (as might be the case when viewing a binary
+	     file, for instance), a `--More--' prompt is printed on the last
+	     line.  <B>Ed</B> waits until the RETURN key is pressed before displaying
+	     the next screen.  The current address is set to the last line
+
+	     printed.
+
+     (.,.)m(.)
+	     Move lines in the buffer.	The addressed lines are moved to after
+	     the right-hand destination address, which may be the address <I>0</I>
+	     (zero).  The current address is set to the last line moved.
+
+     (.,.)n  Print the addressed lines along with their line numbers.  The
+	     current address is set to the last line printed.
+
+     (.,.)p  Print the addressed lines. The current address is set to the last
+	     line printed.
+
+     P	     Toggle the command prompt on and off.  Unless a prompt was speci-
+	     fied by with command-line option <B>-p</B> <I>string</I>, the command prompt is
+	     by default turned off.
+
+     q	     Quit <B>ed</B>.
+
+     Q	     Quit <B>ed</B> unconditionally.  This is similar to the <I>q</I> command, ex-
+	     cept that unwritten changes are discarded without warning.
+
+     ($)r <I>file</I>
+	     Read <I>file</I> to after the addressed line.  If <I>file</I> is not specified,
+	     then the default filename is used.  If there was no default file-
+	     name prior to the command, then the default filename is set to
+	     <I>file</I>. Otherwise, the default filename is unchanged.  The current
+	     address is set to the last line read.
+
+     ($)r <I>!command</I>
+	     Read to after the addressed line the standard output of <I>!command</I>,
+	     (see the <I>!command</I> below).	The default filename is unchanged.
+	     The current address is set to the last line read.
+
+     (.,.)s/re/replacement/
+
+     (.,.)s/re/replacement/g
+
+     (.,.)s/re/replacement/n
+	     Replace text in the addressed lines matching a regular expression
+	     <I>re</I> with <I>replacement</I>. By default, only the first match in each
+	     line is replaced.	If the <I>g</I> (global) suffix is given, then every
+	     match to be replaced.  The <I>n</I> suffix, where <I>n</I> is a positive num-
+	     ber, causes only the <I>n</I>th match to be replaced.  It is an error if
+	     no substitutions are performed on any of the addressed lines.
+	     The current address is set the last line affected.
+
+	     <I>Re</I> and <I>replacement</I> may be delimited by any character other than
+	     space and newline (see the <I>s</I> command below).  If one or two of
+	     the last delimiters is omitted, then the last line affected is
+	     printed as though the print suffix <I>p</I> were specified.
+
+	     An unescaped `&amp;' in <I>replacement</I> is replaced by the currently
+	     matched text.  The character sequence <I>\m</I>, where <I>m</I> is a number in
+	     the range [1,9], is replaced by the <I>m</I> <I>th</I> backreference expression
+	     of the matched text.  If <I>replacement</I> consists of a single `%',
+	     then <I>replacement</I> from the last substitution is used.  Newlines
+	     may be embedded in <I>replacement</I> if they are escaped with a back-
+	     slash (\).
+
+     (.,.)s  Repeat the last substitution.  This form of the <I>s</I> command accepts
+	     a count suffix <I>n</I>, or any combination of the characters <I>r</I>, <I>g</I>, and
+	     <I>p</I>. If a count suffix <I>n</I> is given, then only the <I>n</I>th match is re-
+	     placed.  The <I>r</I> suffix causes the regular expression of the last
+	     search to be used instead of the that of the last substitution.
+	     The <I>g</I> suffix toggles the global suffix of the last substitution.
+	     The <I>p</I> suffix toggles the print suffix of the last substitution
+	     The current address is set to the last line affected.
+
+     (.,.)t(.)
+	     Copy (i.e., transfer) the addressed lines to after the right-hand
+	     destination address, which may be the address <I>0</I> (zero).  The cur-
+	     rent address is set to the last line copied.
+
+     u	     Undo the last command and restores the current address to what it
+	     was before the command.  The global commands <I>g</I>, <I>G</I>, <I>v</I>, and <I>V</I>. are
+	     treated as a single command by undo.  <I>u</I> is its own inverse.
+
+     (1,$)v/re/command-list
+	     Apply <I>command-list</I> to each of the addressed lines not matching a
+	     regular expression <I>re</I>. This is similar to the <I>g</I> command.
+
+     (1,$)V/re/
+	     Interactively edit the addressed lines not matching a regular ex-
+	     pression <I>re</I>. This is similar to the <I>G</I> command.
+
+     (1,$)w <I>file</I>
+	     Write the addressed lines to <I>file</I>. Any previous contents of <I>file</I>
+	     is lost without warning.  If there is no default filename, then
+	     the default filename is set to <I>file</I>, otherwise it is unchanged.
+	     If no filename is specified, then the default filename is used.
+	     The current address is unchanged.
+
+     (1,$)wq <I>file</I>
+	     Write the addressed lines to <I>file</I>, and then executes a <I>q</I> command.
+
+     (1,$)w <I>!command</I>
+	     Write the addressed lines to the standard input of <I>!command</I>, (see
+	     the <I>!command</I> below).  The default filename and current address
+	     are unchanged.
+
+     (1,$)W <I>file</I>
+	     Append the addressed lines to the end of <I>file</I>. This is similar to
+	     the <I>w</I> command, expect that the previous contents of file is not
+	     clobbered.  The current address is unchanged.
+
+     x	     Prompt for an encryption key which is used in subsequent reads
+	     and writes.  If a newline alone is entered as the key, then en-
+	     cryption is turned off.  Otherwise, echoing is disabled while a
+	     key is read.  Encryption/decryption is done using the <B><A HREF="bdes.html">bdes(1)</A></B> al-
+	     gorithm.
+
+     (.+1)zn
+	     Scroll <I>n</I> lines at a time starting at addressed line.  If <I>n</I> is not
+	     specified, then the current window size is used.  The current ad-
+	     dress is set to the last line printed.
+
+     !command
+	     Execute <I>command</I> via <B><A HREF="sh.html">sh(1)</A></B>.  If the first character of <I>command</I> is
+	     `!', then it is replaced by text of the previous <I>!command</I>. <B>Ed</B>
+	     does not process <I>command</I> for backslash (\) escapes.  However, an
+	     unescaped <I>%</I> is replaced by the default filename.  When the shell
+	     returns from execution, a `!'  is printed to the standard output.
+	     The current line is unchanged.
+
+     ($)=    Print the line number of the addressed line.
+
+     (.+1)newline
+	     Print the addressed line, and sets the current address to that
+	     line.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+
+     /tmp/ed.*	buffer file
+     ed.hup	the file to which <B>ed</B> attempts to write the  buffer if the ter-
+		minal hangs up
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bdes.html">bdes(1)</A></B>,  <B><A HREF="sed.html">sed(1)</A></B>,	<B><A HREF="sh.html">sh(1)</A></B>,	<B><A HREF="vi.html">vi(1)</A></B>,	<B><A HREF="regex.html">regex(3)</A></B>
+
+     USD:12-13
+
+     B. W. Kernighan and P. J. Plauger, <I>Software</I> <I>Tools</I> <I>in</I> <I>Pascal</I>, 1981,
+     Addison-Wesley.
+
+
+</PRE>
+<H2>LIMITATIONS</H2><PRE>
+     <B>Ed</B> processes <I>file</I> arguments for backslash escapes, i.e.,  in a filename,
+     any characters preceded by a backslash (\) are interpreted literally.
+
+     If a text (non-binary) file is not terminated by a newline character,
+     then <B>ed</B> appends one on reading/writing it.  In the case of a binary file,
+     <B>ed</B> does not append a newline on reading/writing.
+
+     per line overhead: 4 ints
+
+
+</PRE>
+<H2>DIAGNOSTICS</H2><PRE>
+     When an error occurs, <B>ed</B> prints a `?' and either returns to command mode
+     or exits if its input is from a script.  An explanation of the last error
+     can be printed with the <I>h</I> (help) command.
+
+     Since the <I>g</I> (global) command  masks any errors from failed searches and
+     substitutions, it can be used to perform conditional operations in
+     scripts; e.g.,
+
+     <B>g</B>/<I>old</I>/<B>s</B>//<I>new</I>/
+
+     replaces any occurrences of <I>old</I> with <I>new</I>. If the <I>u</I> (undo) command occurs
+     in a global command list, then the command list is executed only once.
+
+     If diagnostics are not disabled, attempting to quit <B>ed</B> or edit another
+     file before writing a modified buffer results in an error.  If the com-
+     mand is entered a second time, it succeeds, but any changes to the buffer
+     are lost.
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     A <B>ed</B> command appeared in Version 1 AT&amp;T UNIX.
+
+BSD				 May 21, 1993				     8
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

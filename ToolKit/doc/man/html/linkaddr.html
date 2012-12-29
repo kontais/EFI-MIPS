@@ -1,0 +1,88 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="LINK_ADDR.html">LINK_ADDR(3)</A></B>	       FreeBSD Library Functions Manual 	  <B><A HREF="LINK_ADDR.html">LINK_ADDR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>link_addr</B>, <B>link_ntoa</B> - elementary address specification routines for link
+     level access
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;sys/types.h&gt;</B>
+     <B>#include</B> <B>&lt;sys/socket.h&gt;</B>
+     <B>#include</B> <B>&lt;net/if_dl.h&gt;</B>
+
+     <I>void</I>
+     <B>link_addr</B>(<I>const</I> <I>char</I> <I>*addr</I>, <I>struct</I> <I>sockaddr</I><B>_</B><I>dl</I> <I>*sdl</I>)
+
+     <I>char</I> <I>*</I>
+     <B>link_ntoa</B>(<I>const</I> <I>struct</I> <I>sockaddr</I><B>_</B><I>dl</I> <I>*sdl</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The routine <B>link_addr</B>() interprets character strings representing link-
+     level addresses, returning binary information suitable for use in system
+     calls.  The routine <B>link_ntoa</B>() takes a link-level address and returns an
+     ASCII string representing some of the information present, including the
+     link level address itself, and the interface name or number, if present.
+     This facility is experimental and is still subject to change.
+
+     For <B>link_addr</B>(), the string <I>addr</I> may contain an optional network inter-
+     face identifier of the form ``name unit-number'', suitable for the first
+     argument to <B><A HREF="ifconfig.html">ifconfig(8)</A></B>,  followed in all cases by a colon and an inter-
+     face address in the form of groups of hexadecimal digits separated by pe-
+     riods.  Each group represents a byte of address; address bytes are filled
+     left to right from low order bytes through high order bytes.
+
+     Thus le0:8.0.9.13.d.30 represents an ethernet address to be transmitted
+     on the first Lance ethernet interface.
+
+     The direct use of these functions is deprecated in favor of the ad-
+     <B><A HREF="dr2ascii.html">dr2ascii(3)</A></B> interface; however, portable programs cannot rely on the lat-
+     ter as it is not yet widely implemented.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     <B>link_ntoa</B>() always returns a null terminated string.  <B>link_addr</B>() has no
+     return value.  (See <I>BUGS</I>.)
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="addr2ascii.html">addr2ascii(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>link_addr</B>() and <B>link_ntoa</B>() functions appeared in 4.3BSD-Reno.
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     The returned values for link_ntoa reside in a static memory area.
+
+     The function <B>link_addr</B>() should diagnose improperly formed input, and
+     there should be an unambiguous way to recognize this.
+
+     If the <I>sdl</I><B>_</B><I>len</I> field of the link socket address <I>sdl</I> is 0, <B>link_ntoa</B>()
+     will not insert a colon before the interface address bytes.  If this
+     translated address is given to <B>link_addr</B>() without inserting an initial
+     colon, the latter will not interpret it correctly.
+
+4.4BSD				 June 17, 1996				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

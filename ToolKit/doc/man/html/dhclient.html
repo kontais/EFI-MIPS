@@ -1,0 +1,170 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+
+<B><A HREF="dhclient.html">dhclient(8)</A></B>					      <B><A HREF="dhclient.html">dhclient(8)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+       dhclient - Dynamic Host Configuration Protocol Client
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+       <B>dhclient</B> [ <B>-p</B> <I>port</I> ] [ <B>-1</B> ] [ <B>-D</B> ] [ <B>-d</B> ] [ <I>if0</I> [ <I>...ifN</I> ] ]
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+       The Internet Software Consortium  DHCP  Client,	dhclient,
+       provides  a  means  for	configuring  one  or more network
+       interfaces using the Dynamic Host Configuration	Protocol,
+       BOOTP  protocol, or if these protocols fail, by statically
+       assigning an address.
+
+
+</PRE>
+<H2>OPERATION</H2><PRE>
+       The DHCP protocol allows  a  host  to  contact  a  central
+       server which maintains a list of IP addresses which may be
+       assigned on one or  more  subnets.    A	DHCP  client  may
+       request	an  address  from this pool, and then use it on a
+       temporary basis for communication on network.	The  DHCP
+       protocol  also  provides  a mechanism whereby a client can
+       learn important details about the network to which  it  is
+       attached,  such	as  the location of a default router, the
+       location of a name server, and so on.
+
+       On startup, dhclient reads the <I>dhclient.conf</I> for  configu-
+       ration instructions.   It then gets a list of all the net-
+       work interfaces that are configured in the current system.
+       For each interface, it attempts to configure the interface
+       using the DHCP protocol.
+
+       In order to keep track of leases across system reboots and
+       server  restarts,  dhclient  keeps a list of leases it has
+       been  assigned  in  the	dhclient.leases(5)   file.     On
+       startup,  after	reading  the dhclient.conf file, dhclient
+       reads the dhclient.leases file to refresh its memory about
+       what leases it has been assigned.
+
+       When a new lease is acquired, it is appended to the end of
+       the dhclient.leases file.   In order to prevent	the  file
+       from   becoming	arbitrarily  large,  from  time  to  time
+       dhclient creates a new dhclient.leases file from  its  in-
+       core   lease   database.    The	 old   version	 of   the
+       dhclient.leases	file   is   retained   under   the   name
+       <I>dhcpd.leases~</I>  until  the  next time dhclient rewrites the
+       database.
+
+       Old leases are kept around in  case  the  DHCP  server  is
+       unavailable when dhclient is first invoked (generally dur-
+       ing the initial system boot process).   In that event, old
+       leases  from  the  dhclient.leases file which have not yet
+       expired are tested, and	if  they  are  determined  to  be
+       valid,  they are used until either they expire or the DHCP
+       server becomes available.
+
+       A mobile host which may sometimes need to access a network
+       on  which  no  DHCP  server exists may be preloaded with a
+       lease for a fixed address  on  that  network.	When  all
+       attempts  to  contact  a DHCP server have failed, dhclient
+       will try to validate the static lease, and if it succeeds,
+       will use that lease until it is restarted.
+
+       A  mobile  host	may also travel to some networks on which
+       DHCP is not available but BOOTP is.   In that case, it may
+       be  advantageous to arrange with the network administrator
+       for an entry on the BOOTP database, so that the	host  can
+       boot  quickly  on that network rather than cycling through
+       the list of old leases.
+
+
+</PRE>
+<H2>COMMAND LINE</H2><PRE>
+       The names of the network interfaces that  dhclient  should
+       attempt to configure may be specified on the command line.
+       If no interface names are specified on  the  command  line
+       dhclient will identify all network interfaces, elimininat-
+       ing non-broadcast interfaces if possible, and  attempt  to
+       configure each interface.
+
+       If  dhclient  should  listen  and transmit on a port other
+       than the standard (port 68), the <B>-p</B>  flag  may  used.   It
+       should  be  followed  by the udp port number that dhclient
+       should use.  This is mostly useful for debugging purposes.
+       If  the	<B>-p</B>  flag  is  specified, the client will transmit
+       responses to servers at a port number  that  is	one  less
+       than  the one specified - i.e., if you specify <B>-p</B> 68, then
+       the client will listen on port 68 and transmit to port 67.
+       Datagrams  that	must  go through relay agents are sent to
+       the port number specified with the <B>-p</B> flag - if	you  wish
+       to  use	alternate  port  numbers,  you must configure any
+       relay agents you are using to use the same alternate  port
+       numbers.
+
+       Dhclient  will normally run in the foreground until it has
+       configured an interface, and then will revert  to  running
+       in the background.  To run force dhclient to always run as
+       a foreground process, the <B>-d</B>  flag  should  be  specified.
+       This  is useful when running dhclient under a debugger, or
+       when running it out of inittab on System V systems.
+
+       The <B>-D</B> flag causes <B>dhclient</B> to save the script it  creates
+       for use in conjunction with <B>dhclient-script</B> in <I>/tmp.</I>
+
+       The <B>-1</B> flag cause dhclient to try once to get a lease.  If
+       it fails, dhclient exits.
+
+
+</PRE>
+<H2>CONFIGURATION</H2><PRE>
+       The syntax  of  the  <B><A HREF="dhclient.conf.html">dhclient.conf(8)</A></B>  file  is	discussed
+       seperately.
+
+
+</PRE>
+<H2>FILES</H2><PRE>
+       <B>/etc/dhclient.conf</B>
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+       <B><A HREF="dhclient.conf.html">dhclient.conf(5)</A></B>, <B><A HREF="dhclient-script.html">dhclient-script(8)</A></B>
+
+
+</PRE>
+<H2>AUTHOR</H2><PRE>
+       <B>dhclient(8)</B> has been written  for  the  Internet  Software
+       Consortium  by Ted Lemon &lt;mellon@fugue.com&gt; in cooperation
+       with Vixie Enterprises.	To learn more about the  Internet
+       Software Consortium, see <B>http://www.vix.com/isc.</B>  To learn
+       more about Vixie Enterprises, see <B>http://www.vix.com.</B>
+
+       This client was substantially  modified	and  enhanced  by
+       Elliot  Poger for use on Linux while he was working on the
+       MosquitoNet project at Stanford.
+
+       The current version owes much to Elliot's  Linux  enhance-
+       ments,  but  was  substantially	reorganized and partially
+       rewritten by Ted Lemon so as to use  the  same  networking
+       framework  that	the  Internet  Software  Consortium  DHCP
+       server uses.   Much system-specific configuration code was
+       moved  into  a  shell  script  so that as support for more
+       operating systems is added, it will not	be  necessary  to
+       port  and  maintain  system-specific configuration code to
+       these operating systems - instead, the  shell  script  can
+       invoke the native tools to accomplish the same purpose.
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

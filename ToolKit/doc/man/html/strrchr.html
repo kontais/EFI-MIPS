@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="STRRCHR.html">STRRCHR(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="STRRCHR.html">STRRCHR(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>strrchr</B> - locate character in string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>strrchr</B>(<I>const</I> <I>char</I> <I>*s</I>, <I>int</I> <I>c</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>strrchr</B>() function locates the last occurrence of <I>c</I> (converted to a
+     char) in the string <I>s</I>. If <I>c</I> is `\0', <B>strrchr</B>() locates the terminating
+     `\0'.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>strrchr</B>() function returns a pointer to the character, or a null
+     pointer if <I>c</I> does not occur anywhere in <I>s</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="index.html">index(3)</A></B>,	<B><A HREF="memchr.html">memchr(3)</A></B>,  <B><A HREF="rindex.html">rindex(3)</A></B>,	<B><A HREF="strchr.html">strchr(3)</A></B>,  <B><A HREF="strcspn.html">strcspn(3)</A></B>,  <B><A HREF="strpbrk.html">strpbrk(3)</A></B>,
+     <B><A HREF="strsep.html">strsep(3)</A></B>,  <B><A HREF="strspn.html">strspn(3)</A></B>,  <B><A HREF="strstr.html">strstr(3)</A></B>,  <B><A HREF="strtok.html">strtok(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>strrchr</B>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

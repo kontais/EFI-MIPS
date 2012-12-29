@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+<PRE>
+
+<B>_LIBC_Cleanup</B> 		     Libc    Manual 	       <B>_LIBC_Cleanup</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>_LIBC_Cleanup</B> - perform libc cleanup operations.
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;atk_libc.h&gt;</B>
+
+     <I>void</I>
+     <B>_LIBC_Cleanup</B>(<I>VOID</I>)
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>_LIBC_Cleanup</B>() should be used by all EFI protocols and drivers that
+     have called <B><A HREF="InitializeLibC.html">IntializeLibC</A></B>() before they exit through unload.  This call
+     will perform most cleanup operations associated with <B><A HREF="exit.html">exit(3)</A></B> but without
+     calling the EFI <I>Exit</I> service call.  Cleanup operations include:
+
+	   1.	Flush all open output streams.
+	   2.	Close all open streams.
+	   3.   Free all memory allocated through <B><A HREF="malloc.html">malloc(3)</A></B>, <B><A HREF="malloc.html">calloc(3)</A></B>,
+	        and <B><A HREF="malloc.html">realloc(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="exit.html">exit(3)</A></B>, <B><A HREF="_LIBC_EfiExit.html">_LIBC_EfiExit()</A>
+
+</PRE>
+</BODY>
+</HTML>

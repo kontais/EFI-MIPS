@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WCSCMP(3)</B>	       FreeBSD Library Functions Manual 	     <B>WCSCMP(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wcscmp</B>, <B>wcsncmp</B>, - compare strings
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>int</I>
+     <B>wcscmp</B>(<I>const</I> <I>wchar_t</I> <I>*s1</I>, <I>const</I> <I>wchar_t</I> <I>*s2</I>)
+
+     <I>int</I>
+     <B>wcsncmp</B>(<I>const</I> <I>wchar_t</I> <I>*s1</I>, <I>const</I> <I>wchar_t</I> <I>*s2</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wcscmp</B>() and <B>wcsncmp</B>() functions lexicographically compare the null-
+     terminated strings <I>s1</I> and <I>s2</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wcscmp</B>() and <B>wcsncmp</B>() return an integer greater than, equal to, or
+     less than 0, according as the string <I>s1</I> is greater than, equal to, or
+     less than the string <I>s2</I>.
+
+     The <B>wcsncmp</B>() compares not more than <I>len</I> characters.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>bcmp(3)</B>,  <B>memcmp(3)</B>,  <B>strcasecmp(3)</B>,  <B>strcoll(3)</B>,	<B>strxfrm(3)</B>
+
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

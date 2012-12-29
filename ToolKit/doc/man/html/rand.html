@@ -1,0 +1,57 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="RAND.html">RAND(3)</A></B> 	       FreeBSD Library Functions Manual 	       <B><A HREF="RAND.html">RAND(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>rand</B>, <B>srand</B> - bad random number generator
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdlib.h&gt;</B>
+
+     <I>void</I>
+     <B>srand</B>(<I>unsigned</I> <I>seed</I>)
+
+     <I>int</I>
+     <B>rand</B>(<I>void</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     <B>These</B> <B>interfaces</B> <B>are</B> <B>obsoleted</B> <B>by</B> <B>random(3).</B>
+
+     The <B>rand</B>() function computes a sequence of pseudo-random integers in the
+     range of 0 to RAND_MAX (as defined by the header file &lt;<I>stdlib.h</I>&gt;).
+
+     The <B>srand</B>() function sets its argument as the seed for a new sequence of
+     pseudo-random numbers to be returned by <B>rand</B>().  These sequences are re-
+     peatable by calling <B>srand</B>() with the same seed value.
+
+     If no seed value is provided, the functions are automatically seeded with
+     a value of 1.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="random.html">random(3)</A></B>
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>rand</B>() and <B>srand</B>() functions conform to ISO 9899: 1990 (``ISO C'').
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

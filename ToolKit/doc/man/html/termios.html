@@ -1,0 +1,203 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="TERMIOS.html">TERMIOS(4)</A></B>	       FreeBSD Kernel Interfaces Manual 	    <B><A HREF="TERMIOS.html">TERMIOS(4)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>termios</B> - general terminal line discipline
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;termios.h&gt;</B>
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     This describes a general terminal line discipline that is supported on
+     tty asynchronous communication ports.
+
+   <B>Opening</B> <B>a</B> <B>Terminal</B> <B>Device</B> <B>File</B>
+     When a terminal file is opened, it normally causes the process to wait
+     until a connection is established.  For most hardware, the presence of a
+     connection is indicated by the assertion of the hardware CARRIER line. If
+     the termios structure associated with the terminal file has the CLOCAL
+     flag set in the cflag, or if the O_NONBLOCK flag is set in the <B><A HREF="open.html">open(2)</A></B>
+     call, then the open will succeed even without a connection being present.
+
+   <B>Input</B> <B>Processing</B> <B>and</B> <B>Reading</B> <B>Data</B>
+     The EFI Applicaiton Toolkit implementation of the tty only supports the
+     noncanonical mode.
+
+     Input processing depends on whether the O_NONBLOCK flag is set by <B><A HREF="open.html">open(2)</A></B>
+     or <B><A HREF="fcntl.html">fcntl(2)</A></B>.  If the O_NONBLOCK flag is clear, then the read request is
+     blocked until enough data to satisfy the read is available.  If the
+     O_NONBLOCK flag is set, then the read request is completed, without
+     blocking, in one of three ways:
+
+	   1.	If there is enough data available to satisfy the entire re-
+		quest, and the read completes successfully the number of bytes
+		read is returned.
+
+	   2.	If there is not enough data available to satisfy the entire
+		request, and the read completes successfully, having read as
+		much data as possible, the number of bytes read is returned.
+
+	   3.	If there is no data available, the read returns -1, with errno
+		set to EAGAIN.
+
+   <B>Noncanonical</B> <B>Mode</B> <B>Input</B> <B>Processing</B>
+     In noncanonical mode input processing, input bytes are not assembled into
+     lines, and erase and kill processing does not occur.  The values of the
+     VMIN and VTIME members of the <I>c</I><B>_</B><I>cc</I> array are used to determine how to
+     process the bytes received.
+
+     MIN represents the minimum number of bytes that should be received when
+     the <B><A HREF="read.html">read(2)</A></B> function successfully returns.  TIME is a timer of 0.1 second
+     granularity that is used to time out bursty and short term data transmis-
+     sions.  If MIN is greater than { MAX_INPUT}, the response to the request
+     is undefined.  The four possible values for MIN and TIME and their inter-
+     actions are described below.
+
+   <B>Case</B> <B>A:</B> <B>MIN</B> <B>&gt;</B> <B>0,</B> <B>TIME</B> <B>&gt;</B> <B>0</B>
+     In this case TIME serves as an inter-byte timer and is activated after
+     the first byte is received.  Since it is an inter-byte timer, it is reset
+     after a byte is received.	The interaction between MIN and TIME is as
+     follows:  as soon as one byte is received, the inter-byte timer is start-
+     ed.  If MIN bytes are received before the inter-byte timer expires (re-
+     member that the timer is reset upon receipt of each byte), the read is
+     satisfied.  If the timer expires before MIN bytes are received, the char-
+     acters received to that point are returned to the user.  Note that if
+     TIME expires at least one byte is returned because the timer would not
+     have been enabled unless a byte was received.  In this case (MIN &gt; 0,
+     TIME &gt; 0) the read blocks until the MIN and TIME mechanisms are activated
+     by the receipt of the first byte, or a signal is received.  If data is in
+     the buffer at the time of the <B>read</B>(), the result is as if data had been
+     received immediately after the <B>read</B>().
+
+   <B>Case</B> <B>B:</B> <B>MIN</B> <B>&gt;</B> <B>0,</B> <B>TIME</B> <B>=</B> <B>0</B>
+     In this case, since the value of TIME is zero, the timer plays no role
+     and only MIN is significant.  A pending read is not satisfied until MIN
+     bytes are received (i.e., the pending read blocks until MIN bytes are re-
+     ceived), or a signal is received.	A program that uses this case to read
+     record-based terminal I/O may block indefinitely in the read operation.
+
+   <B>Case</B> <B>C:</B> <B>MIN</B> <B>=</B> <B>0,</B> <B>TIME</B> <B>&gt;</B> <B>0</B>
+     In this case, since MIN = 0, TIME no longer represents an inter-byte
+     timer.  It now serves as a read timer that is activated as soon as the
+     read function is processed.  A read is satisfied as soon as a single byte
+     is received or the read timer expires.  Note that in this case if the
+     timer expires, no bytes are returned.  If the timer does not expire, the
+     only way the read can be satisfied is if a byte is received.  In this
+     case the read will not block indefinitely waiting for a byte; if no byte
+     is received within TIME*0.1 seconds after the read is initiated, the read
+     returns a value of zero, having read no data.  If data is in the buffer
+     at the time of the read, the timer is started as if data had been re-
+     ceived immediately after the read.
+
+   <B>Case</B> <B>D:</B> <B>MIN</B> <B>=</B> <B>0,</B> <B>TIME</B> <B>=</B> <B>0</B>
+     The minimum of either the number of bytes requested or the number of
+     bytes currently available is returned without waiting for more bytes to
+     be input.	If no characters are available, read returns a value of zero,
+     having read no data.
+
+   <B>Writing</B> <B>Data</B> <B>and</B> <B>Output</B> <B>Processing</B>
+     When a process writes one or more bytes to a terminal device file, they
+     are processed according to the <I>c</I><B>_</B><I>oflag</I> field (see the <I>Output</I> <I>Modes</I> sec-
+     tion).  The implementation may provide a buffering mechanism; as such,
+     when a call to <B>write</B>() completes, all of the bytes written have been
+     scheduled for transmission to the device, but the transmission will not
+     necessarily have been completed.
+
+   <B>Modem</B> <B>Disconnect</B>
+     If a modem disconnect is detected by the terminal interface and if CLOCAL
+     is not set in the <I>c</I><B>_</B><I>cflag</I> field for the terminal, any subsequent call
+     to the <B>read</B>() function returns the value zero, indicating end of file.
+     Thus, processes that read a terminal file and test for end-of-file can
+     terminate appropriately after a disconnect.  Any subsequent <B>write</B>() to
+     the terminal device returns -1, with <I>errno</I> set to EIO, until the device
+     is closed.
+
+</PRE>
+<H2>General Terminal Interface</H2><PRE>
+   <B>Parameters</B> <B>That</B> <B>Can</B> <B>Be</B> <B>Set</B>
+     Routines that need to control certain terminal I/O characteristics do so
+     by using the termios structure as defined in the header &lt;<I>termios.h</I>&gt;. This
+     structure contains minimally four scalar elements of bit flags and one
+     array of special characters.  The scalar flag elements are named:
+     <I>c</I><B>_</B><I>iflag</I>, <I>c</I><B>_</B><I>oflag</I>, <I>c</I><B>_</B><I>cflag</I>, and <I>c</I><B>_</B><I>lflag</I>. The character array is named
+     <I>c</I><B>_</B><I>cc</I>, and its maximum index is NCCS.
+
+   <B>Control</B> <B>Modes</B>
+     Values of the <I>c</I><B>_</B><I>cflag</I> field describe the basic terminal hardware control,
+     and are composed of the following masks.  Not all values specified are
+     supported by all hardware.
+
+	   CSIZE       /* character size mask */
+	   CS5	       /* 5 bits (pseudo) */
+	   CS6	       /* 6 bits */
+	   CS7	       /* 7 bits */
+
+	   CS8	       /* 8 bits */
+	   CSTOPB      /* send 2 stop bits */
+	   CREAD       /* enable receiver */
+	   PARENB      /* parity enable */
+	   PARODD      /* odd parity, else even */
+	   HUPCL       /* hang up on last close */
+	   CLOCAL      /* ignore modem status lines */
+	   CCTS_OFLOW  /* CTS flow control of output */
+	   CRTSCTS     /* same as CCTS_OFLOW */
+	   CRTS_IFLOW  /* RTS flow control of input */
+	   MDMBUF      /* flow control output via Carrier */
+
+     The CSIZE bits specify the byte size in bits for both transmission and
+     reception.  The <I>c</I><B>_</B><I>cflag</I> is masked with CSIZE and compared with the values
+     CS5, CS6, CS7, or CS8. This size does not include the parity bit, if any.
+     If CSTOPB is set, two stop bits are used, otherwise one stop bit.	For
+     example, at 110 baud, two stop bits are normally used.
+
+     If CREAD is set, the receiver is enabled.	Otherwise, no character is re-
+     ceived.  Not all hardware supports this bit.  In fact, this flag is pret-
+     ty silly and if it were not part of the <B>termios</B> specification it would be
+     omitted.
+
+     If PARENB is set, parity generation and detection are enabled and a pari-
+     ty bit is added to each character.  If parity is enabled, PARODD speci-
+     fies odd parity if set, otherwise even parity is used.
+
+     If HUPCL is set, the modem control lines for the port are lowered when
+     the last process with the port open closes the port or the process termi-
+     nates.  The modem connection is broken.
+
+     If CLOCAL is set, a connection does not depend on the state of the modem
+     status lines.  If CLOCAL is clear, the modem status lines are monitored.
+
+     Under normal circumstances, a call to the <B>open</B>() function waits for the
+     modem connection to complete.  However, if the O_NONBLOCK flag is set or
+     if CLOCAL has been set, the <B>open</B>() function returns immediately without
+     waiting for the connection.
+
+     The CCTS_OFLOW (CRTSCTS) flag is currently unused.
+
+     If MDMBUF is set then output flow control is controlled by the state of
+     Carrier Detect.
+
+     If the object for which the control modes are set is not an asynchronous
+     serial connection, some of the modes may be ignored; for example, if an
+     attempt is made to set the baud rate on a network connection to a termi-
+     nal on another host, the baud rate may or may not be set on the connec-
+     tion between that terminal and the machine it is directly connected to.
+
+4th Berkeley Distribution	April 19, 1994				    11
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

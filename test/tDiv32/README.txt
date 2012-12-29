@@ -1,0 +1,1 @@
+使用loongson2e时，乘法会使用loongson特有指令，在Linux下运行提示非法指令

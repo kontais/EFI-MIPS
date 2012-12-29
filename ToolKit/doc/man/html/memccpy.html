@@ -1,0 +1,48 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="MEMCCPY.html">MEMCCPY(3)</A></B>	       FreeBSD Library Functions Manual 	    <B><A HREF="MEMCCPY.html">MEMCCPY(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>memccpy</B> - copy string until character found
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>void</I> <I>*</I>
+     <B>memccpy</B>(<I>void</I> <I>*dst</I>, <I>const</I> <I>void</I> <I>*src</I>, <I>int</I> <I>c</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>memccpy</B>() function copies bytes from string <I>src</I> to string <I>dst</I>. If the
+     character <I>c</I> (as converted to an unsigned char) occurs in the string <I>src</I>,
+     the copy stops and a pointer to the byte after the copy of <I>c</I> in the
+     string <I>dst</I> is returned.  Otherwise, <I>len</I> bytes are copied, and a NULL
+     pointer is returned.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="bcopy.html">bcopy(3)</A></B>,	<B><A HREF="memcpy.html">memcpy(3)</A></B>,  <B><A HREF="memmove.html">memmove(3)</A></B>,  <B><A HREF="strcpy.html">strcpy(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>memccpy</B>() function first appeared in 4.4BSD.
+
+BSD				 June 9, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,57 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="SETJMP.html">SETJMP(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="SETJMP.html">SETJMP(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>setjmp</B>, <B>longjmp</B> non-local jumps
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;setjmp.h&gt;</B>
+
+     <I>int</I>
+     <B>setjmp</B>(<I>jmp</I><B>_</B><I>buf</I> <I>env</I>)
+
+     <I>void</I>
+     <B>longjmp</B>(<I>jmp</I><B>_</B><I>buf</I> <I>env</I>, <I>int</I> <I>val</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>setjmp</B>() function saves the calling environment in <I>env</I>. It returns 0.
+
+     The corresponding <B>longjmp</B>() function restores the environment saved by
+     the most recent invocations of the <B>setjmp</B>() function.  They then return
+     so that program execution continues as if the corresponding invocation
+     of the <B>setjmp</B>() call had just returned	the value specified by <I>val</I>,
+     instead of 0.
+
+     The <B>longjmp</B>() routine may not be called after the routine which called
+     the <B>setjmp</B>() routines returns.
+
+     All accessible objects have values as of the time <B>longjmp</B>() routine was
+     called, except that the values of objects of automatic storage invocation
+     duration that do not have the <I>volatile</I> type and have been changed between
+     the <B>setjmp</B>() invocation and <B>longjmp</B>() call are indeterminate.
+
+
+</PRE>
+<H2>STANDARDS</H2><PRE>
+     The <B>setjmp</B>() and <B>longjmp</B>() functions conform to ISO 9899: 1990 (``ISO
+     C'').
+
+4th Berkeley Distribution	 June 4, 1993				     2
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

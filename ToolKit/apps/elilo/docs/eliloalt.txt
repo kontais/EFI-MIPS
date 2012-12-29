@@ -1,0 +1,77 @@
+Information related to the eliloalt Linux tool
+---------------------------------------------
+(c) 2002-2003 Hewlett Packard Co
+    Contributed by Stephane Eranian <eranian@hpl.hp.com>
+
+    Last updated: March 1st, 2002
+
+
+The elilo alternate image feature uses an EFI variable called EliloAlt. 
+The content of this variable is a UNICODE string containing a kernel
+image file and its command line options. The variable has a NULL GUID.
+
+To create, read, or modify the variable you need to use the EFI variable
+service and the SetVariable() or GetVariable() interface. The service
+is available when EFI is in boot service mode, i.e., prior to loading
+the kernel but it is also available at runtime when the Linux kernel
+has taken over the control of the machine. 
+
+In order to modify the variable, you can either write a small EFI applications
+or use the Linux/ia64 interface to the EFI variables which use the /proc filesystem.
+
+The elilalt tool included in this package uses the /proc interface to EFI variables
+to create, read, or modify the EliloAlt variable. This tool is a Linux/ia64 application
+and NOT an EFI application.
+
+
+Because modiyfing the EliloAlt can influence how the machine is booted, you must
+be root to run the program, even when you simply want to read the content of
+the variable.
+
+Eliloalt provides the following options:
+
+	-h, --help              display this help and exit
+	--version               output version information and exit
+	-s, --set cmdline       set elilo alternate variable to cmdline
+	-p, --print             print elilo alternate variable
+	-d, --delete            print elilo alternate variable
+
+1/ Creation of the variable
+
+	To create the variable you can type:
+
+	# eliloalt -s "vmlinuz-2.4.9 root=/dev/sdb2 hdc=ide-scsi"
+
+	It is VERY important to use quotes to make sure that the entire list of arguments is 
+	treated as a single argument to the program. Otherwise only the first element 
+	(here vmlinuz-2.4.9) will be used.
+
+
+2/ Printing the content of the variable
+
+	To print the content of the variable you need to type:
+
+	# eliloalt -p
+	EliloAlt="vmlinuz-2.4.9 root=/dev/sdb2 hdc=ide-scsi"
+
+3/ Modifying the variable
+
+	You can simply use the -s option:
+	# eliloalt -s "vmlinuz-2.4.18 root=/dev/sdb2"
+	# eliloalt -p
+	EliloAlt="vmlinuz-2.4.18 root=/dev/sdb2"
+	
+3/ Deleting the variable
+
+	You must use the -d option:
+	# eliloalt -p
+	EliloAlt="vmlinuz-2.4.18 root=/dev/sdb2"
+	# eliloalt -d
+	# eliloalt -p
+	variable not defined
+	
+	Keep in mind that the variable is automatically deleted by elilo if:
+		- the checkalt option is specified in the config file 
+	    OR
+		- the -a is used on the command line
+

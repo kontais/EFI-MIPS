@@ -1,0 +1,91 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title></title>
+</head>
+
+<body>
+
+<pre>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<b>UNGETWC(3)</b>	       FreeBSD Library Functions Manual 	     <b>UNGETWC(3)</b>
+
+
+</pre>
+
+<h2>NAME</h2>
+
+<pre>
+     <b>ungetwc</b> - un-get wide character from input stream
+
+
+</pre>
+
+<h2>SYNOPSIS</h2>
+
+<pre>
+     <b>#include</b> <b>&lt;wchar.h&gt;</b>
+
+     <i>wint_t</i>
+     <b>ungetwc</b>(<i>wint_t</i> <i>c</i>, <i>FILE</i> <i>*stream</i>)
+
+
+</pre>
+
+<h2>DESCRIPTION</h2>
+
+<pre>
+     The <b>ungetwc</b>() function pushes the wide character <i>c</i> (converted to an wchar_t)
+     back onto the input stream pointed to by <i>stream</i>. The pushed-backed wide
+     characters will be returned by subsequent reads on the stream (in reverse
+     order).  A successful intervening call, using the same stream, to one of
+     the file positioning functions (<b>fseek(3)</b>,	<b>fsetpos(3)</b>,  or <b>rewind(3)</b>)
+     will discard the pushed back characters.
+
+     One wide character of push-back is guaranteed, but as long as there is suffi-
+     cient memory, an effectively infinite amount of pushback is allowed.
+
+     If a wide character is successfully pushed-back, the end-of-file indicator for
+     the stream is cleared.
+
+
+</pre>
+
+<h2>RETURN VALUES</h2>
+
+<pre>
+     The <b>ungetwc</b>() function returns the wide character pushed-back after the conver-
+     sion, or WEOF if the operation fails.  If the value of the argument <i>c</i> wide
+     character equals WEOF, the operation will fail and the stream will remain
+     unchanged.
+
+
+</pre>
+
+<h2>SEE ALSO</h2>
+
+<pre>
+     <b>fseek(3)</b>,	<b>getwc(3)</b>,  <b>setvbuf(3)</b>
+
+
+</pre>
+
+<h2>STANDARDS</h2>
+
+<pre>
+     The <b>ungetwc</b>() function conforms to ISO 9899: 1990 (``ISO C'').
+
+</pre>
+
+<hr>
+
+<address>
+    Man(1) output converted with <a
+    href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</address>
+</body>
+</html>

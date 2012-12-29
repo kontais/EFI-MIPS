@@ -1,0 +1,53 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>ISWUPPER(3)</B>	       FreeBSD Library Functions Manual 	    <B>ISWUPPER(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>iswupper</B> - upper-case wide character test
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;wctype.h&gt;</B>
+
+     <I>int</I>
+     <B>iswupper</B>(<I>wint_t</I> <I>wc</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>iswupper</B>() function tests for any upper-case letter.  In the ASCII
+     character set, this includes the following characters:
+
+     101 ``A''	   102 ``B''	 103 ``C''     104 ``D''     105 ``E''
+     106 ``F''	   107 ``G''	 110 ``H''     111 ``I''     112 ``J''
+     113 ``K''	   114 ``L''	 115 ``M''     116 ``N''     117 ``O''
+     120 ``P''	   121 ``Q''	 122 ``R''     123 ``S''     124 ``T''
+     125 ``U''	   126 ``V''	 127 ``W''     130 ``X''     131 ``Y''
+     132 ``Z''
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>iswupper</B>() function returns zero if the wide character tests false and re-
+     turns non-zero if the wide character tests true.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>wctype(3)</B>,	<B>ascii(7)</B>
+
+
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

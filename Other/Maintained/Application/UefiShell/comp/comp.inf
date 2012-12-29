@@ -1,0 +1,71 @@
+#/*++
+#
+# Copyright (c) 2005, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution. The full text of the license may be found at         
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    comp.inf
+#
+#  Abstract: 
+#
+#    Component description file for EFI Shell module.
+#
+#--*/
+
+[defines]
+BASE_NAME            = comp
+FILE_GUID            = A4810650-EF4E-4ef5-9A9E-9A81FDCAF6C2
+COMPONENT_TYPE       = APPLICATION
+
+[sources.common]
+CompStrings.uni
+comp.c
+comp.h
+../ShCommonStrings.uni
+  
+[includes.common]
+  .
+  ../Inc
+  ../Library
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/FrameWork
+  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(DEST_DIR)/
+
+[libraries.common]  
+  EfiShellLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+[--]
+
+#
+# To enable building shell commands standalone or built into the shell,
+# we will specify some additional DEFINEs on the compile command line.
+#
+[nmake.common]
+  C_PROJ_FLAGS += 
+  IMAGE_ENTRY_POINT=InitializeComp
+  C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+  C_STD_FLAGS += -D EFI_BOOTSHELL
+
+
+ 

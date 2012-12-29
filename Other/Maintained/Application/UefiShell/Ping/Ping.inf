@@ -1,0 +1,72 @@
+#/*++
+#
+# Copyright (c) 2006, Intel Corporation                                                         
+# All rights reserved. This program and the accompanying materials                          
+# are licensed and made available under the terms and conditions of the BSD License         
+# which accompanies this distribution. The full text of the license may be found at         
+# http://opensource.org/licenses/bsd-license.php                                            
+#                                                                                           
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+# 
+#  Module Name:
+#
+#    Ping.inf
+#
+#  Abstract:
+#
+#    Component description file for ping application.
+#
+#--*/
+
+[defines]
+BASE_NAME            = Ping
+FILE_GUID            = FAAA94BA-7095-4c0f-8D69-8E00C8328863
+COMPONENT_TYPE       = APPLICATION
+
+[sources.common]
+  ../ShCommonStrings.uni
+  PingStrings.uni
+  Ping.h
+  Ping.c
+
+[includes.common]
+  ../Inc
+  ../Library
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+  $(EDK_SOURCE)/Foundation/FrameWork
+  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(DEST_DIR)/
+
+[libraries.common]  
+  EfiShellLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiDriverLib
+
+[libraries.Ia32]
+  CpuIA32Lib
+
+[libraries.Ipf]
+  CpuIA64Lib
+
+[Libraries.X64]
+  CpuIA32Lib
+
+[nmake.common]
+  C_PROJ_FLAGS += 
+  IMAGE_ENTRY_POINT=EfiMain
+  C_STD_FLAGS += -D EFI_BOOTSHELL
+  C_STD_FLAGS += -D STRING_ARRAY_NAME=$(BASE_NAME)Strings 
+  C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
+

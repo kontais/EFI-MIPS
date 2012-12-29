@@ -1,0 +1,75 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B><A HREF="FGETLN.html">FGETLN(3)</A></B>	       FreeBSD Library Functions Manual 	     <B><A HREF="FGETLN.html">FGETLN(3)</A></B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>fgetln</B> - get a line from a stream
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;stdio.h&gt;</B>
+
+     <I>char</I> <I>*</I>
+     <B>fgetln</B>(<I>FILE</I> <I>*stream</I>, <I>size</I><B>_</B><I>t</I> <I>*len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>fgetln</B>() function returns a pointer to the next line from the stream
+     referenced by <I>stream</I>. This line is <I>not</I> a C string as it does not end with
+     a terminating NUL character.  The length of the line, including the final
+     newline, is stored in the memory location to which <I>len</I> points.  (Note,
+     however, that if the line is the last in a file that does not end in a
+     newline, the returned text will not contain a newline.)
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     Upon successful completion a pointer is returned; this pointer becomes
+     invalid after the next I/O operation on <I>stream</I> (whether successful or
+     not) or as soon as the stream is closed.  Otherwise, NULL is returned.
+     The <B>fgetln</B>() function does not distinguish between end-of-file and error;
+     the routines <B><A HREF="ferror.html">feof(3)</A></B> and <B><A HREF="ferror.html">ferror(3)</A></B> must be used to determine which oc-
+     curred.  If an error occurs, the global variable <I>errno</I> is set to indicate
+     the error.  The end-of-file condition is remembered, even on a terminal,
+     and all subsequent attempts to read will return NULL until the condition
+     is cleared with <B><A HREF="ferror.html">clearerr(3)</A></B>.
+
+     The text to which the returned pointer points may be modified, provided
+     that no changes are made beyond the returned size.  These changes are
+     lost as soon as the pointer becomes invalid.
+
+
+</PRE>
+<H2>ERRORS</H2><PRE>
+     [EBADF]  The argument <I>stream</I> is not a stream open for reading.
+
+     The <B>fgetln</B>() function may also fail and set <I>errno</I> for any of the errors
+     specified for the routines <B><A HREF="fflush.html">fflush(3)</A></B>,  <B><A HREF="malloc.html">malloc(3)</A></B>,	<B><A HREF="read.html">read(2)</A></B>,  <B><A HREF="stat.html">stat(2)</A></B>,  or
+     <B><A HREF="malloc.html">realloc(3)</A></B>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B><A HREF="ferror.html">ferror(3)</A></B>,  <B><A HREF="fgets.html">fgets(3)</A></B>,  <B><A HREF="fopen.html">fopen(3)</A></B>,  <B><A HREF="putc.html">putc(3)</A></B>
+
+
+</PRE>
+<H2>HISTORY</H2><PRE>
+     The <B>fgetln</B>() function first appeared in 4.4BSD.
+
+BSD				April 19, 1994				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>

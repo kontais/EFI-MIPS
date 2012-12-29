@@ -1,0 +1,52 @@
+<HTML>
+<BODY>
+<PRE>
+<!-- Manpage converted by man2html 3.0.1 -->
+
+<B>WMEMCPY(3)</B>	       FreeBSD Library Functions Manual 	     <B>WMEMCPY(3)</B>
+
+
+</PRE>
+<H2>NAME</H2><PRE>
+     <B>wmemcpy</B> - copy wchar_t string
+
+
+</PRE>
+<H2>SYNOPSIS</H2><PRE>
+     <B>#include</B> <B>&lt;string.h&gt;</B>
+
+     <I>void</I> <I>*</I>
+     <B>wmemcpy</B>(<I>void</I> <I>*dst</I>, <I>const</I> <I>void</I> <I>*src</I>, <I>size</I><B>_</B><I>t</I> <I>len</I>)
+
+
+</PRE>
+<H2>DESCRIPTION</H2><PRE>
+     The <B>wmemcpy</B>() function copies <I>len</I> wchar_t's from string <I>src</I> to string <I>dst</I>.
+
+
+</PRE>
+<H2>RETURN VALUES</H2><PRE>
+     The <B>wmemcpy</B>() function returns the original value of <I>dst</I>.
+
+
+</PRE>
+<H2>SEE ALSO</H2><PRE>
+     <B>bcopy(3)</B>,	<B>memccpy(3)</B>,  <B>memmove(3)</B>,  <B>strcpy(3)</B>
+
+
+</PRE>
+<H2>BUGS</H2><PRE>
+     In this implementation <B>wmemcpy</B>() is implemented using <B>bcopy(3)</B>,  and
+     therefore the strings may overlap.  On other systems, copying overlapping
+     strings may produce surprises.  A simpler solution is to not use
+     <B>wmemcpy</B>().
+
+BSD				 June 4, 1993				     1
+</PRE>
+<HR>
+<ADDRESS>
+Man(1) output converted with
+<a href="http://www.oac.uci.edu/indiv/ehood/man2html.html">man2html</a>
+</ADDRESS>
+</BODY>
+</HTML>
