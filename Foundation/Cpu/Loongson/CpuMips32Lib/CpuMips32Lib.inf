@@ -27,7 +27,7 @@ COMPONENT_TYPE  = LIBRARY
   EfiCpuVersion.c
 
 [sources.Mips32]
-  Mips32/CpuMips32.c
+  Mips32/CpuMips32Lib.c
   Mips32/MipsCache.s
   Mips32/Cp0.s
   Mips32/Mips32Mem64.s

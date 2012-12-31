@@ -25,16 +25,10 @@ FILE_GUID            = CCCB0C28-4B24-11d5-9A5A-0090273FC14D
 COMPONENT_TYPE       = BS_DRIVER
 
 [sources.common]
-  LaffStd.c
-  ComponentName.c
-
-[sources.Mips32.YeeLoong]
   GraphicsConsole.h
   GraphicsConsole.c
-
-[sources.Mips32.FuLoong2F]
-  GraphicsConsole.h
-  GraphicsConsoleSis.c
+  LaffStd.c
+  ComponentName.c
 
 [includes.common]
   $(EDK_SOURCE)/Foundation

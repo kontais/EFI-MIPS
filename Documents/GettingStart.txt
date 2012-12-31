@@ -1,27 +1,26 @@
-   编译方法
+   How To Build
 
-一. Linux下模拟运行
+Emulator in linux
   1. cd /home/loongson
-  2. tar xzvf EFI-MIPS-0.3.0.tar.gz
+  2. tar xzvf EFI-MIPS-1.1.1.src.tar.gz
   3. cd EFI-MIPS/Sample/Platform/Linux32/Build/
-  4. source build.sh 来设置EDK_SOURCE环境变量
-  5. make 编译
-  6. make run 运行
+  4. source build.sh
+  5. make
+  6. make run
 
-二. Lemote YeeLoong 8101B的PMON下运行
+Load from PMON (Lemote YeeLoong 8101B)
   1. cd /home/loongson
-  2. tar xzvf EFI-MIPS-1.0.0.tar.gz
+  2. tar xzvf EFI-MIPS-1.1.1.src.tar.gz
   3. cd EFI-MIPS/Sample/Platform/YeeLoong/Build/
-  4. source build.sh 来设置EDK_SOURCE环境变量
-  5. make 2>&1 | tee log
-  6. cp  FV/FvRecovery.fd YeeLoong.bin (放到tftp目录下)
-  7. 在PMON>下执行，load -r -o 81000000 tftp://192.168.11.22/YeeLoong.bin
-  8. 在PMON>下执行，g -e 81000000
+  4. source build.sh
+  5. cp  FV/FvRecovery.fd YeeLoong.bin (to tftproot)
+  6. In PMON>load -r -o 81000000 tftp://192.168.11.22/YeeLoong.bin
+  7. In PMON>g -e 81000000
 
 
 
-需要以下工具:
-  sudo apt-get install subversion
+Tools for Compiler:
+  sudo apt-get install subversion (optional)
   sudo apt-get install make
   sudo apt-get install gcc
   sudo apt-get install g++
@@ -33,5 +32,4 @@
   sudo apt-get install libxext-dev (Linux32)
   sudo apt-get install xorg-dev    (Linux32)
 
-可选工具:
-  sudo apt-get install gdb
+  sudo apt-get install gdb (optional)

@@ -56,7 +56,7 @@ all : build_tools
 
 clean :
 	rm -rf $(SOURCE_DIR)/build/$(SDK_BUILD_ENV)/output
-	rm -rf $(SOURCE_DIR)/build/$(SDK_BUILD_ENV)/bin
+	rm -rf $(SOURCE_DIR)/build/$(SDK_BUILD_ENV)/bin/*
 	cd $(SOURCE_DIR)/lib && $(MAKE) -f lib.mak clean
 	cd $(SOURCE_DIR)/apps && $(MAKE) -f apps.mak clean
 	cd $(SOURCE_DIR)/cmds && $(MAKE) -f cmds.mak clean

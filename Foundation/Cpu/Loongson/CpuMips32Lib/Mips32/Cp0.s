@@ -65,7 +65,7 @@ Returns:
 
 CP0_GetCount:
 /*++
-UINT32
+UINT64
 CP0_GetCount (
   VOID
   )
@@ -85,7 +85,7 @@ Returns:
 --*/
 
   mfc0  v0, CP0_Count
-  nop
+  move  v1, zero
   j	ra
   nop
   
@@ -97,9 +97,9 @@ Returns:
 
 CP0_SetCount:
 /*++
-UINT32
+UINT64
 CP0_SetCount (
-  UINT32 Count
+  UINT64 Count
   )
 
 Routine Description:

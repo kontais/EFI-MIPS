@@ -231,3 +231,4 @@ EFI-MIPS-1.1.0.tar.gz     Add Bonito.
                           Add PciRootBridge.
                           Enable IDE Controller.
                           Add Ext2 FileSystem read support.
+EFI-MIPS-1.1.1.tar.gz     Let Linux32 work again.

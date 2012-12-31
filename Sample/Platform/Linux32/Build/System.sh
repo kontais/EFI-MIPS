@@ -121,7 +121,8 @@ export EFI_FIRMWARE_VOLUMES=../FV/FvRecovery.fd
 # These directories will show up as file systems with no Block IO
 #
 
-export EFI_LINUX_FILE_SYSTEM=.
+#export EFI_LINUX_FILE_SYSTEM=.
+export EFI_LINUX_FILE_SYSTEM=~/EFI-MIPS/ToolKit/build/Mips32/bin
 
 
 #

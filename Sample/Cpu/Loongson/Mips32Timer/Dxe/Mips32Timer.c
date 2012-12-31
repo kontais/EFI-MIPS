@@ -71,7 +71,7 @@ volatile UINT64           mTimerPeriod = 0;
 //
 VOID
 SetCp0Count (
-  IN UINT32  Count
+  IN UINT64  Count
   )
 /*++
 

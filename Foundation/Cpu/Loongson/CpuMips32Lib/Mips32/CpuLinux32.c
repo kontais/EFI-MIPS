@@ -18,7 +18,6 @@ Abstract:
 --*/
 
 #include "CpuMips32.h"
-#include "Mips.h"
 
 VOID
 EfiHalt (VOID)
@@ -41,7 +40,7 @@ EfiInvd (VOID)
 UINT32
 EfiCpuid (VOID)
 {
-  return CP0_GetPRID();
+  return 0;
 }
 
 UINT64
@@ -62,10 +61,7 @@ EfiWriteMsr (
 UINT64
 EfiReadTsc (VOID)
 {
-  //
-  // Use MIPS Count as IA32 TSC
-  //
-  return CP0_GetCount();
+  return 0;
 }
 
 VOID
@@ -91,13 +87,6 @@ EfiGetEflags (
 VOID
 EfiDisableInterrupts (VOID)
 {
-  UINT32 Status;
-
-  Status =  CP0_GetStatus();
-  Status &= ~CP0_STATUS_IE;
-
-  CP0_SetStatus(Status);
-
   return ;
 }
 
@@ -106,13 +95,6 @@ EfiEnableInterrupts (
   VOID
   )
 {
-  UINT32 Status;
-
-  Status =  CP0_GetStatus();
-  Status |= CP0_STATUS_IE;
-
-  CP0_SetStatus(Status);
-  
   return ;
 }
 

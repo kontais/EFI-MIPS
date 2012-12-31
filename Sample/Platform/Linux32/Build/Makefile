@@ -66,7 +66,8 @@ SEC_OBJECTS =                                                     \
   $(PROCESSOR)/EfiCommonLib.a                                     \
   $(PROCESSOR)/EdkGuidLib.a                                       \
   $(PROCESSOR)/EdkFrameworkGuidLib.a                              \
-	$(PROCESSOR)/EfiGuidLib.a
+  $(PROCESSOR)/EfiGuidLib.a                                       \
+  $(PROCESSOR)/CpuMips32Lib.a
 
 #
 # Linux Libaray

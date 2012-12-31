@@ -254,7 +254,7 @@ Arguments:
 Returns:                                                            
    None                                                
 --*/
-UINT32
+UINT64
 MIPS32API
 EfiReadTsc (
   VOID
@@ -401,7 +401,7 @@ Returns:
  --*/
 ;
 
-UINT32
+UINT64
 CP0_GetCount (
 VOID
 )
@@ -422,9 +422,9 @@ Returns:
  --*/
 ;
 
-UINT32
+UINT64
 CP0_SetCount (
-  UINT32 Count
+  UINT64 Count
   )
 /*++
 
