@@ -39,6 +39,7 @@ include $(SDK_INSTALL_DIR)/build/$(SDK_BUILD_ENV)/sdk.env
 all :
 	cd $(SOURCE_DIR)/exitboot  && $(MAKE) -f exitboot.mak all
 	cd $(SOURCE_DIR)/osloader  && $(MAKE) -f osloader.mak all
+	cd $(SOURCE_DIR)/bootlinux  && $(MAKE) -f bootlinux.mak all
 	cd $(SOURCE_DIR)/pktsnoop  && $(MAKE) -f pktsnoop.mak all
 	cd $(SOURCE_DIR)/pktxmit  && $(MAKE) -f pktxmit.mak all
 	cd $(SOURCE_DIR)/rtdriver  && $(MAKE) -f rtdriver.mak all
@@ -57,6 +58,7 @@ all :
 clean :
 	cd $(SOURCE_DIR)/exitboot  && $(MAKE) -f exitboot.mak clean
 	cd $(SOURCE_DIR)/osloader  && $(MAKE) -f osloader.mak clean
+	cd $(SOURCE_DIR)/bootlinux  && $(MAKE) -f bootlinux.mak clean
 	cd $(SOURCE_DIR)/pktsnoop  && $(MAKE) -f pktsnoop.mak clean
 	cd $(SOURCE_DIR)/pktxmit  && $(MAKE) -f pktxmit.mak clean
 	cd $(SOURCE_DIR)/rtdriver  && $(MAKE) -f rtdriver.mak clean
