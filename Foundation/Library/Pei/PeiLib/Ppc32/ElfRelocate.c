@@ -151,44 +151,44 @@ Returns:
       Value    = FromBase + SymbolEntry->st_value + RelaEntry->r_addend;
 
       switch (ELF32_R_TYPE(RelaEntry->r_info)) {
-        case R_PPC_ADDR32:                        /* S + A */
-          *(UINT32 *)Location = Value;
-          break;
-          
-        case R_PPC_ADDR16_LO:                     /* #lo (S + A) */
-          *(UINT16 *)Location = (UINT16)Value;
-          break;
-          
-        case R_PPC_ADDR16_HI:                     /* #hi (S + A) */
-          *(UINT16 *)Location = (UINT16)(Value >> 16);
-          break;
-          
-        case R_PPC_ADDR16_HA:
-          *(UINT16 *)Location = (UINT16)((Value + 0x8000) >> 16); /* #ha (S + A) */
-          break;
-          
-        case R_PPC_REL24:                               /* (S + A -P) >> 2 */
-          //
-          // PowerPC Relative jump < +/-32M
-          //
-          if ((INT32)(Value - (UINT32)Location) < -0x02000000 ||
-              (INT32)(Value - (UINT32)Location) >= 0x02000000) {
-            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_RELA_TYPE;
-            return EFI_UNSUPPORTED;
-          }
-          *(UINT32 *)Location
-            = (*(UINT32 *)Location & ~0x03fffffc) |
-              ((Value - (UINT32)Location) & 0x03fffffc);
-          break;
-          
-        case R_PPC_REL32:                               /* S + A -P */
-          *(UINT32 *)Location = Value - (UINT32)Location;
-          break;
-          
-        default:
+      case R_PPC_ADDR32:                        /* S + A */
+        *(UINT32 *)Location = Value;
+        break;
+        
+      case R_PPC_ADDR16_LO:                     /* #lo (S + A) */
+        *(UINT16 *)Location = (UINT16)Value;
+        break;
+        
+      case R_PPC_ADDR16_HI:                     /* #hi (S + A) */
+        *(UINT16 *)Location = (UINT16)(Value >> 16);
+        break;
+        
+      case R_PPC_ADDR16_HA:
+        *(UINT16 *)Location = (UINT16)((Value + 0x8000) >> 16); /* #ha (S + A) */
+        break;
+        
+      case R_PPC_REL24:                               /* (S + A -P) >> 2 */
+        //
+        // PowerPC Relative jump < +/-32M
+        //
+        if ((INT32)(Value - (UINT32)Location) < -0x02000000 ||
+            (INT32)(Value - (UINT32)Location) >= 0x02000000) {
           ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_RELA_TYPE;
           return EFI_UNSUPPORTED;
-          break;
+        }
+        *(UINT32 *)Location
+          = (*(UINT32 *)Location & ~0x03fffffc) |
+            ((Value - (UINT32)Location) & 0x03fffffc);
+        break;
+        
+      case R_PPC_REL32:                               /* S + A -P */
+        *(UINT32 *)Location = Value - (UINT32)Location;
+        break;
+        
+      default:
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_RELA_TYPE;
+        return EFI_UNSUPPORTED;
+        break;
       }
     }
   }

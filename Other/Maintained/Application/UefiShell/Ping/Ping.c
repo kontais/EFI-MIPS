@@ -20,7 +20,7 @@ Abstract:
 --*/
 
 #include "EfiShellLib.h"
-#include "CpuFuncs.h"
+//#include "CpuFuncs.h"
 #include EFI_ARCH_PROTOCOL_DEFINITION (Cpu)
 #include EFI_PROTOCOL_DEFINITION (Ip4)
 #include "Ping.h"
@@ -538,6 +538,7 @@ Returns:
   UINT64               CurrentTick;
   UINT32               Rtt;
   CHAR16               Notation;
+  EFI_IPv4_ADDRESS     SourceAddress;
 
   ASSERT (RxData != NULL);
 
@@ -549,7 +550,8 @@ Returns:
     return;
   }
 
-  if (!EFI_IP4_EQUAL (RxData->Header->SourceAddress, DestinationIp)) {
+  SourceAddress = RxData->Header->SourceAddress;
+  if (!EFI_IP4_EQUAL (SourceAddress, DestinationIp)) {
     //
     // The source address of this ICMP packet is different from the DestinationIp.
     //
@@ -681,23 +683,23 @@ Returns:
     }
 
     switch (Key.UnicodeChar) {
-      case 0x1B:
-        //
-        // <Esc>
-        //
-      case 0x03:
-        //
-        // <Ctrl+C>
-        //
+    case 0x1B:
+      //
+      // <Esc>
+      //
+    case 0x03:
+      //
+      // <Ctrl+C>
+      //
+      return TRUE;
+
+    case 0:
+      if (Key.ScanCode == 0x17) {
         return TRUE;
+      }
 
-      case 0:
-        if (Key.ScanCode == 0x17) {
-          return TRUE;
-        }
-
-      default:
-        break;
+    default:
+      break;
     }
   }
 }

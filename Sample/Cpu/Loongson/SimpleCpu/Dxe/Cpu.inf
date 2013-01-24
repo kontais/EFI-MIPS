@@ -23,6 +23,11 @@ COMPONENT_TYPE       = BS_DRIVER
 
 [sources.Mips32]
   Mips32/Exception.s
+  Mips32/Unaligned.c
+  Mips32/Branch.c
+#  Mips32/Unaligned.s
+  Mips32/UnalignedHander.c
+  Exception.h
 
 [sources.x64]
   X64/CpuInterrupt.asm

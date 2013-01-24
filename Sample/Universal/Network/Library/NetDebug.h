@@ -34,6 +34,8 @@ enum {
   NETDEBUG_LEVEL_ERROR   = 3,
 };
 
+//#define EFI_NETWORK_STACK_DEBUG
+
 #ifdef EFI_NETWORK_STACK_DEBUG
 
 //

@@ -289,7 +289,7 @@ void
 HandleEvent(UGA_IO_PRIVATE *drv, XEvent *ev)
 {
   switch (ev->type)
-    {
+  {
     case Expose:
       Redraw(drv, ev->xexpose.x, ev->xexpose.y,
         ev->xexpose.width, ev->xexpose.height);
@@ -313,7 +313,7 @@ HandleEvent(UGA_IO_PRIVATE *drv, XEvent *ev)
     case NoExpose:
     default:
       break;
-    }
+  }
 }
 
 void

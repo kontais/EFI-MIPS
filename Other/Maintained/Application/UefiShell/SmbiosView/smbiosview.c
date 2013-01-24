@@ -26,7 +26,7 @@ Revision History
 #include "smbiosview.h"
 #include "PrintInfo.h"
 #include "QueryTable.h"
-#include "smbios.h"
+#include "Smbios.h"
 
 extern UINT8                STRING_ARRAY_NAME[];
 

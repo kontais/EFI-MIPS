@@ -55,12 +55,12 @@ COMPONENT_TYPE       = BS_DRIVER
   $(EDK_SOURCE)/Foundation/Library/Dxe/Include
   $(EDK_SOURCE)/Foundation/Include/Pei
   $(EDK_SOURCE)/Foundation/Library/Pei/Include
-  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include/Mips32
   $(DEST_DIR)
 
 [includes.Mips32]
   $(EDK_SOURCE)/Sample/Chipset/NorthBridge/Bonito
   $(EDK_SOURCE)/Sample/Chipset/SouthBridge/Cs5536
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
   
 [libraries.common]
   Cs5536Lib
@@ -74,6 +74,7 @@ COMPONENT_TYPE       = BS_DRIVER
   EdkGuidLib
   EdkFrameworkGuidLib
   EfiGuidLib
+  CpuMips32Lib
 
 [nmake.common]
   IMAGE_ENTRY_POINT=InitializePcatPciRootBridge

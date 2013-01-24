@@ -207,19 +207,19 @@ Returns:
   *FileState = GetFileState (ErasePolarity, FfsHeader);
 
   switch (*FileState) {
-    case EFI_FILE_HEADER_VALID:
-    case EFI_FILE_DATA_VALID:
-    case EFI_FILE_MARKED_FOR_UPDATE:
-    case EFI_FILE_DELETED:
-      //
-      // Here we need to verify header checksum
-      //
-      return VerifyHeaderChecksum (FfsHeader);
-    
-    case EFI_FILE_HEADER_CONSTRUCTION:
-    case EFI_FILE_HEADER_INVALID:
-    default:
-      return FALSE;
+  case EFI_FILE_HEADER_VALID:
+  case EFI_FILE_DATA_VALID:
+  case EFI_FILE_MARKED_FOR_UPDATE:
+  case EFI_FILE_DELETED:
+    //
+    // Here we need to verify header checksum
+    //
+    return VerifyHeaderChecksum (FfsHeader);
+  
+  case EFI_FILE_HEADER_CONSTRUCTION:
+  case EFI_FILE_HEADER_INVALID:
+  default:
+    return FALSE;
   }
 }
 
@@ -250,17 +250,17 @@ Returns:
   FileState = GetFileState (ErasePolarity, FfsHeader);
   switch (FileState) {
 
-    case EFI_FILE_DELETED:
-    case EFI_FILE_DATA_VALID:
-    case EFI_FILE_MARKED_FOR_UPDATE:
-      //
-      // Some other vliadation like file content checksum might be done here.
-      // For performance issue, Tiano only do FileState check.
-      //
-      return TRUE;
+  case EFI_FILE_DELETED:
+  case EFI_FILE_DATA_VALID:
+  case EFI_FILE_MARKED_FOR_UPDATE:
+    //
+    // Some other vliadation like file content checksum might be done here.
+    // For performance issue, Tiano only do FileState check.
+    //
+    return TRUE;
 
-    default:
-      return FALSE;
+  default:
+    return FALSE;
   }
 }
 

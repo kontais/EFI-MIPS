@@ -55,8 +55,8 @@ COMPONENT_TYPE       = APPLICATION
   $(EDK_SOURCE)/Foundation/Include/IndustryStandard
   $(EDK_SOURCE)/Foundation/Efi
   $(EDK_SOURCE)/Foundation/Efi/Include
-  $(EDK_SOURCE)/Foundation/FrameWork
-  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
   $(EDK_SOURCE)/Foundation/Core/Dxe
   $(DEST_DIR)/
 

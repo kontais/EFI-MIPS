@@ -1229,97 +1229,97 @@ Description
       gBS->FreePool (OldIndexArray);
     }
     switch (StringPtr[CurrIndex]) {
-    
-      case NARROW_CHAR:
-      case WIDE_CHAR:
-        GlyphWidth = ((StringPtr[CurrIndex] == WIDE_CHAR) ? 2 : 1);
-        if (CurrIndex == 0) {
-          LineStartGlyphWidth = GlyphWidth;
-        }
-        break;
+  
+    case NARROW_CHAR:
+    case WIDE_CHAR:
+      GlyphWidth = ((StringPtr[CurrIndex] == WIDE_CHAR) ? 2 : 1);
+      if (CurrIndex == 0) {
+        LineStartGlyphWidth = GlyphWidth;
+      }
+      break;
 
+    //
+    // char is '\n'
+    // "\r\n" isn't handled here, handled by case CHAR_CARRIAGE_RETURN
+    //
+    case CHAR_LINEFEED:
       //
-      // char is '\n'
-      // "\r\n" isn't handled here, handled by case CHAR_CARRIAGE_RETURN
+      // Store a range of string as a line
       //
-      case CHAR_LINEFEED:
+      IndexArray[LineCount*3]   = PrevCurrIndex;
+      IndexArray[LineCount*3+1] = CurrIndex;
+      IndexArray[LineCount*3+2] = LineStartGlyphWidth;
+      LineCount ++;
+      //
+      // Reset offset and save begin position of line
+      //
+      GlyphOffset = 0;
+      LineStartGlyphWidth = GlyphWidth;
+      PrevCurrIndex = CurrIndex + 1;
+      break;
+
+    //
+    // char is '\r'
+    // "\r\n" and "\r" both are handled here
+    //
+    case CHAR_CARRIAGE_RETURN:
+      if (StringPtr[CurrIndex + 1] == CHAR_LINEFEED) {
         //
-        // Store a range of string as a line
+        // next char is '\n'
         //
         IndexArray[LineCount*3]   = PrevCurrIndex;
         IndexArray[LineCount*3+1] = CurrIndex;
         IndexArray[LineCount*3+2] = LineStartGlyphWidth;
         LineCount ++;
+        CurrIndex ++;
+      }
+      GlyphOffset = 0;
+      LineStartGlyphWidth = GlyphWidth;
+      PrevCurrIndex = CurrIndex + 1;
+      break;
+
+    //
+    // char is space or other char
+    //
+    default:
+      GlyphOffset     += GlyphWidth;
+      if (GlyphOffset >= BlockWidth) {
+        if (LastSpaceIndex > PrevCurrIndex) {
+          //
+          // LastSpaceIndex points to space inside current screen-line,
+          // restore to LastSpaceIndex
+          // (Otherwise the word is too long to fit one screen-line, just cut it)
+          //
+          CurrIndex  = LastSpaceIndex;
+          GlyphWidth = LastSpaceGlyphWidth;
+        } else if (GlyphOffset > BlockWidth) {
+          //
+          // the word is too long to fit one screen-line and we don't get the chance 
+          // of GlyphOffset == BlockWidth because GlyphWidth = 2
+          //
+          CurrIndex --;
+        }
+        
+        IndexArray[LineCount*3]   = PrevCurrIndex;
+        IndexArray[LineCount*3+1] = CurrIndex + 1;
+        IndexArray[LineCount*3+2] = LineStartGlyphWidth;
+        LineStartGlyphWidth = GlyphWidth;
+        LineCount ++;
         //
         // Reset offset and save begin position of line
         //
-        GlyphOffset = 0;
-        LineStartGlyphWidth = GlyphWidth;
-        PrevCurrIndex = CurrIndex + 1;
-        break;
+        GlyphOffset                 = 0;
+        PrevCurrIndex               = CurrIndex + 1;
+      }
 
       //
-      // char is '\r'
-      // "\r\n" and "\r" both are handled here
+      // LastSpaceIndex: remember position of last space
       //
-      case CHAR_CARRIAGE_RETURN:
-        if (StringPtr[CurrIndex + 1] == CHAR_LINEFEED) {
-          //
-          // next char is '\n'
-          //
-          IndexArray[LineCount*3]   = PrevCurrIndex;
-          IndexArray[LineCount*3+1] = CurrIndex;
-          IndexArray[LineCount*3+2] = LineStartGlyphWidth;
-          LineCount ++;
-          CurrIndex ++;
-        }
-        GlyphOffset = 0;
-        LineStartGlyphWidth = GlyphWidth;
-        PrevCurrIndex = CurrIndex + 1;
-        break;
-
-      //
-      // char is space or other char
-      //
-      default:
-        GlyphOffset     += GlyphWidth;
-        if (GlyphOffset >= BlockWidth) {
-          if (LastSpaceIndex > PrevCurrIndex) {
-            //
-            // LastSpaceIndex points to space inside current screen-line,
-            // restore to LastSpaceIndex
-            // (Otherwise the word is too long to fit one screen-line, just cut it)
-            //
-            CurrIndex  = LastSpaceIndex;
-            GlyphWidth = LastSpaceGlyphWidth;
-          } else if (GlyphOffset > BlockWidth) {
-            //
-            // the word is too long to fit one screen-line and we don't get the chance 
-            // of GlyphOffset == BlockWidth because GlyphWidth = 2
-            //
-            CurrIndex --;
-          }
-          
-          IndexArray[LineCount*3]   = PrevCurrIndex;
-          IndexArray[LineCount*3+1] = CurrIndex + 1;
-          IndexArray[LineCount*3+2] = LineStartGlyphWidth;
-          LineStartGlyphWidth = GlyphWidth;
-          LineCount ++;
-          //
-          // Reset offset and save begin position of line
-          //
-          GlyphOffset                 = 0;
-          PrevCurrIndex               = CurrIndex + 1;
-        }
-
-        //
-        // LastSpaceIndex: remember position of last space
-        //
-        if (StringPtr[CurrIndex] == CHAR_SPACE) {
-          LastSpaceIndex      = CurrIndex;
-          LastSpaceGlyphWidth = GlyphWidth;
-        }
-        break;
+      if (StringPtr[CurrIndex] == CHAR_SPACE) {
+        LastSpaceIndex      = CurrIndex;
+        LastSpaceGlyphWidth = GlyphWidth;
+      }
+      break;
     }
   }
 

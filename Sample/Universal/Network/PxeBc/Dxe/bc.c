@@ -2201,7 +2201,7 @@ PxeBcDriverSupported (
 
   Routine Description:
     Test to see if this driver supports Controller. Any Controller
-    than contains a Snp protocol can be supported.
+    that contains a Snp protocol can be supported.
 
   Arguments:
     This                - Protocol instance pointer.

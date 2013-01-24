@@ -75,11 +75,6 @@ ExceptionTable:
     .word    ExceptionGeneral
     .word    ExceptionGeneral
 
-
-    .globl IntrServiceState
-IntrServiceState:
-    .word  0
-
     .set    noreorder
 
 /*----------------------------------------------------------------
@@ -100,10 +95,6 @@ Exception:
      */
     li    k0, CP0_DIAG_BTB_CLEAR | CP0_DIAG_RAS_DISABLE
     dmtc0 k0, CP0_Diagnostic
-
-    la    k1, IntrServiceState
-    li    k0, 1       // TRUE
-    sw    k0, 0(k1)
 
     mfc0  k1, CP0_Cause
     la    k0, ExceptionTable
@@ -153,9 +144,6 @@ ExceptionInterrupt:
     RESTORE_CPU(sp, CF_RA_OFFS)
     addu  sp, sp, FRAMESZ(KERN_EXC_FRAME_SIZE)
 
-    la    k1, IntrServiceState
-    sw    zero, 0(k1)  // FALSE
-
     sync
     eret
     .set  at
@@ -177,6 +165,7 @@ ExceptionGeneral:
     .set  noat
     sub   k0, sp, FRAMESZ(KERN_EXC_FRAME_SIZE)
     SAVE_CPU(k0, CF_RA_OFFS)
+    SAVE_CPU_SREG(k0, CF_RA_OFFS)
     .set  at
 
     //  Set New Stack
@@ -197,10 +186,8 @@ ExceptionGeneral:
 
     .set  noat
     RESTORE_CPU(sp, CF_RA_OFFS)
+    RESTORE_CPU_SREG(sp, CF_RA_OFFS)
     addu  sp, sp, FRAMESZ(KERN_EXC_FRAME_SIZE)
-
-    la    k1, IntrServiceState
-    sw    zero, 0(k1)  // FALSE
 
     sync
     eret
@@ -220,14 +207,11 @@ ExceptionTlbMissTable:
     .word    ExceptionTlbMissGeneral
     
     
+    .align 3
     .globl    ExceptionTlbMiss
 ExceptionTlbMiss:
 
     .set    noat
-
-    la    k1, IntrServiceState
-    li    k0, 1       // TRUE
-    sw    k0, 0(k1)
 
     la    k0, ExceptionTlbMissTable
     nop   
@@ -250,6 +234,7 @@ ExceptionTlbMissGeneral:
     .set  noat
     sub   k0, sp, FRAMESZ(KERN_EXC_FRAME_SIZE)
     SAVE_CPU(k0, CF_RA_OFFS)
+    SAVE_CPU_SREG(k0, CF_RA_OFFS)
     .set  at
 
     //  Set New Stack
@@ -268,10 +253,8 @@ ExceptionTlbMissGeneral:
 
     .set  noat
     RESTORE_CPU(sp, CF_RA_OFFS)
+    RESTORE_CPU_SREG(sp, CF_RA_OFFS)
     addu  sp, sp, FRAMESZ(KERN_EXC_FRAME_SIZE)
-
-    la    k1, IntrServiceState
-    sw    zero, 0(k1)  // FALSE
 
     sync
     eret

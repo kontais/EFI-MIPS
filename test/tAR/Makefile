@@ -9,7 +9,7 @@ all: a.c b.c c.c
 	objdump -d m1 > m1.txt
 	gcc -o m2 main.c c.o ab.a   # 可以
 	objdump -d m2 > m2.txt
-	gcc -o m3 main.c abc.a      # 找不到fa,fb
+#	gcc -o m3 main.c abc.a      # 找不到fa,fb
 
 clean:
 	rm -rf *.o *.a m? *.txt

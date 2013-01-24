@@ -39,7 +39,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #include "libinputbar.h"
 #include "libmenubar.h"
 
-#include "libmisc.h"
+#include "libMisc.h"
 
 #include "libclipboard.h"
 

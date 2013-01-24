@@ -204,20 +204,20 @@ PeiCpuIoWidthInc (
   *SrcInc = 1 << (Width % 4);
   *DstInc = 1 << (Width % 4);
   switch (Width) {
-    case PeiCpuIoWidthFifoUint8:
-    case PeiCpuIoWidthFifoUint16:
-    case PeiCpuIoWidthFifoUint32:
-    case PeiCpuIoWidthFifoUint64:
-      *DstInc = 0;
-      break;
-    case PeiCpuIoWidthFillUint8:
-    case PeiCpuIoWidthFillUint16:
-    case PeiCpuIoWidthFillUint32:
-    case PeiCpuIoWidthFillUint64:
-      *SrcInc = 0;
-      break;
-    default:
-      break;
+  case PeiCpuIoWidthFifoUint8:
+  case PeiCpuIoWidthFifoUint16:
+  case PeiCpuIoWidthFifoUint32:
+  case PeiCpuIoWidthFifoUint64:
+    *DstInc = 0;
+    break;
+  case PeiCpuIoWidthFillUint8:
+  case PeiCpuIoWidthFillUint16:
+  case PeiCpuIoWidthFillUint32:
+  case PeiCpuIoWidthFillUint64:
+    *SrcInc = 0;
+    break;
+  default:
+    break;
   }
 }
 
@@ -238,36 +238,36 @@ PeiCpuIoRead (
   PeiCpuIoWidthInc(Width, &SrcInc, &DstInc);
 
   switch (Width) {
-    case PeiCpuIoWidthUint8:
-    case PeiCpuIoWidthFifoUint8:
-    case PeiCpuIoWidthFillUint8:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT8*)Buffer = PeiCpuIoRead8 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint16:
-    case PeiCpuIoWidthFifoUint16:
-    case PeiCpuIoWidthFillUint16:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT16*)Buffer = PeiCpuIoRead16 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint32:
-    case PeiCpuIoWidthFifoUint32:
-    case PeiCpuIoWidthFillUint32:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT32*)Buffer = PeiCpuIoRead32 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint64:
-    case PeiCpuIoWidthFifoUint64:
-    case PeiCpuIoWidthFillUint64:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT64*)Buffer = PeiCpuIoRead64 (PeiServices, This, Address);
-      }
-      break;
-    default:
-      break;
+  case PeiCpuIoWidthUint8:
+  case PeiCpuIoWidthFifoUint8:
+  case PeiCpuIoWidthFillUint8:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT8*)Buffer = PeiCpuIoRead8 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint16:
+  case PeiCpuIoWidthFifoUint16:
+  case PeiCpuIoWidthFillUint16:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT16*)Buffer = PeiCpuIoRead16 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint32:
+  case PeiCpuIoWidthFifoUint32:
+  case PeiCpuIoWidthFillUint32:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT32*)Buffer = PeiCpuIoRead32 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint64:
+  case PeiCpuIoWidthFifoUint64:
+  case PeiCpuIoWidthFillUint64:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT64*)Buffer = PeiCpuIoRead64 (PeiServices, This, Address);
+    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -288,36 +288,36 @@ PeiCpuIoWrite (
   PeiCpuIoWidthInc(Width, &SrcInc, &DstInc);
 
   switch (Width) {
-    case PeiCpuIoWidthUint8:
-    case PeiCpuIoWidthFifoUint8:
-    case PeiCpuIoWidthFillUint8:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuIoWrite8 (PeiServices, This, Address, *(UINT8*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint16:
-    case PeiCpuIoWidthFifoUint16:
-    case PeiCpuIoWidthFillUint16:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuIoWrite16 (PeiServices, This, Address, *(UINT16*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint32:
-    case PeiCpuIoWidthFifoUint32:
-    case PeiCpuIoWidthFillUint32:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuIoWrite32 (PeiServices, This, Address, *(UINT32*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint64:
-    case PeiCpuIoWidthFifoUint64:
-    case PeiCpuIoWidthFillUint64:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuIoWrite64 (PeiServices, This, Address, *(UINT64*)Buffer);
-      }
-      break;
-    default:
-      break;
+  case PeiCpuIoWidthUint8:
+  case PeiCpuIoWidthFifoUint8:
+  case PeiCpuIoWidthFillUint8:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuIoWrite8 (PeiServices, This, Address, *(UINT8*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint16:
+  case PeiCpuIoWidthFifoUint16:
+  case PeiCpuIoWidthFillUint16:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuIoWrite16 (PeiServices, This, Address, *(UINT16*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint32:
+  case PeiCpuIoWidthFifoUint32:
+  case PeiCpuIoWidthFillUint32:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuIoWrite32 (PeiServices, This, Address, *(UINT32*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint64:
+  case PeiCpuIoWidthFifoUint64:
+  case PeiCpuIoWidthFillUint64:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuIoWrite64 (PeiServices, This, Address, *(UINT64*)Buffer);
+    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -338,36 +338,36 @@ PeiCpuMemRead (
   PeiCpuIoWidthInc(Width, &SrcInc, &DstInc);
 
   switch (Width) {
-    case PeiCpuIoWidthUint8:
-    case PeiCpuIoWidthFifoUint8:
-    case PeiCpuIoWidthFillUint8:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT8*)Buffer = PeiCpuMemRead8 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint16:
-    case PeiCpuIoWidthFifoUint16:
-    case PeiCpuIoWidthFillUint16:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT16*)Buffer = PeiCpuMemRead16 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint32:
-    case PeiCpuIoWidthFifoUint32:
-    case PeiCpuIoWidthFillUint32:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT32*)Buffer = PeiCpuMemRead32 (PeiServices, This, Address);
-      }
-      break;
-    case PeiCpuIoWidthUint64:
-    case PeiCpuIoWidthFifoUint64:
-    case PeiCpuIoWidthFillUint64:
-      for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
-        *(UINT64*)Buffer = PeiCpuMemRead64 (PeiServices, This, Address);
-      }
-      break;
-    default:
-      break;
+  case PeiCpuIoWidthUint8:
+  case PeiCpuIoWidthFifoUint8:
+  case PeiCpuIoWidthFillUint8:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT8*)Buffer = PeiCpuMemRead8 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint16:
+  case PeiCpuIoWidthFifoUint16:
+  case PeiCpuIoWidthFillUint16:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT16*)Buffer = PeiCpuMemRead16 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint32:
+  case PeiCpuIoWidthFifoUint32:
+  case PeiCpuIoWidthFillUint32:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT32*)Buffer = PeiCpuMemRead32 (PeiServices, This, Address);
+    }
+    break;
+  case PeiCpuIoWidthUint64:
+  case PeiCpuIoWidthFifoUint64:
+  case PeiCpuIoWidthFillUint64:
+    for (Index = 0; Index < Count; Index++, Address += SrcInc, Buffer = (UINT8*)Buffer + DstInc) {
+      *(UINT64*)Buffer = PeiCpuMemRead64 (PeiServices, This, Address);
+    }
+    break;
+  default:
+    break;
   }
 }
 
@@ -388,36 +388,36 @@ PeiCpuMemWrite (
   PeiCpuIoWidthInc(Width, &SrcInc, &DstInc);
 
   switch (Width) {
-    case PeiCpuIoWidthUint8:
-    case PeiCpuIoWidthFifoUint8:
-    case PeiCpuIoWidthFillUint8:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuMemWrite8 (PeiServices, This, Address, *(UINT8*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint16:
-    case PeiCpuIoWidthFifoUint16:
-    case PeiCpuIoWidthFillUint16:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuMemWrite16 (PeiServices, This, Address, *(UINT16*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint32:
-    case PeiCpuIoWidthFifoUint32:
-    case PeiCpuIoWidthFillUint32:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuMemWrite32 (PeiServices, This, Address, *(UINT32*)Buffer);
-      }
-      break;
-    case PeiCpuIoWidthUint64:
-    case PeiCpuIoWidthFifoUint64:
-    case PeiCpuIoWidthFillUint64:
-      for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
-        PeiCpuMemWrite64 (PeiServices, This, Address, *(UINT64*)Buffer);
-      }
-      break;
-    default:
-      break;
+  case PeiCpuIoWidthUint8:
+  case PeiCpuIoWidthFifoUint8:
+  case PeiCpuIoWidthFillUint8:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuMemWrite8 (PeiServices, This, Address, *(UINT8*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint16:
+  case PeiCpuIoWidthFifoUint16:
+  case PeiCpuIoWidthFillUint16:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuMemWrite16 (PeiServices, This, Address, *(UINT16*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint32:
+  case PeiCpuIoWidthFifoUint32:
+  case PeiCpuIoWidthFillUint32:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuMemWrite32 (PeiServices, This, Address, *(UINT32*)Buffer);
+    }
+    break;
+  case PeiCpuIoWidthUint64:
+  case PeiCpuIoWidthFifoUint64:
+  case PeiCpuIoWidthFillUint64:
+    for (Index = 0; Index < Count; Index++, Buffer = (UINT8*)Buffer + SrcInc, Address += DstInc) {
+      PeiCpuMemWrite64 (PeiServices, This, Address, *(UINT64*)Buffer);
+    }
+    break;
+  default:
+    break;
   }
 }
 

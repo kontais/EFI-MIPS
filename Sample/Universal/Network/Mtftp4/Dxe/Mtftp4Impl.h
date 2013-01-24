@@ -51,7 +51,7 @@ enum {
   MTFTP4_STATE_DESTORY,
 };
 
-typedef struct _MTFTP4_SERVICE {
+struct _MTFTP4_SERVICE {
   UINT32                        Signature;
   EFI_SERVICE_BINDING_PROTOCOL  ServiceBinding;
 
@@ -73,7 +73,7 @@ typedef struct _MTFTP4_SERVICE {
   UDP_IO_PORT                   *ConnectUdp;
 };
 
-typedef struct _MTFTP4_PROTOCOL {
+struct _MTFTP4_PROTOCOL {
   UINT32                        Signature;
   NET_LIST_ENTRY                Link;
   EFI_MTFTP4_PROTOCOL           Mtftp4;

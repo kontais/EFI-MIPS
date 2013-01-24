@@ -20,6 +20,31 @@ Abstract:
 
 #include "Reset.h"
 
+
+VOID YeeloongReset(VOID)
+{
+  	IoWrite8(0x0381, 0xf4);
+  	IoWrite8(0x0382, 0xec);
+  	IoWrite8(0x0383, 0x01);
+    while (1);
+}
+
+VOID YeeLoongShutdown ()
+{
+	UINTN temp;
+
+	temp = *(volatile UINT32 *)(0xbfe0011c);
+	temp &= ~0x00000001;
+	*(volatile UINT32 *)(0xbfe0011c) = temp;
+
+	temp = *(volatile UINT32 *)(0xbfe00120);
+	temp &= ~0x00000001;
+	*(volatile UINT32 *)(0xbfe00120) = temp;
+
+	while(1);
+}
+
+
 VOID
 EFIAPI
 KbcResetSystem (
@@ -52,16 +77,14 @@ Returns:
 
   switch (ResetType) {
   case EfiResetWarm:
-  case EfiResetCold:
-  case EfiResetShutdown:
-//    Data = 0xfe;
-//    IoWrite8 (0x64, Data);
-  	IoWrite8(0x0381, 0xf4);
-  	IoWrite8(0x0382, 0xec);
-  	IoWrite8(0x0383, 0x01);
-  	while(1);
+    YeeloongReset();
     break;
-
+  case EfiResetCold:
+    YeeloongReset();
+    break;
+  case EfiResetShutdown:
+    YeeLoongShutdown();
+    break;
   default:
     return ;
   }

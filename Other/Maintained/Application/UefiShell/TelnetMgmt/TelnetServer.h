@@ -69,11 +69,11 @@ EFI_STATUS
 //
 #define EFI_TELNET_SERVER_REVISION  0x00010000
 
-typedef struct _EFI_TELNET_SERVER_PROTOCOL {
+struct _EFI_TELNET_SERVER_PROTOCOL {
   UINT64                        Revision;
   UINT8                         TerminalType;
   EFI_TELNET_SERVER_SET_OPTION  SetOption;
-} EFI_TELNET_SERVER_PROTOCOL;
+} ;
 
 //
 // Global Variables

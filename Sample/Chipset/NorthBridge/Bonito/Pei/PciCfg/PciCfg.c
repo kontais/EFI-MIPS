@@ -46,17 +46,17 @@ PciCfgRead (
   RdData = RdData >> Shift;
   
   switch (Width) {
-    case PeiPciCfgWidthUint8:
-      *(UINT8*)Buffer = (UINT8)RdData;
-      break;
-    case PeiPciCfgWidthUint16:
-      *(UINT16*)Buffer = (UINT16)RdData;
-      break;
-    case PeiPciCfgWidthUint32:
-      *(UINT32*)Buffer = (UINT32)RdData;
-      break;
-    default:
-      return EFI_INVALID_PARAMETER;
+  case PeiPciCfgWidthUint8:
+    *(UINT8*)Buffer = (UINT8)RdData;
+    break;
+  case PeiPciCfgWidthUint16:
+    *(UINT16*)Buffer = (UINT16)RdData;
+    break;
+  case PeiPciCfgWidthUint32:
+    *(UINT32*)Buffer = (UINT32)RdData;
+    break;
+  default:
+    return EFI_INVALID_PARAMETER;
   }
   return EFI_SUCCESS;
 }
@@ -88,17 +88,17 @@ PciCfgWrite (
   RdData = RdData & Mask;
   
   switch (Width) {
-    case PeiPciCfgWidthUint8:
-      WrData = *(UINT8*) Buffer;
-      break;
-    case PeiPciCfgWidthUint16:
-      WrData = *(UINT16*) Buffer;
-      break;
-    case PeiPciCfgWidthUint32:
-      WrData = *(UINT32*) Buffer;
-      break;
-    default:
-      return EFI_INVALID_PARAMETER;
+  case PeiPciCfgWidthUint8:
+    WrData = *(UINT8*) Buffer;
+    break;
+  case PeiPciCfgWidthUint16:
+    WrData = *(UINT16*) Buffer;
+    break;
+  case PeiPciCfgWidthUint32:
+    WrData = *(UINT32*) Buffer;
+    break;
+  default:
+    return EFI_INVALID_PARAMETER;
   }
 
   WrData = (WrData << Shift) | RdData;

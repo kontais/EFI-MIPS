@@ -20,7 +20,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #ifndef _LIB_MENU_BAR_H_
 #define _LIB_MENU_BAR_H_
 
-#include "Heditortype.h"
+#include "heditortype.h"
 
 EFI_STATUS
 HMainMenuBarInit (

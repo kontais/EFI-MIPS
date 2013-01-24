@@ -47,7 +47,7 @@ COMPONENT_TYPE       = APPLICATION
   newshell/NshellStrings.uni
   newshell/init.c
   newshell/nshell.h
-  newshell/fakehii.c
+  newshell/FakeHii.c
 
   ShCommonStrings.uni
   shellenv/ShellenvHelpStrings.uni
@@ -61,14 +61,14 @@ COMPONENT_TYPE       = APPLICATION
   shellenv/DhStrings.uni
   
   shellenv/cmddisp.c
-  shellenv/connect.c
+  shellenv/Connect.c
   shellenv/data.c
   shellenv/exec.c
   shellenv/init.c
   shellenv/protid.c
   shellenv/var.c
   shellenv/conio.c
-  shellenv/consoleproxy.c
+  shellenv/ConsoleProxy.c
   shellenv/handle.c
   shellenv/dprot.c
   shellenv/map.c
@@ -147,7 +147,7 @@ COMPONENT_TYPE       = APPLICATION
   ver/ver.c
   ver/ver.h
   
-  drivers/driversStrings.uni
+  drivers/DriversStrings.uni
   drivers/drivers.c
   drivers/drivers.h
   
@@ -162,15 +162,15 @@ COMPONENT_TYPE       = APPLICATION
   comp/CompStrings.uni
   comp/comp.c
   
-  dblk/dblkStrings.uni
+  dblk/DblkStrings.uni
   dblk/dblk.c
   dblk/efidump.c
  
   devices/DevicesStrings.uni
   devices/devices.c
   
-  devicetree/DevicetreeStrings.uni
-  devicetree/devicetree.c
+  DeviceTree/DevicetreeStrings.uni
+  DeviceTree/devicetree.c
   
   dmem/MemStrings.uni
   dmem/DebugStrings.uni  
@@ -191,12 +191,12 @@ COMPONENT_TYPE       = APPLICATION
   edit/libMenuBar.c
   edit/libMisc.c 
   
-  eficompress/CompressStrings.uni
-  eficompress/compressMain.c
-  eficompress/compress.c   
+  EfiCompress/CompressStrings.uni
+  EfiCompress/CompressMain.c
+  EfiCompress/compress.c   
   
-  efidecompress/DecompressStrings.uni
-  efidecompress/decompress.c
+  EfiDecompress/DecompressStrings.uni
+  EfiDecompress/Decompress.c
   
   err/ErrStrings.uni
   err/err.c
@@ -207,22 +207,22 @@ COMPONENT_TYPE       = APPLICATION
   hexedit/HexeditStrings.uni
   hexedit/main.c
   hexedit/libBufferImage.c
-  hexedit/libFileImage.c
-  hexedit/libDiskImage.c
+  hexedit/libfileimage.c
+  hexedit/libdiskimage.c
   hexedit/libMemImage.c
   hexedit/libEditor.c
   hexedit/libTitleBar.c
   hexedit/libStatusBar.c
   hexedit/libInputBar.c
   hexedit/libMenuBar.c
-  hexedit/libClipBoard.c
+  hexedit/libclipboard.c
   hexedit/libMisc.c
   
-  ipconfig/IpConfigStrings.uni
-  ipconfig/IpConfig.c
+  IpConfig/IpConfigStrings.uni
+  IpConfig/IpConfig.c
   
-  loadpcirom/LoadPciRomStrings.uni
-  loadpcirom/LoadPciRom.c
+  LoadPciRom/LoadPciRomStrings.uni
+  LoadPciRom/LoadPciRom.c
   
   mem/MemStrings.uni
   mem/DebugStrings.uni  
@@ -230,10 +230,10 @@ COMPONENT_TYPE       = APPLICATION
   mem/MemCommonPart.c
   mem/efidump.c  
   
-  memmap/memmapStrings.uni
+  memmap/MemmapStrings.uni
   memmap/memmap.c
   
-  mm/MmStrings.uni
+  mm/mmStrings.uni
   mm/mm.c
   
   mode/ModeStrings.uni
@@ -242,7 +242,7 @@ COMPONENT_TYPE       = APPLICATION
   mount/MountStrings.uni
   mount/mount.c
   
-  openinfo/OPeninfoStrings.uni
+  openinfo/OpeninfoStrings.uni
   openinfo/openinfo.c
   
   pci/PciStrings.uni
@@ -252,22 +252,27 @@ COMPONENT_TYPE       = APPLICATION
   sermode/SermodeStrings.uni
   sermode/sermode.c
   
-  smbiosview/SmBiosViewStrings.uni
-  smbiosview/QueryTable.c
-  smbiosview/EventLogInfo.c
-  smbiosview/PrintInfo.c
-  smbiosview/LibSmbiosView.c
-  smbiosview/smbiosview.c
-  smbiosview/smbios.c
+  SmbiosView/SmBiosViewStrings.uni
+  SmbiosView/QueryTable.c
+  SmbiosView/EventLogInfo.c
+  SmbiosView/PrintInfo.c
+  SmbiosView/LibSmbiosView.c
+  SmbiosView/smbiosview.c
+  SmbiosView/Smbios.c
   
-  stall/stallStrings.uni
+  stall/StallStrings.uni
   stall/stall.c
   
-  telnetmgmt/TelnetMgmtStrings.uni
-  telnetmgmt/TelnetMgmt.c
+  TelnetMgmt/TelnetMgmtStrings.uni
+  TelnetMgmt/TelnetMgmt.c
   
   tzone/TZoneStrings.uni
   tzone/tzone.c
+
+[sources.Mips32]
+  ver/Mips32/ver32.c
+  Library/Mips32/Math.s
+  Library/Mips32/initplat.c
 
 [sources.ia32]
   ver/ia32/ver32.c
@@ -293,7 +298,7 @@ COMPONENT_TYPE       = APPLICATION
 
 [includes.common]
   .
-  ./Inc
+  ./inc
   ./ver
   ./Library
   $(EDK_SOURCE)/Foundation
@@ -301,10 +306,13 @@ COMPONENT_TYPE       = APPLICATION
   $(EDK_SOURCE)/Foundation/Include/IndustryStandard
   $(EDK_SOURCE)/Foundation/Efi
   $(EDK_SOURCE)/Foundation/Efi/Include
-  $(EDK_SOURCE)/Foundation/FrameWork
-  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
   $(EDK_SOURCE)/Foundation/Core/Dxe
   $(DEST_DIR)
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
 
 [libraries.common]
   EdkProtocolLib
@@ -334,4 +342,3 @@ COMPONENT_TYPE       = APPLICATION
   EBC_C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
 
 
- 

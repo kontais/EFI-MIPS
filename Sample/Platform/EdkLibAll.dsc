@@ -63,3 +63,9 @@ $(EDK_PREFIX)Foundation/Library/Dxe/GraphicsLite/Graphics.inf
 #
 $(EDK_PREFIX)Sample/Platform/Generic/Dxe/GenericBds/GenericBds.inf
 $(EDK_PREFIX)Sample/Bus/Usb/UsbLib/Dxe/UsbDxeLib.inf
+
+#
+# Shell Libraries
+#
+$(EDK_PREFIX)Other/Maintained/Application/UefiShell/Library/EfiShellLib.inf
+

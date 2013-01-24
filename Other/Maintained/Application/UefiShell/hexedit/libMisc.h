@@ -20,7 +20,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 #ifndef _LIB_MISC_H_
 #define _LIB_MISC_H_
 
-#include "Heditortype.h"
+#include "heditortype.h"
 
 VOID
 HEditorClearLine (

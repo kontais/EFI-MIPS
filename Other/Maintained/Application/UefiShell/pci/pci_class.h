@@ -24,7 +24,7 @@ Revision History
 #ifndef _PCI_CLASS_H_
 #define _PCI_CLASS_H_
 
-#include "TIANO.h"  // for UINT32 etc.
+#include "Tiano.h"  // for UINT32 etc.
 #define PCI_CLASS_STRING_LIMIT  54
 //
 // Printable strings for Pci class code

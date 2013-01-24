@@ -26,7 +26,7 @@ Revision History
 #include "LibSmbiosView.h"
 #include "QueryTable.h"
 #include "EventLogInfo.h"
-#include "smbios.h"
+#include "Smbios.h"
 #include STRING_DEFINES_FILE
 
 //

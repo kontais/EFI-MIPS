@@ -4,3 +4,9 @@ unsigned long long rl()
   ll = 0x123456789;
   return ll;
 }
+int main()
+{
+  rl();
+  return 0;
+}
+

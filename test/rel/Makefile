@@ -6,9 +6,12 @@ READELF = readelf
 OBJDUMP = objdump
 LOADADDR = 0x00100000
 OD = od
+RM = rm -rf
+
 all: test
 
-test: clean test.o
+#test: clean test.o
+test: test.o
 	$(LD) $(LD_FLAGS) -r -e fa -o test test.o
 	$(READELF) -a test > test.readelf
 	$(OBJDUMP) -Dtr test > test.dump

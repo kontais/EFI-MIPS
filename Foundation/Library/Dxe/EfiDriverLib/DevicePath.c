@@ -605,3 +605,49 @@ Returns:
 #endif  
   return NULL;
 }
+
+EFI_STATUS
+EfiPrintDevicePath (
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
+  )
+/*++
+
+Routine Description:
+  Function is used to print device path. (Just For Debug)
+
+Arguments:
+  DevicePath - A pointer to a device path data structure.
+
+Returns:
+
+--*/
+{
+  UINT32 Index;
+  if (DevicePath == NULL) {
+    DEBUG((EFI_D_ERROR, "DevicePath == NULL\n"));
+    return 0;
+  }
+
+  //
+  // Search for the end of the device path structure
+  //
+  Index = 0;
+  while (!EfiIsDevicePathEnd (DevicePath)) {
+    if (Index++ > 8) break;
+    DEBUG((EFI_D_ERROR, "/(0x%x,0x%x,%d)", 
+      DevicePath->Type, 
+      DevicePath->SubType, 
+      EfiDevicePathNodeLength(DevicePath)));
+    DevicePath = EfiNextDevicePathNode (DevicePath);
+  }
+
+  // End DevPath
+  DEBUG((EFI_D_ERROR, "/(0x%x,0x%x,%d)", 
+    DevicePath->Type, 
+    DevicePath->SubType, 
+    EfiDevicePathNodeLength(DevicePath)));
+
+  DEBUG((EFI_D_ERROR, "\n"));
+
+}
+

@@ -165,12 +165,10 @@ COMPONENT_TYPE       = APPLICATION
   Library/Mips32/Math.s
   Library/Mips32/initplat.c
 
-
 [sources.ia32]
   ver/ia32/ver32.c
   Library/ia32/math.c
   Library/ia32/initplat.c
-
 
 [sources.ipf]
   ver/ipf/ver64.c
@@ -235,5 +233,3 @@ COMPONENT_TYPE       = APPLICATION
   EBC_C_STD_FLAGS += -D STRING_DEFINES_FILE=\"$(BASE_NAME)StrDefs.h\"
 
 
-
- 

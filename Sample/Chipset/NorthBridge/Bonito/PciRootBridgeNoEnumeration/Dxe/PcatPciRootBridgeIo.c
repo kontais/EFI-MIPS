@@ -22,7 +22,8 @@ Revision History
 
 #include "PcatPciRootBridge.h"
 #include "Pci22.h"
-
+#include "ArchDefs.h"   // For CACHED_TO_PHYS
+#include "CpuMips32.h"  // For MipsCacheSync
 //
 // Protocol Member Function Prototypes
 //
@@ -607,104 +608,21 @@ PcatRootBridgeIoMap (
   }
 
   //
-  // Most PCAT like chipsets can not handle performing DMA above 4GB.
-  // If any part of the DMA transfer being mapped is above 4GB, then
-  // map the DMA transfer to a buffer below 4GB.
+  // This config must be change according to Loongson 2F address window registers setting
+  // PCI 0x80000000 to RAM 0x00000000 is power on default
+  // PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) -> DDR 
+  // (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI WIN0
   //
-  PhysicalAddress = (EFI_PHYSICAL_ADDRESS)(UINTN)HostAddress;
-  if ((PhysicalAddress + *NumberOfBytes) > 0x100000000) {
-
+  PhysicalAddress = (EFI_PHYSICAL_ADDRESS)(CACHED_TO_PHYS((UINTN)HostAddress));
+  
+  if ((PhysicalAddress + *NumberOfBytes) > 0x10000000)  {
+    return EFI_UNSUPPORTED;
+  }
+  else {
     //
-    // Common Buffer operations can not be remapped.  If the common buffer
-    // if above 4GB, then it is not possible to generate a mapping, so return 
-    // an error.
+    // The transfer is below 256M
     //
-    if (Operation == EfiPciOperationBusMasterCommonBuffer || Operation == EfiPciOperationBusMasterCommonBuffer64) {
-      return EFI_UNSUPPORTED;
-    }
-
-    //
-    // Allocate a MAP_INFO structure to remember the mapping when Unmap() is
-    // called later.
-    //
-    Status = gBS->AllocatePool (
-                    EfiBootServicesData, 
-                    sizeof(MAP_INFO), 
-                    &MapInfo
-                    );
-    if (EFI_ERROR (Status)) {
-      *NumberOfBytes = 0;
-      return Status;
-    }
-
-    //
-    // Return a pointer to the MAP_INFO structure in Mapping
-    //
-    *Mapping = MapInfo;
-
-    //
-    // Initialize the MAP_INFO structure
-    //
-    MapInfo->Operation         = Operation;
-    MapInfo->NumberOfBytes     = *NumberOfBytes;
-    MapInfo->NumberOfPages     = EFI_SIZE_TO_PAGES(*NumberOfBytes);
-    MapInfo->HostAddress       = PhysicalAddress;
-    MapInfo->MappedHostAddress = 0x00000000ffffffff;
-
-    //
-    // Allocate a buffer below 4GB to map the transfer to.
-    //
-    Status = gBS->AllocatePages (
-                    AllocateMaxAddress, 
-                    EfiBootServicesData, 
-                    MapInfo->NumberOfPages,
-                    &MapInfo->MappedHostAddress
-                    );
-    if (EFI_ERROR(Status)) {
-      gBS->FreePool (MapInfo);
-      *NumberOfBytes = 0;
-      return Status;
-    }
-
-    //
-    // If this is a read operation from the Bus Master's point of view,
-    // then copy the contents of the real buffer into the mapped buffer
-    // so the Bus Master can read the contents of the real buffer.
-    //
-    if (Operation == EfiPciOperationBusMasterRead || Operation == EfiPciOperationBusMasterRead64) {
-      EfiCopyMem (
-        (VOID *)(UINTN)MapInfo->MappedHostAddress, 
-        (VOID *)(UINTN)MapInfo->HostAddress,
-        MapInfo->NumberOfBytes
-        );
-    }
-
-
-	Status =gBS->AllocatePool (
-                    EfiBootServicesData, 
-                    sizeof(MAP_INFO_INSTANCE), 
-                    &MapInstance
-                    );                    
-    if (EFI_ERROR(Status)) {
-      gBS->FreePages (MapInfo->MappedHostAddress,MapInfo->NumberOfPages);
-      gBS->FreePool (MapInfo);
-      *NumberOfBytes = 0;
-      return Status;
-    }
-
-    MapInstance->Map=MapInfo;
-    PrivateData = DRIVER_INSTANCE_FROM_PCI_ROOT_BRIDGE_IO_THIS(This);
-    InsertTailList(&PrivateData->MapInfo,&MapInstance->Link);
-    
-	//
-    // The DeviceAddress is the address of the maped buffer below 4GB
-    //
-    *DeviceAddress = MapInfo->MappedHostAddress;
-  } else {
-    //
-    // The transfer is below 4GB, so the DeviceAddress is simply the HostAddress
-    //
-    *DeviceAddress = PhysicalAddress;
+    *DeviceAddress = PhysicalAddress + 0x80000000;
   }
 
   //
@@ -737,42 +655,7 @@ PcatRootBridgeIoUnmap (
   // If a mapping buffer was not required, then this function simply returns EFI_SUCCESS.
   //
   if (Mapping != NULL) {
-    //
-    // Get the MAP_INFO structure from Mapping
-    //
-    MapInfo = (MAP_INFO *)Mapping;
-
-	for (Link = PrivateData->MapInfo.ForwardLink; Link != &PrivateData->MapInfo; Link = Link->ForwardLink) {
-    	if (((MAP_INFO_INSTANCE*)Link)->Map == MapInfo)
-    	 	break;
-    }
-
-    if (Link == &PrivateData->MapInfo) {
-    	return EFI_INVALID_PARAMETER;
-	}
-
-    RemoveEntryList(Link);
-    ((MAP_INFO_INSTANCE*)Link)->Map = NULL;
-    gBS->FreePool((MAP_INFO_INSTANCE*)Link);
-
-    //
-    // If this is a write operation from the Bus Master's point of view,
-    // then copy the contents of the mapped buffer into the real buffer
-    // so the processor can read the contents of the real buffer.
-    //
-    if (MapInfo->Operation == EfiPciOperationBusMasterWrite || MapInfo->Operation == EfiPciOperationBusMasterWrite64) {
-      EfiCopyMem (
-        (VOID *)(UINTN)MapInfo->HostAddress, 
-        (VOID *)(UINTN)MapInfo->MappedHostAddress,
-        MapInfo->NumberOfBytes
-        );
-    }
-
-    //
-    // Free the mapped buffer and the MAP_INFO structure.
-    //
-    gBS->FreePages (MapInfo->MappedHostAddress, MapInfo->NumberOfPages);
-    gBS->FreePool (Mapping);
+    return EFI_UNSUPPORTED;
   }
 
   //
@@ -857,6 +740,8 @@ PcatRootBridgeIoFlush (
   // Perform a fence operation to make sure all memory operations are flushed
   //
   MEMORY_FENCE();
+
+  MipsCacheSync();
 
   return EFI_SUCCESS;
 }

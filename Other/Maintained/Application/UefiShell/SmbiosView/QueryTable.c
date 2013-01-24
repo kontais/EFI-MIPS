@@ -23,7 +23,7 @@ Revision History
 #include "EfiShellLib.h"
 #include "QueryTable.h"
 #include "PrintInfo.h"
-#include "smbios.h"
+#include "Smbios.h"
 
 #include STRING_DEFINES_FILE
 

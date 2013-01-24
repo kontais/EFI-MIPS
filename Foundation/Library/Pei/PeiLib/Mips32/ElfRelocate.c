@@ -119,20 +119,20 @@ Returns:
     //
     //
     switch (SectionHeader.sh_type) {
-      case SHT_RELA:
-        Status = ElfRelocateRela(Index, &SectionHeader, ImageContext);
-        if ( EFI_ERROR(Status)) {
-         return Status;
-        }
-        break;
-      case SHT_REL:
-        Status = ElfRelocateRel(Index, &SectionHeader, ImageContext);
-        if ( EFI_ERROR(Status)) {
-          return Status;
-        }
-        break;
-      default:
-        continue;
+    case SHT_RELA:
+      Status = ElfRelocateRela(Index, &SectionHeader, ImageContext);
+      if ( EFI_ERROR(Status)) {
+       return Status;
+      }
+      break;
+    case SHT_REL:
+      Status = ElfRelocateRel(Index, &SectionHeader, ImageContext);
+      if ( EFI_ERROR(Status)) {
+        return Status;
+      }
+      break;
+    default:
+      continue;
     }
   }
   
@@ -251,59 +251,59 @@ Returns:
     Value    = FromBase + SymbolEntry->st_value + RelaEntry->r_addend;
 
     switch (ELF32_R_TYPE(RelaEntry->r_info)) {
-      case R_MIPS_NONE:
-        ;
-        break;
-        
-      case R_MIPS_32:
-        *Location = Value;
-        break;
-        
-      case R_MIPS_26:
-        //
-        //  26 = 28 - 2 , 4 byte aligned
-        //
-        if (Value % 4) {
-          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
-          return EFI_UNSUPPORTED;
-        }
-        //
-        //  Jump > 256MB
-        //
-        if ((Value & 0xf0000000) != (((UINT32)Location + 4) & 0xf0000000)) {
-          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
-          return EFI_UNSUPPORTED;
-        }
-        *Location = (*Location & ~0x03ffffff) | ((Value >> 2) & 0x03ffffff);
-        break;
-        
-      case R_MIPS_HI16:
-        *Location = (*Location & 0xffff0000) | 
-                    ((((long long) Value + 0x8000LL) >> 16) & 0xffff);
-        break;
-        
-      case R_MIPS_LO16:
-        *Location = (*Location & 0xffff0000) | (Value & 0xffff);
-        break;
-        
-      case R_MIPS_64:
-        *(UINT64 *)Location = Value;
-        break;
-        
-      case R_MIPS_HIGHER:
-        *Location = (*Location & 0xffff0000) |
-                    ((((long long) Value + 0x80008000LL) >> 32) & 0xffff);
-        break;
-        
-      case R_MIPS_HIGHEST:
-        *Location = (*Location & 0xffff0000) |
-                    ((((long long) Value + 0x800080008000LL) >> 48) & 0xffff);
-        break;
-        
-      default:
-        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_RELA_TYPE;
+    case R_MIPS_NONE:
+      ;
+      break;
+      
+    case R_MIPS_32:
+      *Location = Value;
+      break;
+      
+    case R_MIPS_26:
+      //
+      //  26 = 28 - 2 , 4 byte aligned
+      //
+      if (Value % 4) {
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
         return EFI_UNSUPPORTED;
-        break;
+      }
+      //
+      //  Jump > 256MB
+      //
+      if ((Value & 0xf0000000) != (((UINT32)Location + 4) & 0xf0000000)) {
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
+        return EFI_UNSUPPORTED;
+      }
+      *Location = (*Location & ~0x03ffffff) | ((Value >> 2) & 0x03ffffff);
+      break;
+      
+    case R_MIPS_HI16:
+      *Location = (*Location & 0xffff0000) | 
+                  ((((long long) Value + 0x8000LL) >> 16) & 0xffff);
+      break;
+      
+    case R_MIPS_LO16:
+      *Location = (*Location & 0xffff0000) | (Value & 0xffff);
+      break;
+      
+    case R_MIPS_64:
+      *(UINT64 *)Location = Value;
+      break;
+      
+    case R_MIPS_HIGHER:
+      *Location = (*Location & 0xffff0000) |
+                  ((((long long) Value + 0x80008000LL) >> 32) & 0xffff);
+      break;
+      
+    case R_MIPS_HIGHEST:
+      *Location = (*Location & 0xffff0000) |
+                  ((((long long) Value + 0x800080008000LL) >> 48) & 0xffff);
+      break;
+      
+    default:
+      ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_RELA_TYPE;
+      return EFI_UNSUPPORTED;
+      break;
     }
   }
   
@@ -443,114 +443,114 @@ Returns:
     Value    = FromBase + SymbolEntry->st_value;
 
     switch (ELF32_R_TYPE(RelEntry->r_info)) {
-      case R_MIPS_NONE:
-        ;
-        break;
+    case R_MIPS_NONE:
+      ;
+      break;
 
-      case R_MIPS_32:
-        *(UINT32 *)Location += (Value + Adjust);
-        break;
-        
-      case R_MIPS_26:
-        //
-        //  26 = 28 - 2 , 4 byte aligned
-        //
-        if ((Value + Adjust) % 4) {
-          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
-          return EFI_UNSUPPORTED;
-        }
-        //
-        //  Jump > 256MB
-        //
-        if (((Value + Adjust) & 0xf0000000) != (((UINT32)Location +Adjust + 4) & 0xf0000000)) {
-          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
-          return EFI_UNSUPPORTED;
-        }
-        *Location = (*Location & ~0x03ffffff) | 
-                    ((*Location + ((Value + Adjust) >> 2)) & 0x03ffffff);
-        break;
+    case R_MIPS_32:
+      *(UINT32 *)Location += (Value + Adjust);
+      break;
+      
+    case R_MIPS_26:
+      //
+      //  26 = 28 - 2 , 4 byte aligned
+      //
+      if ((Value + Adjust) % 4) {
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
+        return EFI_UNSUPPORTED;
+      }
+      //
+      //  Jump > 256MB
+      //
+      if (((Value + Adjust) & 0xf0000000) != (((UINT32)Location +Adjust + 4) & 0xf0000000)) {
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_JUMP_ADDRESS;
+        return EFI_UNSUPPORTED;
+      }
+      *Location = (*Location & ~0x03ffffff) | 
+                  ((*Location + ((Value + Adjust) >> 2)) & 0x03ffffff);
+      break;
 
-      case R_MIPS_HI16:
-        //
-        // Record the R_MIPS_HI16 entry, do actual relcate in R_MIPS_LO16
-        //
-        HI16_REL_ENTRY[Hi16RelLevel].Relocated = 0;
-        HI16_REL_ENTRY[Hi16RelLevel].Location  = Location;
-        HI16_REL_ENTRY[Hi16RelLevel].Value     = Value;
-        Hi16RelLevel ++ ;
-        if (Hi16RelLevel > CONTINUOUS_MIPS_HI16_REL_MAX) {
-          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_R_MIPS16_PAIR;
-          return EFI_UNSUPPORTED;
+    case R_MIPS_HI16:
+      //
+      // Record the R_MIPS_HI16 entry, do actual relcate in R_MIPS_LO16
+      //
+      HI16_REL_ENTRY[Hi16RelLevel].Relocated = 0;
+      HI16_REL_ENTRY[Hi16RelLevel].Location  = Location;
+      HI16_REL_ENTRY[Hi16RelLevel].Value     = Value;
+      Hi16RelLevel ++ ;
+      if (Hi16RelLevel > CONTINUOUS_MIPS_HI16_REL_MAX) {
+        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_R_MIPS16_PAIR;
+        return EFI_UNSUPPORTED;
+      }
+      break;
+      
+    case R_MIPS_LO16:
+      {
+        UINT32 insnlo;
+        UINT32 val;
+        UINT32 vallo;
+        UINT32 insn;
+
+        insnlo = *Location;
+        vallo = ((insnlo & 0xffff) ^ 0x8000) - 0x8000;
+
+        if (Hi16RelLevel > 0) {
+          Hi16RelLevel --;
         }
-        break;
-        
-      case R_MIPS_LO16:
+
+        pLastHi16 = &HI16_REL_ENTRY[Hi16RelLevel];
+
+        if (pLastHi16->Relocated == 0)
         {
-          UINT32 insnlo;
-          UINT32 val;
-          UINT32 vallo;
-          UINT32 insn;
-
-          insnlo = *Location;
-          vallo = ((insnlo & 0xffff) ^ 0x8000) - 0x8000;
-
-          if (Hi16RelLevel > 0) {
-            Hi16RelLevel --;
-          }
-
-          pLastHi16 = &HI16_REL_ENTRY[Hi16RelLevel];
-
-          if (pLastHi16->Relocated == 0)
-          {
-            if (Value != pLastHi16->Value) {
-              ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_R_MIPS16_PAIR;
-              return EFI_UNSUPPORTED;
-            }
-            //
-            // Do HI16 relocate
-            //
-            insn =  *(pLastHi16->Location);
-            val  =  ((insn & 0xffff) << 16) + vallo;
-            val  += (Value + Adjust);
-
-            val  =  ((val >> 16) + ((val & 0x8000) != 0)) & 0xffff;
-
-            insn =  (insn & ~0xffff) | val;
-            *(pLastHi16->Location) = insn;
-
-            pLastHi16->Relocated = 1;
-          }
-
-          //
-          // deal with LO16
-          //
-          val  = (Value + Adjust) + vallo;
-          insnlo = (insnlo & ~0xffff) | (val & 0xffff);
-          *Location = insnlo;
-
-          break;
-        }
-      case R_MIPS_PC16:
-        {
-          INT32  rel;
-
-          rel = (UINT32)Value - (UINT32)Location;
-          rel >>= 2;
-          rel -= 1;
-
-          if( (rel > 32768) || (rel < -32768) ) {
+          if (Value != pLastHi16->Value) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_INCORRECT_R_MIPS16_PAIR;
             return EFI_UNSUPPORTED;
           }
+          //
+          // Do HI16 relocate
+          //
+          insn =  *(pLastHi16->Location);
+          val  =  ((insn & 0xffff) << 16) + vallo;
+          val  += (Value + Adjust);
 
-          *Location = (*Location & 0xffff0000) | (rel & 0xffff);
-          
-          break;
+          val  =  ((val >> 16) + ((val & 0x8000) != 0)) & 0xffff;
+
+          insn =  (insn & ~0xffff) | val;
+          *(pLastHi16->Location) = insn;
+
+          pLastHi16->Relocated = 1;
         }
-        
-      default:
-        ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_REL_TYPE;
-        return EFI_UNSUPPORTED;
+
+        //
+        // deal with LO16
+        //
+        val  = (Value + Adjust) + vallo;
+        insnlo = (insnlo & ~0xffff) | (val & 0xffff);
+        *Location = insnlo;
+
         break;
+      }
+    case R_MIPS_PC16:
+      {
+        INT32  rel;
+
+        rel = (UINT32)Value - (UINT32)Location;
+        rel >>= 2;
+        rel -= 1;
+
+        if( (rel > 32768) || (rel < -32768) ) {
+          return EFI_UNSUPPORTED;
+        }
+
+        *Location = (*Location & 0xffff0000) | (rel & 0xffff);
+        
+        break;
+      }
+      
+    default:
+      ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_UNSUPPORTED_REL_TYPE;
+      return EFI_UNSUPPORTED;
+      break;
     }
   }
 

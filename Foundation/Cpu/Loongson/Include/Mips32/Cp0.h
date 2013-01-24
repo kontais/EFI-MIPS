@@ -91,6 +91,7 @@ Abstract:
 #define  CP0_CAUSE_IP_SHIFT   8
 #define  CP0_CAUSE_EXC_CODE   0x0000007c
 #define  CP0_CAUSE_EXC_SHIFT  2
+#define  CP0_CAUSE_BD         0x80000000
 
 //
 // CP0_Diagnostic

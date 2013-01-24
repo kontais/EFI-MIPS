@@ -31,15 +31,15 @@ COMPONENT_TYPE       = APPLICATION
   Ping.c
 
 [includes.common]
-  ../Inc
+  ../inc
   ../Library
   $(EDK_SOURCE)/Foundation/Efi
   $(EDK_SOURCE)/Foundation
   $(EDK_SOURCE)/Foundation/Efi/Include
   $(EDK_SOURCE)/Foundation/Include
   $(EDK_SOURCE)/Foundation/Include/IndustryStandard
-  $(EDK_SOURCE)/Foundation/FrameWork
-  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
   $(EDK_SOURCE)/Foundation/Core/Dxe
   $(EDK_SOURCE)/Foundation/Library/Dxe/Include
   $(DEST_DIR)/
@@ -51,8 +51,13 @@ COMPONENT_TYPE       = APPLICATION
   EfiProtocolLib
   ArchProtocolLib
   EdkGuidLib
-  EdkFrameworkGuidLib
   EfiDriverLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+  CompilerStub
+
+[libraries.Mips32]
+  CpuMips32Lib
 
 [libraries.Ia32]
   CpuIA32Lib

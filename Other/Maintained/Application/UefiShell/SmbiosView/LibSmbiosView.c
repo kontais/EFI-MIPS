@@ -22,10 +22,10 @@ Revision History
 --*/
 
 #include "EfiShellLib.h"
-#include "LIbSmbios.h"
+#include "LibSmbios.h"
 #include "LibSmbiosView.h"
 #include "smbiosview.h"
-#include "smbios.h"
+#include "Smbios.h"
 #include STRING_DEFINES_FILE
 
 STATIC UINT8                    mInit         = 0;

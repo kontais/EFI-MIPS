@@ -20,7 +20,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 --*/
 
-#include "Heditor.h"
+#include "heditor.h"
 
 HEFI_EDITOR_COLOR_ATTRIBUTES    HOriginalColors;
 INTN                            HOriginalMode;

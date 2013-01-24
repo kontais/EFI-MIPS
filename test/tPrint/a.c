@@ -35,14 +35,13 @@ Print (
   pc = fmt;
   while (*pc) {
     switch (*pc) {
-     case 'x':
+    case 'x':
       //uv = (*(UINTN *) ((args += ((sizeof (UINTN) + 3) &~(3))) - ((sizeof (UINTN) + 3) &~(3))));
       //uv = (*(UINTN *) ((args += 4) - 4));
       uv = VA_ARG (args, UINTN);
       Data[Index++] = (UINT32)uv;
       Data[Index++] = (UINT32)(uv>>32);
       break;
-
     case 'd':
       //sv = (*(UINT64 *) ((args += ((sizeof (UINT64) + 3) &~(3))) - ((sizeof (UINT64) + 3) &~(3))));
       //sv = (*(UINT64 *) ((args += 8) - 8));
@@ -53,7 +52,7 @@ Print (
 
       //sv = (*(UINT64 *) (((void*)((UINT32)(((UINT32) args) + 7) & -8) + 8) - 8));
       sv = VA_ARG64 (args, UINT64);
-     
+
 
 
       Data[Index++] = (UINT32)sv;

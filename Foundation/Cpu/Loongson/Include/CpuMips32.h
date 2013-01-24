@@ -1,14 +1,14 @@
 /*++
 
-Copyright (c) 2004 - 2006, Intel Corporation                                                         
-Copyright (c) 2010, kontais                                                                         
-All rights reserved. This program and the accompanying materials                          
-are licensed and made available under the terms and conditions of the BSD License         
-which accompanies this distribution.  The full text of the license may be found at        
-http://opensource.org/licenses/bsd-license.php                                            
-                                                                                          
-THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
-WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
+Copyright (c) 2004 - 2006, Intel Corporation
+Copyright (c) 2010, kontais
+All rights reserved. This program and the accompanying materials
+are licensed and made available under the terms and conditions of the BSD License
+which accompanies this distribution.  The full text of the license may be found at
+http://opensource.org/licenses/bsd-license.php
+
+THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 
 Module Name:
 
@@ -48,7 +48,7 @@ typedef struct {
 
 typedef struct {
   UINT32  ExtendedSignatureCount;
-  UINT32  ExtendedTableChecksum;  
+  UINT32  ExtendedTableChecksum;
   UINT8   Reserved[12];
 } EFI_CPU_MICROCODE_EXTENDED_TABLE_HEADER;
 
@@ -147,13 +147,13 @@ EfiHalt (
   )
 ;
 
-/*++                                                                                                                               
-Routine Description:                                                
-  Halt the Cpu    
-Arguments:                
-   None                                                          
-Returns:                                                            
-   None                                                
+/*++
+Routine Description:
+  Halt the Cpu
+Arguments:
+   None
+Returns:
+   None
 --*/
 VOID
 MIPS32API
@@ -162,13 +162,13 @@ EfiWbinvd (
   )
 ;
 
-/*++                                                                                                                               
-Routine Description:                                                
+/*++
+Routine Description:
   Write back and invalidate the Cpu cache
-Arguments:                
-   None                                                          
-Returns:                                                            
-   None                                                
+Arguments:
+   None
+Returns:
+   None
 --*/
 VOID
 MIPS32API
@@ -177,27 +177,27 @@ EfiInvd (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Invalidate the Cpu cache
-Arguments:                
-   None                                                          
-Returns:                                                            
-   None                                                
+Arguments:
+   None
+Returns:
+   None
 --*/
 UINT32
 MIPS32API
 EfiCpuid (VOID)
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Get the Cpu info by excute the CPUID instruction
-Arguments:                
+Arguments:
    RegisterInEax: -The input value to put into register EAX
-   Regs:          -The Output value                      
-Returns:                                                            
-   None                                                
+   Regs:          -The Output value
+Returns:
+   None
 --*/
 
 VOID
@@ -207,17 +207,17 @@ EfiCpuidExt (
   IN  UINT32                 CacheLevel,
   OUT EFI_CPUID_REGISTER     *Regs
   )
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   When RegisterInEax != 4, the functionality is the same as EfiCpuid.
   When RegisterInEax == 4, the function return the deterministic cache
   parameters by excuting the CPUID instruction
-Arguments:                
+Arguments:
    RegisterInEax: - The input value to put into register EAX
    CacheLevel:      - The deterministic cache level
-   Regs:          - The Output value                      
-Returns:                                                            
-   None                                                
+   Regs:          - The Output value
+Returns:
+   None
 --*/
 ;
 
@@ -228,14 +228,14 @@ EfiReadMsr (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Read Cpu MSR
-Arguments:                
+Arguments:
   Index: -The index value to select the register
-                       
-Returns:                                                            
-   Return the read data                                                
+
+Returns:
+   Return the read data
 --*/
 VOID
 MIPS32API
@@ -245,14 +245,14 @@ EfiWriteMsr (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Write Cpu MSR
-Arguments:                
+Arguments:
   Index: -The index value to select the register
-  Value: -The value to write to the selected register                      
-Returns:                                                            
-   None                                                
+  Value: -The value to write to the selected register
+Returns:
+   None
 --*/
 UINT64
 MIPS32API
@@ -261,13 +261,13 @@ EfiReadTsc (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Read Time stamp
-Arguments:                
-  None                 
-Returns:                                                            
-   Return the read data                                                
+Arguments:
+  None
+Returns:
+   Return the read data
 --*/
 VOID
 MIPS32API
@@ -276,13 +276,13 @@ EfiDisableCache (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Writing back and invalidate the cache,then diable it
-Arguments:                
-  None                 
-Returns:                                                            
-  None                                               
+Arguments:
+  None
+Returns:
+  None
 --*/
 VOID
 MIPS32API
@@ -291,13 +291,13 @@ EfiEnableCache (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Invalidate the cache,then Enable it
-Arguments:                
-  None                 
-Returns:                                                            
-  None                                               
+Arguments:
+  None
+Returns:
+  None
 --*/
 UINT32
 MIPS32API
@@ -306,13 +306,13 @@ EfiGetEflags (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Get Eflags
-Arguments:                
-  None                 
-Returns:                                                            
-  Return the Eflags value                                               
+Arguments:
+  None
+Returns:
+  Return the Eflags value
 --*/
 VOID
 MIPS32API
@@ -321,12 +321,12 @@ EfiDisableInterrupts (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Disable Interrupts
-Arguments:                
-  None                 
-Returns:                                                            
+Arguments:
+  None
+Returns:
   None
 --*/
 VOID
@@ -336,13 +336,13 @@ EfiEnableInterrupts (
   )
 ;
 
-/*++                                                                                                                          
-Routine Description:                                                
+/*++
+Routine Description:
   Enable Interrupts
-Arguments:                
-  None                 
-Returns:                                                            
-  None                                               
+Arguments:
+  None
+Returns:
+  None
 --*/
 
 
@@ -435,7 +435,7 @@ Routine Description:
 Arguments:
 
   Count  - count to save
-  
+
 Returns:
 
 --*/
@@ -454,7 +454,7 @@ Routine Description:
 Arguments:
 
   None
-  
+
 Returns:
 
   Value of cp0 status.
@@ -475,7 +475,7 @@ Routine Description:
 Arguments:
 
   Value to set to cp0 status.
-  
+
 Returns:
 
   None
@@ -496,7 +496,7 @@ Routine Description:
 Arguments:
 
   None
-  
+
 Returns:
 
   Value of cp0 cause.
@@ -517,7 +517,7 @@ Routine Description:
 Arguments:
 
   Value to set to cp0 cause.
-  
+
 Returns:
 
   None
@@ -537,7 +537,7 @@ Routine Description:
 Arguments:
 
   None
-  
+
 Returns:
 
   Value of cp0 compare.
@@ -557,7 +557,7 @@ Routine Description:
 Arguments:
 
   Value to set to cp0 compare.
-  
+
 Returns:
 
   None
@@ -580,4 +580,5 @@ Store64 (
 ;
 
 #endif
+
 

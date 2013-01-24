@@ -136,7 +136,9 @@ static int console_col = 0; /* cursor col */
 static int console_row = 0; /* cursor row */
 
 static const int video_font_draw_table16[] = {
-    0x00000000, 0x42080000, 0x00004208, 0x42084208
+    /* 0x00000000, 0x42080000, 0x00004208, 0x42084208 */
+    0x00000000, 0xffff0000, 0x0000ffff, 0xffffffff
+		
 };
 
 

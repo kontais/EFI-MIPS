@@ -43,7 +43,8 @@ Revision history:
 EFI_FORWARD_DECLARATION (EFI_NETWORK_INTERFACE_IDENTIFIER_PROTOCOL);
 
 typedef enum {
-  EfiNetworkInterfaceUndi = 1
+  EfiNetworkInterfaceUndi = 1,
+  EfiNetworkInterfaceSnp = 2
 } EFI_NETWORK_PROTOCOL_TYPE;
 
 struct _EFI_NETWORK_INTERFACE_IDENTIFIER_PROTOCOL {

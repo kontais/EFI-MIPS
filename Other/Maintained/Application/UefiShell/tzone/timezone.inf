@@ -20,7 +20,7 @@
 #--*/
 
 [defines]
-BASE_NAME            = timezone
+BASE_NAME            = TZone
 FILE_GUID            = E27B12B9-2647-4af3-ADBC-B5AB5FB50421
 COMPONENT_TYPE       = APPLICATION
 
@@ -32,15 +32,15 @@ COMPONENT_TYPE       = APPLICATION
 
 [includes.common]
   .
-  ../Inc
+  ../inc
   ../Library
   $(EDK_SOURCE)/Foundation
   $(EDK_SOURCE)/Foundation/Include
   $(EDK_SOURCE)/Foundation/Include/IndustryStandard
   $(EDK_SOURCE)/Foundation/Efi
   $(EDK_SOURCE)/Foundation/Efi/Include
-  $(EDK_SOURCE)/Foundation/FrameWork
-  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
   $(EDK_SOURCE)/Foundation/Core/Dxe
   $(DEST_DIR)/
 

@@ -1,0 +1,35 @@
+PCI Root Bridge No Enumeration
+  Handle   = NULL
+  DevPath  = ACPI_DP, EISA_PNP_ID(0x0A03), mEfiPciRootBridgeDevicePath, PcatRootBridgeDevicePathConstructor
+  Protocol = gEfiPciRootBridgeIoProtocolGuid
+  Protocol = gEfiDeviceIoProtocolGuid
+
+PCI Bus No Enumeration
+  Protocol = DriverBinding
+  Handle   = NULL, (PciIoDevice->Handle), CreatePciIoDevice
+  DevPath  = (PCI RootBridgeIo).DP + HW_PCI_DP, Function, Device, CreatePciDevicePath
+  Protocol = PciIo RegisterPciDevice, PciIoInterface
+
+Ide Controller
+  Protocol = DriverBinding, PciIo, PCI_SUB_CLASS_IDE, PCI_CLASS_MASS_STORAGE
+  Handle   = ControllerHandle, PciIoDevice->Handle
+  Protocol = gIdeControllerDriverGuid, 
+  Protocol = gEfiIdeControllerInitProtocolGuid
+
+Ide Bus
+  Protocol = DriverBinding, use gEfiIdeControllerInitProtocolGuid
+  Handle   = NULL, IdeBlkIoDevicePtr->Handle
+  DevPath  = (PCI Bus).DP + MSG_ATAPI_DP
+  Protocol = gEfiBlockIoProtocolGuid
+  Protocol = gEfiDiskInfoProtocolGuid
+
+Disk Io
+  Protocol = DriverBinding, use gEfiBlockIoProtocolGuid
+  Handle   = ControllerHandle
+  Protocol = gEfiDiskIoProtocolGuid
+
+Ext2
+  Protocol = DriverBinding, use gEfiDiskIoProtocolGuid
+  Handle   = ControllerHandle, Volume->Handle
+  Protocol = gEfiSimpleFileSystemProtocolGuid
+

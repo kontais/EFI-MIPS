@@ -18,6 +18,7 @@ Abstract:
 
 #include "CpuDxe.h"
 #include "Mips.h"
+#include "Exception.h"
 
 //
 // Global Variables
@@ -98,13 +99,6 @@ Returns:
 
 --*/
 {
-  //
-  // Do not support recursive Interrupt
-  //
-  if (IntrServiceState == TRUE) {
-    return EFI_DEVICE_ERROR;
-  }
-
   EfiEnableInterrupts (); 
   mInterruptState  = TRUE;
   return EFI_SUCCESS;
@@ -328,7 +322,100 @@ DumpExceptionDataDebugOut (
     "!!!! MIPS32 Exception Type - %08x !!!!\n",
     InterruptType
     ));
- 
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "$0-%08x at-%08x v0-%08x v1-%08x\n",
+    SystemContext.SystemContextMips32->zero,
+    SystemContext.SystemContextMips32->ast,
+    SystemContext.SystemContextMips32->v0,
+    SystemContext.SystemContextMips32->v1
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "a0-%08x a1-%08x a2-%08x a3-%08x\n",
+    SystemContext.SystemContextMips32->a0,
+    SystemContext.SystemContextMips32->a1,
+    SystemContext.SystemContextMips32->a2,
+    SystemContext.SystemContextMips32->a3
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "t0-%08x t1-%08x t2-%08x t3-%08x\n",
+    SystemContext.SystemContextMips32->t0,
+    SystemContext.SystemContextMips32->t1,
+    SystemContext.SystemContextMips32->t2,
+    SystemContext.SystemContextMips32->t3
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "t4-%08x t5-%08x t6-%08x t7-%08x\n",
+    SystemContext.SystemContextMips32->t4,
+    SystemContext.SystemContextMips32->t5,
+    SystemContext.SystemContextMips32->t6,
+    SystemContext.SystemContextMips32->t7
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "s0-%08x s1-%08x s2-%08x s3-%08x\n",
+    SystemContext.SystemContextMips32->s0,
+    SystemContext.SystemContextMips32->s1,
+    SystemContext.SystemContextMips32->s2,
+    SystemContext.SystemContextMips32->s3
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "s4-%08x s5-%08x s6-%08x s7-%08x\n",
+    SystemContext.SystemContextMips32->s4,
+    SystemContext.SystemContextMips32->s5,
+    SystemContext.SystemContextMips32->s6,
+    SystemContext.SystemContextMips32->s7
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "t8-%08x t9-%08x\n",
+    SystemContext.SystemContextMips32->t8,
+    SystemContext.SystemContextMips32->t9
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "gp-%08x sp-%08x ra-%08x\n",
+    SystemContext.SystemContextMips32->gp,
+    SystemContext.SystemContextMips32->sp,
+    SystemContext.SystemContextMips32->ra
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "status-%08x mullo-%08x mulhi-%08x badvaddr-%08x\n",
+    SystemContext.SystemContextMips32->status,
+    SystemContext.SystemContextMips32->mullo,
+    SystemContext.SystemContextMips32->mulhi,
+    SystemContext.SystemContextMips32->badvaddr
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "cause-%08x epc-%08x%s\n",
+    SystemContext.SystemContextMips32->cause,
+    SystemContext.SystemContextMips32->pc,
+    (SystemContext.SystemContextMips32->cause & CP0_CAUSE_BD) ? "(+4)" : ""
+    ));
+
+  DEBUG ((
+    EFI_D_ERROR,
+    "*epc-%08x *(epc+4)-%08x\n",
+    *(UINT32*)SystemContext.SystemContextMips32->pc,
+    *(UINT32*)(SystemContext.SystemContextMips32->pc + 4)
+    ));
+
   return ;
 }
 #endif
@@ -979,10 +1066,26 @@ Returns:
   ASSERT_EFI_ERROR (Status);
 
   //
-  // Install Exception Handler (0x00 ~ 0x1F)
+  // Install Exception Handler (0 ~ 31)
   //
-  for (InterruptVector = 0; InterruptVector < 0x20; InterruptVector++) {
+  for (InterruptVector = 0; InterruptVector < 32; InterruptVector++) {
     CpuRegisterInterruptHandler (NULL, InterruptVector, ExceptionHandler);
+  }
+
+  //
+  // Unaligned Access Handler
+  //
+  CpuRegisterInterruptHandler (NULL, EXCEPT_MIPS32_ADEL, ExceptionHandlerADESL);
+  CpuRegisterInterruptHandler (NULL, EXCEPT_MIPS32_ADES, ExceptionHandlerADESL);
+
+  //
+  // Install interrupt vector ( 32 ~ 39)
+  //
+  for (Intr = EfiMips32Intr0; Intr < EfiMips32IntrMax; Intr++) {
+    InterruptVector = 0;
+    Status = gMips32Intr->GetVector (gMips32Intr, Intr, &InterruptVector);
+    ASSERT_EFI_ERROR (Status);
+    CpuRegisterInterruptHandler (NULL, InterruptVector, InterruptHandler);
   }
 
   //
@@ -990,16 +1093,7 @@ Returns:
   //
   CpuRegisterInterruptHandler (NULL, EXCEPT_MIPS32_TLB_MISS, ExceptionHandler);
   CpuRegisterInterruptHandler (NULL, EXCEPT_MIPS32_XTLB_MISS, ExceptionHandler);
-  
-  //
-  // Install interrupt vector
-  //
-  for (Intr = EfiMips32Intr0; Intr <= EfiMips32Intr7; Intr++) {
-    InterruptVector = 0;
-    Status = gMips32Intr->GetVector (gMips32Intr, Intr, &InterruptVector);
-    ASSERT_EFI_ERROR (Status);
-    CpuRegisterInterruptHandler (NULL, InterruptVector, InterruptHandler);
-  }
+
 
   //
   // Install Mips RAM Common Excepiton Code

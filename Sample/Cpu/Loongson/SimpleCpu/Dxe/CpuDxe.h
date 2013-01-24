@@ -29,7 +29,6 @@ extern UINT8 Exception[];
 extern UINT8 ExceptionEnd[];
 extern UINT8 ExceptionTlbMiss[];
 extern UINT8 ExceptionTlbMissEnd[];
-extern UINT32 IntrServiceState;
 
 #define CPU_EXCEPTION_DEBUG_OUTPUT   1
 #define CPU_EXCEPTION_VGA_SWITCH     1

@@ -55,6 +55,7 @@ COMPONENT_TYPE       = BS_DRIVER
   EdkFrameworkProtocolLib
   EfiProtocolLib
   ArchProtocolLib
+#  PrintLib
   EfiCommonLib
   EdkGuidLib
   CompilerStub

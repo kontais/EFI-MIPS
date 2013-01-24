@@ -1,0 +1,78 @@
+#/*++
+#
+# Copyright (c) 2012, kontais
+# All rights reserved. This program and the accompanying materials
+# are licensed and made available under the terms and conditions of the BSD License
+# which accompanies this distribution.  The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
+#  Module Name:
+#
+#    Rtl81x9.inf
+#
+#  Abstract:
+#
+#    Component description file for realtek 81x9 NIC.
+#
+#--*/
+
+[defines]
+BASE_NAME            = Rtl81x9
+FILE_GUID            = ab8067fe-5eb0-412d-8234-12431c0351f0
+COMPONENT_TYPE       = BS_DRIVER
+
+[sources.common]
+  Rtl81x9.c
+  Rtl81x9.h
+  Rtl81x9Reg.h
+  Rtl81x9Snp.c
+  Rtl81x9NvData.c
+  Rtl81x9Shutdown.c
+  Rtl81x9Stop.c
+  Rtl81x9Dev.c
+  Rtl81x9Dev.h
+  Rtl81x9Eeprom.c
+  Rtl81x9StationAddress.c
+  Rtl81x9Reset.c
+  Rtl81x9Start.c
+  Rtl81x9Initialize.c
+  Rtl81x9WaitForPacket.c
+  Rtl81x9ReceiveFilters.c
+  Rtl81x9Statistics.c
+  Rtl81x9MCastIpToMac.c
+  Rtl81x9GetStatus.c
+  Rtl81x9Receive.c
+  Rtl81x9Transmit.c
+  ComponentName.c
+
+[libraries.common]
+#  PrintLib
+  EfiDriverLib
+  EdkProtocolLib
+  EdkFrameworkProtocolLib
+  EfiProtocolLib
+  ArchProtocolLib
+  EfiCommonLib
+  EdkGuidLib
+  EdkFrameworkGuidLib
+  EfiGuidLib
+
+[includes.common]
+  $(EDK_SOURCE)/Foundation/Efi
+  $(EDK_SOURCE)/Foundation
+  $(EDK_SOURCE)/Foundation/Framework
+  .
+  $(EDK_SOURCE)/Foundation/Core/Dxe
+  $(EDK_SOURCE)/Foundation/Include
+  $(EDK_SOURCE)/Foundation/Efi/Include
+  $(EDK_SOURCE)/Foundation/Framework/Include
+  $(EDK_SOURCE)/Foundation/Include/IndustryStandard
+#  $(EDK_SOURCE)/Foundation/Library/Dxe/Print
+  $(EDK_SOURCE)/Foundation/Library/Dxe/Include
+  $(EDK_SOURCE)/Foundation/Library/Dxe/EfiDriverLib
+
+[nmake.common]
+  IMAGE_ENTRY_POINT=InitializeRtl81x9Driver

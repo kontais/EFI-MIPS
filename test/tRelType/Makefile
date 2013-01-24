@@ -1,19 +1,21 @@
-#LOAD_ADDR=0x00400000
-LOAD_ADDR=0x80000000
+LOAD_ADDR=0x00400000
 TOOL_DIR=/home/loongson/EFI-MIPS/Sample/Platform/YeeLoong/Build/Tools
 FWIMAGE=$(TOOL_DIR)/FwImage
 ELFLINK=$(TOOL_DIR)/ElfLink
 ELFTOBIN=$(TOOL_DIR)/ElfToBin
 
 all: 
-	ld -r -d -N -G 0 -o D.rel D.o
-	$(FWIMAGE) -t 0 SECURITY_CORE D.rel D.efi
-	$(ELFLINK) $(LOAD_ADDR) D.efi D.link
-	objcopy -R .reginfo D.rel
-	ld -e DxeMain -d -N -G 0 -Ttext $(LOAD_ADDR) -o D.elf D.rel
-	objcopy -R .reginfo -O binary --set-section-flags .bss=alloc,load,contents D.elf D.bin
-	$(ELFTOBIN) D.elf D.bin2
+	gcc -Wa,-mno-pdr -c -G 0 -mno-abicalls -fno-pic -o t.o t.c
+	ld -r -d -N -G 0 -o t.rel t.o
+	$(FWIMAGE) -t 0 SECURITY_CORE t.rel t.efi
+	readelf -a t.efi > t.efi.readelf
+	ld -e EntryPoint -d -N -G 0 -Ttext $(LOAD_ADDR) -o t.elf t.rel
+	objcopy -R .reginfo -O binary --set-section-flags .bss=alloc,load,contents t.elf t.bin
+	$(ELFTOBIN) t.elf t.bin2
+	hd t.efi > t.efi.hex
+	hd t.bin > t.hex
+	$(ELFLINK) $(LOAD_ADDR) t.efi t.link
 
 
 clean:
-	rm -rf D.elf D.efi.readelf D.efi D.rel D.hex D.bin D.link *.bin* *.hex
+	rm -rf t.o t.elf t.efi.readelf t.efi t.rel t.hex t.bin t.link *.bin* *.hex

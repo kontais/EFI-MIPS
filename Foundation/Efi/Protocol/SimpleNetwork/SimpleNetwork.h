@@ -137,6 +137,7 @@ typedef enum {
 #define EFI_SIMPLE_NETWORK_TRANSMIT_INTERRUPT             0x02
 #define EFI_SIMPLE_NETWORK_COMMAND_INTERRUPT              0x04
 #define EFI_SIMPLE_NETWORK_SOFTWARE_INTERRUPT             0x08
+#define EFI_SIMPLE_NETWORK_NO_MEDIA                       0x10
 
 #define MAX_MCAST_FILTER_CNT                              16
 typedef struct {

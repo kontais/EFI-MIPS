@@ -21,7 +21,7 @@ Revision History
 --*/
 
 #include "EfiShellLib.h"
-#include "pci22.h"
+#include "Pci22.h"
 #include "pci_class.h"
 #include "pci.h"
 #include "Acpi.h"

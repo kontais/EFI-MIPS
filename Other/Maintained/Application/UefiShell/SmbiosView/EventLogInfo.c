@@ -25,7 +25,7 @@ Revision History
 #include "PrintInfo.h"
 #include "QueryTable.h"
 #include "EventLogInfo.h"
-#include "smbios.h"
+#include "Smbios.h"
 #include STRING_DEFINES_FILE
 
 VOID

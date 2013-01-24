@@ -788,208 +788,208 @@ Returns:
   // If it's an encapsulating section, then create the new section stream also
   //
   switch (Node->Type) {
-    case EFI_SECTION_COMPRESSION:
-      //
-      // Get the CompressionSectionHeader
-      //
-      ASSERT (Node->Size >= sizeof (EFI_COMPRESSION_SECTION));
+  case EFI_SECTION_COMPRESSION:
+    //
+    // Get the CompressionSectionHeader
+    //
+    ASSERT (Node->Size >= sizeof (EFI_COMPRESSION_SECTION));
+    
+    CompressionHeader = (EFI_COMPRESSION_SECTION *) SectionHeader;
+    
+    //
+    // Allocate space for the new stream
+    //
+    if (CompressionHeader->UncompressedLength > 0) {
+      NewStreamBufferSize = CompressionHeader->UncompressedLength;
+      NewStreamBuffer = CoreAllocateBootServicesPool (NewStreamBufferSize);
+      if (NewStreamBuffer == NULL) {
+        CoreFreePool (Node);
+        return EFI_OUT_OF_RESOURCES;
+      }
       
-      CompressionHeader = (EFI_COMPRESSION_SECTION *) SectionHeader;
-      
-      //
-      // Allocate space for the new stream
-      //
-      if (CompressionHeader->UncompressedLength > 0) {
-        NewStreamBufferSize = CompressionHeader->UncompressedLength;
-        NewStreamBuffer = CoreAllocateBootServicesPool (NewStreamBufferSize);
-        if (NewStreamBuffer == NULL) {
-          CoreFreePool (Node);
-          return EFI_OUT_OF_RESOURCES;
+      if (CompressionHeader->CompressionType == EFI_NOT_COMPRESSED) {
+        //
+        // stream is not actually compressed, just encapsulated.  So just copy it.
+        //
+        EfiCommonLibCopyMem (NewStreamBuffer, CompressionHeader + 1, NewStreamBufferSize);
+      } else if (CompressionHeader->CompressionType == EFI_STANDARD_COMPRESSION ||
+                 CompressionHeader->CompressionType == EFI_CUSTOMIZED_COMPRESSION) {
+        //
+        // Decompress the stream
+        //
+        if (CompressionHeader->CompressionType == EFI_STANDARD_COMPRESSION) {
+        Status = CoreLocateProtocol (&gEfiTianoDecompressProtocolGuid, NULL, &Decompress);
+        } else {
+          Status = CoreLocateProtocol (&gEfiCustomizedDecompressProtocolGuid, NULL, &Decompress);
         }
         
-        if (CompressionHeader->CompressionType == EFI_NOT_COMPRESSED) {
-          //
-          // stream is not actually compressed, just encapsulated.  So just copy it.
-          //
-          EfiCommonLibCopyMem (NewStreamBuffer, CompressionHeader + 1, NewStreamBufferSize);
-        } else if (CompressionHeader->CompressionType == EFI_STANDARD_COMPRESSION ||
-                   CompressionHeader->CompressionType == EFI_CUSTOMIZED_COMPRESSION) {
-          //
-          // Decompress the stream
-          //
-          if (CompressionHeader->CompressionType == EFI_STANDARD_COMPRESSION) {
-          Status = CoreLocateProtocol (&gEfiTianoDecompressProtocolGuid, NULL, &Decompress);
-          } else {
-            Status = CoreLocateProtocol (&gEfiCustomizedDecompressProtocolGuid, NULL, &Decompress);
-          }
-          
-          ASSERT_EFI_ERROR (Status);
-          
-          Status = Decompress->GetInfo (
-                                 Decompress,
-                                 CompressionHeader + 1,
-                                 Node->Size - sizeof (EFI_COMPRESSION_SECTION),
-                                 (UINT32 *)&NewStreamBufferSize,
-                                 &ScratchSize
-                                 );
-          ASSERT_EFI_ERROR (Status);
-          ASSERT (NewStreamBufferSize == CompressionHeader->UncompressedLength);
+        ASSERT_EFI_ERROR (Status);
+        
+        Status = Decompress->GetInfo (
+                               Decompress,
+                               CompressionHeader + 1,
+                               Node->Size - sizeof (EFI_COMPRESSION_SECTION),
+                               (UINT32 *)&NewStreamBufferSize,
+                               &ScratchSize
+                               );
+        ASSERT_EFI_ERROR (Status);
+        ASSERT (NewStreamBufferSize == CompressionHeader->UncompressedLength);
 
-          ScratchBuffer = CoreAllocateBootServicesPool (ScratchSize);
-          if (ScratchBuffer == NULL) {
-            CoreFreePool (Node);
-            CoreFreePool (NewStreamBuffer);
-            return EFI_OUT_OF_RESOURCES;
-          }
-
-          Status = Decompress->Decompress (
-                                 Decompress,
-                                 CompressionHeader + 1,
-                                 Node->Size - sizeof (EFI_COMPRESSION_SECTION),
-                                 NewStreamBuffer,
-                                 (UINT32)NewStreamBufferSize,
-                                 ScratchBuffer,
-                                 ScratchSize
-                                 );
-          ASSERT_EFI_ERROR (Status);
-          CoreFreePool (ScratchBuffer);                                           
+        ScratchBuffer = CoreAllocateBootServicesPool (ScratchSize);
+        if (ScratchBuffer == NULL) {
+          CoreFreePool (Node);
+          CoreFreePool (NewStreamBuffer);
+          return EFI_OUT_OF_RESOURCES;
         }
+
+        Status = Decompress->Decompress (
+                               Decompress,
+                               CompressionHeader + 1,
+                               Node->Size - sizeof (EFI_COMPRESSION_SECTION),
+                               NewStreamBuffer,
+                               (UINT32)NewStreamBufferSize,
+                               ScratchBuffer,
+                               ScratchSize
+                               );
+        ASSERT_EFI_ERROR (Status);
+        CoreFreePool (ScratchBuffer);                                           
+      }
+    } else {
+      NewStreamBuffer = NULL;
+      NewStreamBufferSize = 0;
+    }
+    
+    Status = OpenSectionStreamEx (
+               NewStreamBufferSize,
+               NewStreamBuffer,
+               FALSE,
+               Stream->AuthenticationStatus,
+               &Node->EncapsulatedStreamHandle
+               );
+    if (EFI_ERROR (Status)) {
+      CoreFreePool (Node);
+      CoreFreePool (NewStreamBuffer);
+      return Status;
+    }
+    break;
+
+  case EFI_SECTION_GUID_DEFINED:
+    GuidedHeader = (EFI_GUID_DEFINED_SECTION *) SectionHeader;
+    Node->EncapsulationGuid = &GuidedHeader->SectionDefinitionGuid;
+    Status = CoreLocateProtocol (Node->EncapsulationGuid, NULL, &GuidedExtraction);
+    if (!EFI_ERROR (Status)) {
+      //
+      // NewStreamBuffer is always allocated by ExtractSection... No caller
+      // allocation here.
+      //
+      Status = GuidedExtraction->ExtractSection (
+                                   GuidedExtraction,
+                                   GuidedHeader,
+                                   &NewStreamBuffer,
+                                   &NewStreamBufferSize,
+                                   &AuthenticationStatus
+                                   );
+      if (EFI_ERROR (Status)) {
+        CoreFreePool (*ChildNode);
+        return EFI_PROTOCOL_ERROR;
+      }
+      
+      //
+      // Make sure we initialize the new stream with the correct 
+      // authentication status for both aggregate and local status fields.
+      //
+      if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_AUTH_STATUS_VALID) {
+        //
+        // OR in the parent stream's aggregate status.
+        //
+        AuthenticationStatus |= Stream->AuthenticationStatus & EFI_AGGREGATE_AUTH_STATUS_ALL;
       } else {
-        NewStreamBuffer = NULL;
-        NewStreamBufferSize = 0;
+        //
+        // since there's no authentication data contributed by the section,
+        // just inherit the full value from our immediate parent.
+        //
+        AuthenticationStatus = Stream->AuthenticationStatus;
       }
       
       Status = OpenSectionStreamEx (
                  NewStreamBufferSize,
                  NewStreamBuffer,
                  FALSE,
-                 Stream->AuthenticationStatus,
+                 AuthenticationStatus,
+                 &Node->EncapsulatedStreamHandle
+                 );
+      if (EFI_ERROR (Status)) {
+        CoreFreePool (*ChildNode);
+        CoreFreePool (NewStreamBuffer);
+        return Status;
+      }
+    } else {
+      //
+      // There's no GUIDed section extraction protocol available.
+      //
+      if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_PROCESSING_REQUIRED) {
+        //
+        // If the section REQUIRES an extraction protocol, then we're toast
+        //
+        CoreFreePool (*ChildNode);
+        return EFI_PROTOCOL_ERROR;
+      }
+      
+      //
+      // Figure out the proper authentication status
+      //
+      AuthenticationStatus = Stream->AuthenticationStatus;
+      if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_AUTH_STATUS_VALID) {
+        //
+        //  The local status of the new stream is contained in 
+        //  AuthenticaionStatus.  This value needs to be ORed into the
+        //  Aggregate bits also...
+        //
+        
+        //
+        // Clear out and initialize the local status
+        //
+        AuthenticationStatus &= ~EFI_LOCAL_AUTH_STATUS_ALL;
+        AuthenticationStatus |= EFI_LOCAL_AUTH_STATUS_IMAGE_SIGNED | EFI_LOCAL_AUTH_STATUS_NOT_TESTED;
+        //
+        // OR local status into aggregate status
+        //
+        AuthenticationStatus |= AuthenticationStatus >> 16;
+      }
+      
+      SectionLength = SECTION_SIZE (GuidedHeader);
+      Status = OpenSectionStreamEx (
+                 SectionLength - GuidedHeader->DataOffset,
+                 (UINT8 *) GuidedHeader + GuidedHeader->DataOffset,
+                 TRUE,
+                 AuthenticationStatus,
                  &Node->EncapsulatedStreamHandle
                  );
       if (EFI_ERROR (Status)) {
         CoreFreePool (Node);
-        CoreFreePool (NewStreamBuffer);
         return Status;
       }
-      break;
-
-    case EFI_SECTION_GUID_DEFINED:
-      GuidedHeader = (EFI_GUID_DEFINED_SECTION *) SectionHeader;
-      Node->EncapsulationGuid = &GuidedHeader->SectionDefinitionGuid;
-      Status = CoreLocateProtocol (Node->EncapsulationGuid, NULL, &GuidedExtraction);
-      if (!EFI_ERROR (Status)) {
-        //
-        // NewStreamBuffer is always allocated by ExtractSection... No caller
-        // allocation here.
-        //
-        Status = GuidedExtraction->ExtractSection (
-                                     GuidedExtraction,
-                                     GuidedHeader,
-                                     &NewStreamBuffer,
-                                     &NewStreamBufferSize,
-                                     &AuthenticationStatus
-                                     );
-        if (EFI_ERROR (Status)) {
-          CoreFreePool (*ChildNode);
-          return EFI_PROTOCOL_ERROR;
-        }
-        
-        //
-        // Make sure we initialize the new stream with the correct 
-        // authentication status for both aggregate and local status fields.
-        //
-        if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_AUTH_STATUS_VALID) {
-          //
-          // OR in the parent stream's aggregate status.
-          //
-          AuthenticationStatus |= Stream->AuthenticationStatus & EFI_AGGREGATE_AUTH_STATUS_ALL;
-        } else {
-          //
-          // since there's no authentication data contributed by the section,
-          // just inherit the full value from our immediate parent.
-          //
-          AuthenticationStatus = Stream->AuthenticationStatus;
-        }
-        
-        Status = OpenSectionStreamEx (
-                   NewStreamBufferSize,
-                   NewStreamBuffer,
-                   FALSE,
-                   AuthenticationStatus,
-                   &Node->EncapsulatedStreamHandle
-                   );
-        if (EFI_ERROR (Status)) {
-          CoreFreePool (*ChildNode);
-          CoreFreePool (NewStreamBuffer);
-          return Status;
-        }
-      } else {
-        //
-        // There's no GUIDed section extraction protocol available.
-        //
-        if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_PROCESSING_REQUIRED) {
-          //
-          // If the section REQUIRES an extraction protocol, then we're toast
-          //
-          CoreFreePool (*ChildNode);
-          return EFI_PROTOCOL_ERROR;
-        }
-        
-        //
-        // Figure out the proper authentication status
-        //
-        AuthenticationStatus = Stream->AuthenticationStatus;
-        if (GuidedHeader->Attributes & EFI_GUIDED_SECTION_AUTH_STATUS_VALID) {
-          //
-          //  The local status of the new stream is contained in 
-          //  AuthenticaionStatus.  This value needs to be ORed into the
-          //  Aggregate bits also...
-          //
-          
-          //
-          // Clear out and initialize the local status
-          //
-          AuthenticationStatus &= ~EFI_LOCAL_AUTH_STATUS_ALL;
-          AuthenticationStatus |= EFI_LOCAL_AUTH_STATUS_IMAGE_SIGNED | EFI_LOCAL_AUTH_STATUS_NOT_TESTED;
-          //
-          // OR local status into aggregate status
-          //
-          AuthenticationStatus |= AuthenticationStatus >> 16;
-        }
-        
-        SectionLength = SECTION_SIZE (GuidedHeader);
-        Status = OpenSectionStreamEx (
-                   SectionLength - GuidedHeader->DataOffset,
-                   (UINT8 *) GuidedHeader + GuidedHeader->DataOffset,
-                   TRUE,
-                   AuthenticationStatus,
-                   &Node->EncapsulatedStreamHandle
-                   );
-        if (EFI_ERROR (Status)) {
-          CoreFreePool (Node);
-          return Status;
-        }
-      }
-      
-      if ((AuthenticationStatus & EFI_LOCAL_AUTH_STATUS_ALL) == 
-            (EFI_LOCAL_AUTH_STATUS_IMAGE_SIGNED | EFI_LOCAL_AUTH_STATUS_NOT_TESTED)) {
-        //
-        // Need to register for RPN for when the required GUIDed extraction
-        // protocol becomes available.  This will enable us to refresh the
-        // AuthenticationStatus cached in the Stream if it's ever requested
-        // again.
-        //
-        CreateGuidedExtractionRpnEvent (Stream, Node);
-      }
-      
-      break;
-
-    default:
-      
+    }
+    
+    if ((AuthenticationStatus & EFI_LOCAL_AUTH_STATUS_ALL) == 
+          (EFI_LOCAL_AUTH_STATUS_IMAGE_SIGNED | EFI_LOCAL_AUTH_STATUS_NOT_TESTED)) {
       //
-      // Nothing to do if it's a leaf
+      // Need to register for RPN for when the required GUIDed extraction
+      // protocol becomes available.  This will enable us to refresh the
+      // AuthenticationStatus cached in the Stream if it's ever requested
+      // again.
       //
-      break;
+      CreateGuidedExtractionRpnEvent (Stream, Node);
+    }
+    
+    break;
+
+  default:
+    
+    //
+    // Nothing to do if it's a leaf
+    //
+    break;
   }
   
   //

@@ -557,6 +557,6 @@ Returns:
   gBS->FreePool (Packet);
 
 ON_EXIT:
-  gBS->FreePool (Message);
+  //gBS->FreePool (Message);
   return Status;
 }

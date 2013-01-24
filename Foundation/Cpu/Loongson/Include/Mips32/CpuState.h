@@ -46,6 +46,7 @@
  *  branch emulation etc works properly.
  */
 #define SAVE_CPU(frame, bo)             \
+    SAVE_REG(zero,  ZERO, frame, bo)   ;\
     SAVE_REG(AT,  AST, frame, bo)      ;\
     SAVE_REG(v0,  V0, frame, bo)       ;\
     SAVE_REG(v1,  V1, frame, bo)       ;\

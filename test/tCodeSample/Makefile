@@ -1,8 +1,8 @@
 CC   = gcc
 ASM  = $(CC)
 
-INC += -I /home/zhangtao/EFI-MIPS/Foundation/Cpu/Loongson/Include \
-	-I /home/zhangtao/EFI-MIPS/Foundation/Cpu/Loongson/Include/Mips32
+INC += -I ~/EFI-MIPS/Foundation/Cpu/Loongson/Include \
+	-I ~/EFI-MIPS/Foundation/Cpu/Loongson/Include/Mips32
 
 
 

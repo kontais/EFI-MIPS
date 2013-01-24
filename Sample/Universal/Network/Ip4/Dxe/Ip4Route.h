@@ -90,7 +90,7 @@ typedef struct {
 //
 typedef struct _IP4_ROUTE_TABLE IP4_ROUTE_TABLE;
 
-typedef struct _IP4_ROUTE_TABLE {
+struct _IP4_ROUTE_TABLE {
   INTN                      RefCnt;
   UINT32                    TotalNum;
   NET_LIST_ENTRY            RouteArea[IP4_MASK_NUM];

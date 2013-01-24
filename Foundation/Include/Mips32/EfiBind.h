@@ -134,6 +134,10 @@ typedef int       register_t;
 // #define _EFIAPI __cdecl
 #define _EFIAPI
 
+#define LITTLE_ENDIAN 1234
+#define BIG_ENDIAN    4321
+
+#define BYTE_ORDER LITTLE_ENDIAN
 
 #endif // _EFI_BIND_H_
 

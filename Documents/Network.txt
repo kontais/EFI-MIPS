@@ -1,0 +1,5 @@
+load Mnp.efi Arp.efi Ip4.efi Ip4Config.efi Udp4.efi Dhcp4.efi Mtftp4.efi Tcp4.efi
+IfConfig.efi -s eth0 static 192.168.11.22 255.255.255.0 192.168.11.11 perment
+
+
+ifconfig ¨Cs eth0 Dhcp

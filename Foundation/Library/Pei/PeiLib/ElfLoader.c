@@ -438,72 +438,72 @@ Returns:
       }
 
       switch ( SectionHeader.sh_type ) {
-          case SHT_SYMTAB:
-            ImageContext->SymbolTableIndex  = Index;
-            ImageContext->SymbolTableOffset = SectionHeader.sh_offset;
-            if (SectionHeader.sh_entsize != sizeof(Elf32_Sym)) {
-              ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SYMBOL_ENTRY_SIZE;
-              return EFI_UNSUPPORTED;
-            }
-            ImageContext->NumberOfSymbols   = SectionHeader.sh_size / 
-                                                sizeof(Elf32_Sym);
-            ImageContext->FixupDataSize     += 
-              SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
-            break;
-            
-          case SHT_STRTAB:
-            //
-            //.dynstr, .shstrtab, .strtab all have SHT_STRTAB type
-            //
-            if (Index != ImageContext->SectionHeaderStringIndex) {
-              ImageContext->StringTableIndex  = Index;
-              ImageContext->StringTableOffset = SectionHeader.sh_offset;
-            }
-            ImageContext->FixupDataSize     += 
-              SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
-            break;
+      case SHT_SYMTAB:
+        ImageContext->SymbolTableIndex  = Index;
+        ImageContext->SymbolTableOffset = SectionHeader.sh_offset;
+        if (SectionHeader.sh_entsize != sizeof(Elf32_Sym)) {
+          ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SYMBOL_ENTRY_SIZE;
+          return EFI_UNSUPPORTED;
+        }
+        ImageContext->NumberOfSymbols   = SectionHeader.sh_size / 
+                                            sizeof(Elf32_Sym);
+        ImageContext->FixupDataSize     += 
+          SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
+        break;
+        
+      case SHT_STRTAB:
+        //
+        //.dynstr, .shstrtab, .strtab all have SHT_STRTAB type
+        //
+        if (Index != ImageContext->SectionHeaderStringIndex) {
+          ImageContext->StringTableIndex  = Index;
+          ImageContext->StringTableOffset = SectionHeader.sh_offset;
+        }
+        ImageContext->FixupDataSize     += 
+          SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
+        break;
 
-          case SHT_RELA:
-          case SHT_REL:
-            ImageContext->FixupDataSize     += 
-              SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
-            break;
-            
-          case SHT_PROGBITS:
-            //
-            // Add each allocate section size
-            //
-            if ( SectionHeader.sh_flags & SHF_ALLOC ) {
-              ImageContext->ImageSize +=
-                (UINT64) ( SectionHeader.sh_size + SectionHeader.sh_addralign * 2 );
-              //
-              //BUGBUG: Assume SHF_ALLOC|SHF_EXECINSTR is .text section
-              //Relocatable file have no .fini, .init, .plt section which have 
-              //SHF_EXECINSTR Attribute
-              //
-              if ( SectionHeader.sh_flags & SHF_EXECINSTR ) {
-                ImageContext->TextSectionIndex = Index;
-              }
-            }
-            break;
+      case SHT_RELA:
+      case SHT_REL:
+        ImageContext->FixupDataSize     += 
+          SectionHeader.sh_size + SectionHeader.sh_addralign * 2;
+        break;
+        
+      case SHT_PROGBITS:
+        //
+        // Add each allocate section size
+        //
+        if ( SectionHeader.sh_flags & SHF_ALLOC ) {
+          ImageContext->ImageSize +=
+            (UINT64) ( SectionHeader.sh_size + SectionHeader.sh_addralign * 2 );
+          //
+          //BUGBUG: Assume SHF_ALLOC|SHF_EXECINSTR is .text section
+          //Relocatable file have no .fini, .init, .plt section which have 
+          //SHF_EXECINSTR Attribute
+          //
+          if ( SectionHeader.sh_flags & SHF_EXECINSTR ) {
+            ImageContext->TextSectionIndex = Index;
+          }
+        }
+        break;
 
-          case SHT_NOBITS:
-            //
-            // Add .bss section size. Make sure use ld's -r with -d option 
-            // to allocate common symbols to .bss section
-            //
-            if ((SectionHeader.sh_flags & SHF_ALLOC) &&
-                (SectionHeader.sh_flags & SHF_WRITE)) {
-              ImageContext->ImageSize +=
-                (UINT64) ( SectionHeader.sh_size + SectionHeader.sh_addralign * 2 );
-            }
-            break;
-  
-          default:
-            //
-            // Don' case non SHF_ALLOC section size
-            //
-            break;
+      case SHT_NOBITS:
+        //
+        // Add .bss section size. Make sure use ld's -r with -d option 
+        // to allocate common symbols to .bss section
+        //
+        if ((SectionHeader.sh_flags & SHF_ALLOC) &&
+            (SectionHeader.sh_flags & SHF_WRITE)) {
+          ImageContext->ImageSize +=
+            (UINT64) ( SectionHeader.sh_size + SectionHeader.sh_addralign * 2 );
+        }
+        break;
+
+      default:
+        //
+        // Don' case non SHF_ALLOC section size
+        //
+        break;
       }
 
       TempSection += sizeof(Elf32_Shdr);
@@ -753,111 +753,110 @@ Returns:
       }
 
       switch ( SectionHeader.sh_type ) {
-          case SHT_SYMTAB:
-          case SHT_STRTAB:
-          case SHT_RELA:
-          case SHT_REL:
-            if (ImageContext->FixupData == NULL) {
-              ImageContext->SectionLoadAddress[Index] = 
-                SectionHeader.sh_offset + (Elf32_Addr)ImageContext->Handle;
-            } else {
-              Status = ElfAllocateSectionBase(
-                         &FixupBase,
-                         &FixupEnd,
-                         &ImageContext->SectionLoadAddress[Index],
-                         SectionHeader.sh_size,
-                         SectionHeader.sh_addralign
-                         );
-              if (EFI_ERROR(Status)) {
-                ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
-                return Status;
-              }
-              
-              //
-              //Load section data
-              //
-              Size   = SectionHeader.sh_size;
-              Status = ImageContext->ImageRead (
-                         ImageContext->Handle,
-                         SectionHeader.sh_offset,
-                         &Size,
-                         (VOID *)(UINTN)ImageContext->SectionLoadAddress[Index]
-                         );
-              if (EFI_ERROR (Status)) {
-                ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_IMAGE_READ;
-                return Status;
-              }
-            }
-            break;
-            
-          case SHT_PROGBITS:
-            if ( SectionHeader.sh_flags & SHF_ALLOC ) {
-              Status = ElfAllocateSectionBase(
-                         &Base,
-                         &End,
-                         &TempBase,
-                         SectionHeader.sh_size,
-                         SectionHeader.sh_addralign
-                         );
-              if (EFI_ERROR(Status)) {
-                ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
-                return Status;
-              }
+      case SHT_SYMTAB:
+      case SHT_STRTAB:
+      case SHT_RELA:
+      case SHT_REL:
+        if (ImageContext->FixupData == NULL) {
+          ImageContext->SectionLoadAddress[Index] = 
+            SectionHeader.sh_offset + (Elf32_Addr)ImageContext->Handle;
+        } else {
+          Status = ElfAllocateSectionBase(
+                     &FixupBase,
+                     &FixupEnd,
+                     &ImageContext->SectionLoadAddress[Index],
+                     SectionHeader.sh_size,
+                     SectionHeader.sh_addralign
+                     );
+          if (EFI_ERROR(Status)) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
+            return Status;
+          }
+          
+          //
+          //Load section data
+          //
+          Size   = SectionHeader.sh_size;
+          Status = ImageContext->ImageRead (
+                     ImageContext->Handle,
+                     SectionHeader.sh_offset,
+                     &Size,
+                     (VOID *)(UINTN)ImageContext->SectionLoadAddress[Index]
+                     );
+          if (EFI_ERROR (Status)) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_IMAGE_READ;
+            return Status;
+          }
+        }
+        break;
+        
+      case SHT_PROGBITS:
+        if ( SectionHeader.sh_flags & SHF_ALLOC ) {
+          Status = ElfAllocateSectionBase(
+                     &Base,
+                     &End,
+                     &TempBase,
+                     SectionHeader.sh_size,
+                     SectionHeader.sh_addralign
+                     );
+          if (EFI_ERROR(Status)) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
+            return Status;
+          }
 
-              //
-              // Adjust to ImageAddress
-              //
-              ImageContext->SectionLoadAddress[Index] 
-                                            = TempBase + Adjust;
-              //
-              //Load section data
-              //
-              Size   = SectionHeader.sh_size;
-              Status = ImageContext->ImageRead (
-                         ImageContext->Handle,
-                         SectionHeader.sh_offset,
-                         &Size,
-                         (VOID *)(UINTN)ImageContext->SectionLoadAddress[Index]
-                         );
-              if (EFI_ERROR (Status)) {
-                ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_IMAGE_READ;
-                return Status;
-              }
-            }
-            break;
+          //
+          // Adjust to ImageAddress
+          //
+          ImageContext->SectionLoadAddress[Index] 
+                                        = TempBase + Adjust;
+          //
+          //Load section data
+          //
+          Size   = SectionHeader.sh_size;
+          Status = ImageContext->ImageRead (
+                     ImageContext->Handle,
+                     SectionHeader.sh_offset,
+                     &Size,
+                     (VOID *)(UINTN)ImageContext->SectionLoadAddress[Index]
+                     );
+          if (EFI_ERROR (Status)) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_IMAGE_READ;
+            return Status;
+          }
+        }
+        break;
 
-          case SHT_NOBITS:
-            if ((SectionHeader.sh_flags & SHF_ALLOC) &&
-                (SectionHeader.sh_flags & SHF_WRITE)) {
-              Status = ElfAllocateSectionBase(
-                         &Base,
-                         &End,
-                         &TempBase,
-                         SectionHeader.sh_size,
-                         SectionHeader.sh_addralign
-                         );
-              if (EFI_ERROR(Status)) {
-                ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
-                return Status;
-              }
+      case SHT_NOBITS:
+        if ((SectionHeader.sh_flags & SHF_ALLOC) &&
+            (SectionHeader.sh_flags & SHF_WRITE)) {
+          Status = ElfAllocateSectionBase(
+                     &Base,
+                     &End,
+                     &TempBase,
+                     SectionHeader.sh_size,
+                     SectionHeader.sh_addralign
+                     );
+          if (EFI_ERROR(Status)) {
+            ImageContext->ImageError = EFI_ELF_IMAGE_ERROR_SECTION_NOT_LOADED;
+            return Status;
+          }
 
-              //
-              // Adjust to ImageAddress
-              //
-              ImageContext->SectionLoadAddress[Index] 
-                                         = TempBase + Adjust;
-              
-              //
-              // Fill .bss section to zero
-              //
-              ZeroMem ((VOID *)(UINTN)(ImageContext->SectionLoadAddress[Index]), 
-                SectionHeader.sh_size);
-            }
-            break;
-  
-          default:
-            break;
-            
+          //
+          // Adjust to ImageAddress
+          //
+          ImageContext->SectionLoadAddress[Index] 
+                                     = TempBase + Adjust;
+          
+          //
+          // Fill .bss section to zero
+          //
+          ZeroMem ((VOID *)(UINTN)(ImageContext->SectionLoadAddress[Index]), 
+            SectionHeader.sh_size);
+        }
+        break;
+
+      default:
+        break;
       }
 
       TempSection += sizeof(Elf32_Shdr);

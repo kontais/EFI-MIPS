@@ -25,8 +25,11 @@ COMPONENT_TYPE      = LIBRARY
 
 [sources.common]
   NetLib.c
+  NetLib.h
   NetBuffer.c
+  NetBuffer.h
   NetDebug.c
+  NetDebug.h
 
 [includes.common]
   .

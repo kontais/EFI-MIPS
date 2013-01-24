@@ -68,15 +68,18 @@ COMPONENT_TYPE  = LIBRARY
 
 [includes.common]
   .
-  ../Inc
+  ../inc
   $(EDK_SOURCE)/Foundation
   $(EDK_SOURCE)/Foundation/Include
   $(EDK_SOURCE)/Foundation/Efi
   $(EDK_SOURCE)/Foundation/Efi/Include
-  $(EDK_SOURCE)/Foundation/FrameWork
-  $(EDK_SOURCE)/Foundation/FrameWork/Include
+  $(EDK_SOURCE)/Foundation/Framework
+  $(EDK_SOURCE)/Foundation/Framework/Include
   $(EDK_SOURCE)/Foundation/Include/IndustryStandard
   $(EDK_SOURCE)/Foundation/Core/Dxe
+
+[includes.Mips32]
+  $(EDK_SOURCE)/Foundation/Cpu/Loongson/Include
 
 [libraries.common]
   EdkFrameworkProtocolLib

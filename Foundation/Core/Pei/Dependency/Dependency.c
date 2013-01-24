@@ -143,126 +143,126 @@ Returns:
   while (TRUE) {
 
     switch (*(Iterator++)) {
-      
+    
+    //
+    // For performance reason we put the frequently used items in front of 
+    // the rarely used  items
+    //
+    
+    case (EFI_DEP_PUSH):
       //
-      // For performance reason we put the frequently used items in front of 
-      // the rarely used  items
+      // Check to make sure the dependency grammar doesn't overflow the
+      // EvalStack on the push
       //
-      
-      case (EFI_DEP_PUSH):
-        //
-        // Check to make sure the dependency grammar doesn't overflow the
-        // EvalStack on the push
-        //
-        if (StackPtr > &EvalStack[MAX_GRAMMAR_SIZE-1]) {
-          return EFI_INVALID_PARAMETER;
-        }
-
-        //
-        // Push the pointer to the PUSH opcode operator (pointer to PPI GUID)
-        // We will evaluate if the PPI is insalled on the POP operation.
-        //
-        StackPtr->Operator = (VOID *) Iterator;
-        Iterator = Iterator + sizeof (EFI_GUID);
-        StackPtr++;
-        break;
-
-      case (EFI_DEP_AND):    
-      case (EFI_DEP_OR):     
-        //
-        // Check to make sure the dependency grammar doesn't underflow the
-        // EvalStack on the two POPs for the AND operation.  Don't need to
-        // check for the overflow on PUSHing the result since we already
-        // did two POPs.
-        //
-        if (StackPtr < &EvalStack[2]) {
-          return EFI_INVALID_PARAMETER;
-        }
-
-        //
-        // Evaluate the first POPed operator only. If the operand is
-        // EFI_DEP_AND and the POPed operator evaluates to FALSE, or the
-        // operand is EFI_DEP_OR and the POPed operator evaluates to TRUE,
-        // we don't need to check the second operator, and the result will be
-        // evaluation of the POPed operator. Otherwise, don't POP the second
-        // operator since it will now evaluate to the final result on the
-        // next operand that causes a POP.
-        // 
-        StackPtr--;
-        //
-        // Iterator has increased by 1 after we retrieve the operand, so here we 
-        // should get the value pointed by (Iterator - 1), in order to obtain the 
-        // same operand.
-        //
-        if (*(Iterator - 1) == EFI_DEP_AND) {
-          if (!(IsPpiInstalled (PeiServices, StackPtr))) {
-            (StackPtr-1)->Result = FALSE;
-            (StackPtr-1)->Operator = NULL;
-          }
-        } else {
-          if (IsPpiInstalled (PeiServices, StackPtr)) {
-            (StackPtr-1)->Result = TRUE;
-            (StackPtr-1)->Operator = NULL;
-          }
-        }
-        break;
-        
-      case (EFI_DEP_END):
-        StackPtr--;
-        //
-        // Check to make sure EvalStack is balanced.  If not, then there is
-        // an error in the dependency grammar, so return EFI_INVALID_PARAMETER.
-        //
-        if (StackPtr != &EvalStack[0]) {
-          return EFI_INVALID_PARAMETER;
-        }
-        *Runnable = IsPpiInstalled (PeiServices, StackPtr);
-        return EFI_SUCCESS;
-        break;
-
-      case (EFI_DEP_NOT):    
-        //
-        // Check to make sure the dependency grammar doesn't underflow the
-        // EvalStack on the POP for the NOT operation.  Don't need to
-        // check for the overflow on PUSHing the result since we already
-        // did a POP.
-        //
-        if (StackPtr < &EvalStack[1]) {
-          return EFI_INVALID_PARAMETER;
-        }
-        (StackPtr-1)->Result = (BOOLEAN) !IsPpiInstalled (PeiServices, (StackPtr-1));
-        (StackPtr-1)->Operator = NULL;
-        break;
-
-      case (EFI_DEP_TRUE):
-      case (EFI_DEP_FALSE):
-        //
-        // Check to make sure the dependency grammar doesn't overflow the
-        // EvalStack on the push
-        //
-        if (StackPtr > &EvalStack[MAX_GRAMMAR_SIZE-1]) {
-          return EFI_INVALID_PARAMETER;
-        }
-        //
-        // Iterator has increased by 1 after we retrieve the operand, so here we 
-        // should get the value pointed by (Iterator - 1), in order to obtain the 
-        // same operand.
-        //
-        if (*(Iterator - 1) == EFI_DEP_TRUE) {
-          StackPtr->Result = TRUE;
-        } else {
-          StackPtr->Result = FALSE;
-        }
-        StackPtr->Operator = NULL;
-        StackPtr++;
-        break;
-
-      default:
-        //
-        // The grammar should never arrive here
-        //
+      if (StackPtr > &EvalStack[MAX_GRAMMAR_SIZE-1]) {
         return EFI_INVALID_PARAMETER;
-        break;
+      }
+
+      //
+      // Push the pointer to the PUSH opcode operator (pointer to PPI GUID)
+      // We will evaluate if the PPI is insalled on the POP operation.
+      //
+      StackPtr->Operator = (VOID *) Iterator;
+      Iterator = Iterator + sizeof (EFI_GUID);
+      StackPtr++;
+      break;
+
+    case (EFI_DEP_AND):    
+    case (EFI_DEP_OR):     
+      //
+      // Check to make sure the dependency grammar doesn't underflow the
+      // EvalStack on the two POPs for the AND operation.  Don't need to
+      // check for the overflow on PUSHing the result since we already
+      // did two POPs.
+      //
+      if (StackPtr < &EvalStack[2]) {
+        return EFI_INVALID_PARAMETER;
+      }
+
+      //
+      // Evaluate the first POPed operator only. If the operand is
+      // EFI_DEP_AND and the POPed operator evaluates to FALSE, or the
+      // operand is EFI_DEP_OR and the POPed operator evaluates to TRUE,
+      // we don't need to check the second operator, and the result will be
+      // evaluation of the POPed operator. Otherwise, don't POP the second
+      // operator since it will now evaluate to the final result on the
+      // next operand that causes a POP.
+      // 
+      StackPtr--;
+      //
+      // Iterator has increased by 1 after we retrieve the operand, so here we 
+      // should get the value pointed by (Iterator - 1), in order to obtain the 
+      // same operand.
+      //
+      if (*(Iterator - 1) == EFI_DEP_AND) {
+        if (!(IsPpiInstalled (PeiServices, StackPtr))) {
+          (StackPtr-1)->Result = FALSE;
+          (StackPtr-1)->Operator = NULL;
+        }
+      } else {
+        if (IsPpiInstalled (PeiServices, StackPtr)) {
+          (StackPtr-1)->Result = TRUE;
+          (StackPtr-1)->Operator = NULL;
+        }
+      }
+      break;
+      
+    case (EFI_DEP_END):
+      StackPtr--;
+      //
+      // Check to make sure EvalStack is balanced.  If not, then there is
+      // an error in the dependency grammar, so return EFI_INVALID_PARAMETER.
+      //
+      if (StackPtr != &EvalStack[0]) {
+        return EFI_INVALID_PARAMETER;
+      }
+      *Runnable = IsPpiInstalled (PeiServices, StackPtr);
+      return EFI_SUCCESS;
+      break;
+
+    case (EFI_DEP_NOT):    
+      //
+      // Check to make sure the dependency grammar doesn't underflow the
+      // EvalStack on the POP for the NOT operation.  Don't need to
+      // check for the overflow on PUSHing the result since we already
+      // did a POP.
+      //
+      if (StackPtr < &EvalStack[1]) {
+        return EFI_INVALID_PARAMETER;
+      }
+      (StackPtr-1)->Result = (BOOLEAN) !IsPpiInstalled (PeiServices, (StackPtr-1));
+      (StackPtr-1)->Operator = NULL;
+      break;
+
+    case (EFI_DEP_TRUE):
+    case (EFI_DEP_FALSE):
+      //
+      // Check to make sure the dependency grammar doesn't overflow the
+      // EvalStack on the push
+      //
+      if (StackPtr > &EvalStack[MAX_GRAMMAR_SIZE-1]) {
+        return EFI_INVALID_PARAMETER;
+      }
+      //
+      // Iterator has increased by 1 after we retrieve the operand, so here we 
+      // should get the value pointed by (Iterator - 1), in order to obtain the 
+      // same operand.
+      //
+      if (*(Iterator - 1) == EFI_DEP_TRUE) {
+        StackPtr->Result = TRUE;
+      } else {
+        StackPtr->Result = FALSE;
+      }
+      StackPtr->Operator = NULL;
+      StackPtr++;
+      break;
+
+    default:
+      //
+      // The grammar should never arrive here
+      //
+      return EFI_INVALID_PARAMETER;
+      break;
     }
   }
 }

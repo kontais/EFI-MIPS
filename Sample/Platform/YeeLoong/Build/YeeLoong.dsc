@@ -1,30 +1,30 @@
 #/*++
 #
-# Copyright (c) 2004 - 2007, Intel Corporation                                                         
-# All rights reserved. This program and the accompanying materials                          
-# are licensed and made available under the terms and conditions of the BSD License         
-# which accompanies this distribution.  The full text of the license may be found at        
-# http://opensource.org/licenses/bsd-license.php                                            
-#                                                                                           
-# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,                     
-# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.             
-# 
+# Copyright (c) 2004 - 2007, Intel Corporation
+# All rights reserved. This program and the accompanying materials
+# are licensed and made available under the terms and conditions of the BSD License
+# which accompanies this distribution.  The full text of the license may be found at
+# http://opensource.org/licenses/bsd-license.php
+#
+# THE PROGRAM IS DISTRIBUTED UNDER THE BSD LICENSE ON AN "AS IS" BASIS,
+# WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+#
 #  Module Name:
 #
 #    Linux32.dsc
 #
 #  Abstract:
 #
-#    This is the build description file containing the platform 
+#    This is the build description file containing the platform
 #    build definitions.
 #
 #
 #  Notes:
-#    
+#
 #    The info in this file is broken down into sections. The start of a section
 #    is designated by a "[" in the first column. So the [=====] separater ends
 #    a section.
-#    
+#
 #--*/
 
 
@@ -45,7 +45,7 @@ PLATFORM                  = YeeLoong
 #BOOT_FV_BASE_ADDRESS      = 0x81000000
 FV_RECOVERY_BASE_ADDRESS  = 0x81000000
 NV_STORAGE_BASE_ADDRESS   = 0x813E0000
-#LANGUAGE                  = eng,fra,chn 
+#LANGUAGE                  = eng,fra,chn
 
 #
 # Actual variable block size should exclude the size of the FV header.
@@ -348,7 +348,7 @@ $(CAPSULE_INF)
 # NOTE:
 #   Including these in the FV will take over use of the COM port.
 #
-Sample/Universal/Debugger/Debugport/Dxe/DebugPort.inf                    FV=NULL 
+Sample/Universal/Debugger/Debugport/Dxe/DebugPort.inf                    FV=NULL
 Sample/Cpu/DebugSupport/Dxe/DebugSupport.inf                             FV=NULL
 
 #
@@ -371,10 +371,18 @@ Sample/Universal/UserInterface/HiiDataBase/Dxe/HiiDatabase.inf
 Sample/Platform/Generic/Logo/Logo.inf
 Sample/Universal/Disk/Partition/Dxe/Partition.inf
 Sample/Bus/Pci/PciBusNoEnumeration/Dxe/PciBusNoEnumeration.inf
-Sample/Universal/UserInterface/SetupBrowser/Dxe/SetupBrowser.inf                   
+Sample/Universal/UserInterface/SetupBrowser/Dxe/SetupBrowser.inf
 Sample/Universal/UserInterface/SetupBrowser/Dxe/DriverSample/DriverSample.inf
+
+#
+# Shell App
+#
+Other/Maintained/Application/UefiShell/IfConfig/IfConfig.inf           FV=NULL
+Other/Maintained/Application/UefiShell/Ping/Ping.inf                   FV=NULL
+
 #Other/Maintained/Application/$(UEFI_PREFIX)Shell/Bin/Shell.inf
-Other/Maintained/Application/$(UEFI_PREFIX)Shell/Shell.inf
+#Other/Maintained/Application/$(UEFI_PREFIX)Shell/Shell.inf
+Other/Maintained/Application/$(UEFI_PREFIX)Shell/ShellFull.inf
 Sample/Universal/Disk/UnicodeCollation/English/Dxe/English.inf
 #Sample/Bus/LinuxThunk/BlockIo/Dxe/LinuxBlockIo.inf
 #Sample/Bus/LinuxThunk/Console/Dxe/LinuxConsole.inf
@@ -389,26 +397,31 @@ Sample/Bus/Pmon/LinuxThunk/Dxe/LinuxThunk.inf
 $(GRAPHICS_INF)
 
 #Sample/Platform/Linux32/Dxe/Linux32Platform/MiscSubclass/MiscSubclassDriver.inf
-Sample/Bus/Pci/IdeBus/Dxe/IdeBus.inf                                          
-Sample/Bus/Pci/IdeController/Dxe/IdeController.inf                                          
-Sample/Bus/Pci/Uhci/Dxe/Uhci.inf                                              
-#Sample/Bus/Pci/Ehci/Dxe/Ehci.inf                                              
-#Sample/Bus/Pci/EhciRouting/Dxe/EhciRouting.inf                                              
+Sample/Bus/Pci/IdeBus/Dxe/IdeBus.inf
+Sample/Bus/Pci/IdeController/Dxe/IdeController.inf
+Sample/Bus/Pci/Uhci/Dxe/Uhci.inf
+#Sample/Bus/Pci/Ehci/Dxe/Ehci.inf
+#Sample/Bus/Pci/EhciRouting/Dxe/EhciRouting.inf
 #Sample/Bus/Pci/VgaMiniPort/Dxe/VgaMiniPort.inf
-Sample/Bus/Pci/Undi/RuntimeDxe/Undi.inf                                       
 $(ATAPI_PASS_THRU_INF)
 Sample/Bus/Scsi/ScsiBus/Dxe/ScsiBus.inf
 Sample/Bus/Scsi/ScsiDisk/Dxe/ScsiDisk.inf
-Sample/Bus/Usb/UsbBot/Dxe/UsbBot.inf                                          
-Sample/Bus/Usb/UsbBus/Dxe/UsbBus.inf                                          
-Sample/Bus/Usb/UsbCbi/Dxe/Cbi0/UsbCbi0.inf                                    
-Sample/Bus/Usb/UsbCbi/Dxe/Cbi1/UsbCbi1.inf                                    
-Sample/Bus/Usb/UsbKb/Dxe/UsbKb.inf                                            
-Sample/Bus/Usb/UsbMassStorage/Dxe/UsbMassStorage.inf                          
-Sample/Bus/Usb/UsbMouse/Dxe/UsbMouse.inf                                      
-Sample/Universal/Network/PxeBc/Dxe/BC.inf                                     
-Sample/Universal/Network/PxeDhcp4/Dxe/PxeDhcp4.inf                               
-Sample/Universal/Network/Snp32_64/Dxe/SNP.inf                                 
+Sample/Bus/Usb/UsbBot/Dxe/UsbBot.inf
+Sample/Bus/Usb/UsbBus/Dxe/UsbBus.inf
+Sample/Bus/Usb/UsbCbi/Dxe/Cbi0/UsbCbi0.inf
+Sample/Bus/Usb/UsbCbi/Dxe/Cbi1/UsbCbi1.inf
+Sample/Bus/Usb/UsbKb/Dxe/UsbKb.inf
+Sample/Bus/Usb/UsbMassStorage/Dxe/UsbMassStorage.inf
+Sample/Bus/Usb/UsbMouse/Dxe/UsbMouse.inf
+
+#
+# PXE
+#
+Sample/Bus/Pci/Undi/RuntimeDxe/Undi.inf
+Sample/Universal/Network/PxeBc/Dxe/BC.inf
+Sample/Universal/Network/PxeDhcp4/Dxe/PxeDhcp4.inf
+#Sample/Universal/Network/Snp32_64/Dxe/SNP.inf
+Sample/Chipset/Nic/Rtl81x9/Dxe/Rtl81x9.inf
 
 #
 # ISA Bus and Device
@@ -426,14 +439,14 @@ Sample/Bus/Isa/Ps2Keyboard/Dxe/Ps2keyboard.inf
 #
 # UEFI network drivers.
 #
-Sample/Universal/Network/Mnp/Dxe/Mnp.inf                               FV=NULL
-Sample/Universal/Network/Arp/Dxe/Arp.inf                               FV=NULL
-Sample/Universal/Network/Ip4/Dxe/Ip4.inf                               FV=NULL
-Sample/Universal/Network/Ip4Config/Dxe/Ip4Config.inf                   FV=NULL
-Sample/Universal/Network/Udp4/Dxe/Udp4.inf                             FV=NULL
-Sample/Universal/Network/Tcp4/Dxe/Tcp4.inf                             FV=NULL
-Sample/Universal/Network/Dhcp4/Dxe/Dhcp4.inf                           FV=NULL
-Sample/Universal/Network/Mtftp4/Dxe/Mtftp4.inf                         FV=NULL
+Sample/Universal/Network/Mnp/Dxe/Mnp.inf
+Sample/Universal/Network/Arp/Dxe/Arp.inf
+Sample/Universal/Network/Ip4/Dxe/Ip4.inf
+Sample/Universal/Network/Ip4Config/Dxe/Ip4Config.inf
+Sample/Universal/Network/Udp4/Dxe/Udp4.inf
+Sample/Universal/Network/Tcp4/Dxe/Tcp4.inf
+Sample/Universal/Network/Dhcp4/Dxe/Dhcp4.inf
+Sample/Universal/Network/Mtftp4/Dxe/Mtftp4.inf
 
 #Sample/Universal/Network/SnpNt32/Dxe/SnpNt32.inf                       FV=NULL
 
@@ -443,7 +456,7 @@ Sample/Universal/Network/Mtftp4/Dxe/Mtftp4.inf                         FV=NULL
 #
 
 #
-# Fat File System driver. Default is binary only 
+# Fat File System driver. Default is binary only
 #
 #Other/Maintained/Universal/Disk/FileSystem/EnhancedFat/Dxe/Fat.inf
 Sample/Universal/Disk/FileSystem/Ext2/Dxe/Ext2.inf

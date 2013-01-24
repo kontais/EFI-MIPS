@@ -22,7 +22,7 @@ Revision History
 --*/
 
 #include "EfiShellLib.h"
-#include "decompress.h"
+#include "Decompress.h"
 
 extern UINT8    STRING_ARRAY_NAME[];
 
@@ -31,7 +31,7 @@ extern UINT8    STRING_ARRAY_NAME[];
 //
 #include STRING_DEFINES_FILE
 
-#include EFI_PROTOCOL_DEFINITION (decompress)
+#include EFI_PROTOCOL_DEFINITION (Decompress)
 
 EFI_HII_HANDLE  HiiDecompressHandle;
 EFI_GUID        EfiDecompressGuid = EFI_DECOMPRESS_GUID;

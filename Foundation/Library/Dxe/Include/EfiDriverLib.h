@@ -338,6 +338,24 @@ Returns:
 --*/
 ;
 
+EFI_STATUS
+EfiPrintDevicePath (
+  IN EFI_DEVICE_PATH_PROTOCOL  *DevicePath
+  )
+/*++
+
+Routine Description:
+  Function is used to print device path. (Just For Debug)
+
+Arguments:
+  DevicePath - A pointer to a device path data structure.
+
+Returns:
+
+--*/
+;
+
+
 EFI_DEVICE_PATH_PROTOCOL        *
 EfiDevicePathFromHandle (
   IN EFI_HANDLE       Handle
