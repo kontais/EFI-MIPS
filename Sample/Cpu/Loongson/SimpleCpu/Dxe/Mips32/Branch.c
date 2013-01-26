@@ -49,6 +49,10 @@
 #include "Exception.h"
 #include "MipsOpcode.h"
 
+//
+// return register
+//
+#define RA   31
 /*
  * Return the resulting PC as if the branch was executed.
  * Update Context ra if branch and link
