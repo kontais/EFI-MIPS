@@ -1,6 +1,6 @@
 /*++
 
-Copyright (c) 2011, kontais
+Copyright (c) 2012, kontais
 All rights reserved. This program and the accompanying materials                          
 are licensed and made available under the terms and conditions of the BSD License         
 which accompanies this distribution.  The full text of the license may be found at        
@@ -17,14 +17,14 @@ Abstract:
 
 --*/
 
-#include "Sm712Uga.h"
+#include "Sm712Gop.h"
 
 //
 // EFI Component Name Functions
 //
 EFI_STATUS
 EFIAPI
-Sm712UgaComponentNameGetDriverName (
+Sm712GopComponentNameGetDriverName (
   IN  EFI_COMPONENT_NAME_PROTOCOL  *This,
   IN  CHAR8                        *Language,
   OUT CHAR16                       **DriverName
@@ -32,7 +32,7 @@ Sm712UgaComponentNameGetDriverName (
 
 EFI_STATUS
 EFIAPI
-Sm712UgaComponentNameGetControllerName (
+Sm712GopComponentNameGetControllerName (
   IN  EFI_COMPONENT_NAME_PROTOCOL                     *This,
   IN  EFI_HANDLE                                      ControllerHandle,
   IN  EFI_HANDLE                                      ChildHandle        OPTIONAL,
@@ -43,20 +43,20 @@ Sm712UgaComponentNameGetControllerName (
 //
 // EFI Component Name Protocol
 //
-EFI_COMPONENT_NAME_PROTOCOL     gSm712UgaComponentName = {
-  Sm712UgaComponentNameGetDriverName,
-  Sm712UgaComponentNameGetControllerName,
+EFI_COMPONENT_NAME_PROTOCOL     gSm712GopComponentName = {
+  Sm712GopComponentNameGetDriverName,
+  Sm712GopComponentNameGetControllerName,
   "eng"
 };
 
-static EFI_UNICODE_STRING_TABLE mSm712UgaDriverNameTable[] = {
-  { "eng", L"Sm712 Universal Graphics Adapter Driver" },
+static EFI_UNICODE_STRING_TABLE mSm712GopDriverNameTable[] = {
+  { "eng", L"Sm712 GOP Driver" },
   { NULL , NULL }
 };
 
 EFI_STATUS
 EFIAPI
-Sm712UgaComponentNameGetDriverName (
+Sm712GopComponentNameGetDriverName (
   IN  EFI_COMPONENT_NAME_PROTOCOL  *This,
   IN  CHAR8                        *Language,
   OUT CHAR16                       **DriverName
@@ -90,15 +90,15 @@ Sm712UgaComponentNameGetDriverName (
 {
   return EfiLibLookupUnicodeString (
           Language,
-          gSm712UgaComponentName.SupportedLanguages,
-          mSm712UgaDriverNameTable,
+          gSm712GopComponentName.SupportedLanguages,
+          mSm712GopDriverNameTable,
           DriverName
           );
 }
 
 EFI_STATUS
 EFIAPI
-Sm712UgaComponentNameGetControllerName (
+Sm712GopComponentNameGetControllerName (
   IN  EFI_COMPONENT_NAME_PROTOCOL                     *This,
   IN  EFI_HANDLE                                      ControllerHandle,
   IN  EFI_HANDLE                                      ChildHandle        OPTIONAL,

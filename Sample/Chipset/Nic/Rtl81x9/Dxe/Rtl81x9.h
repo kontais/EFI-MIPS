@@ -80,7 +80,7 @@ typedef struct _RTL81X9_SNP_DRIVER {
 //
 // Global Variables
 //
-extern EFI_COMPONENT_NAME_PROTOCOL  gSimpleNetworkComponentName;
+extern EFI_COMPONENT_NAME_PROTOCOL  gRtl81x9SimpleNetworkComponentName;
 extern EFI_PCI_IO_PROTOCOL          *mPciIo;
 extern EFI_SIMPLE_NETWORK_PROTOCOL Rtl81x9SimpleNetworkProtocol;
 

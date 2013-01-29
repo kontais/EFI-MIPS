@@ -590,6 +590,8 @@ PcatRootBridgeIoMap (
     return EFI_INVALID_PARAMETER;
   }
 
+  PrivateData = DRIVER_INSTANCE_FROM_PCI_ROOT_BRIDGE_IO_THIS(This);
+  
   //
   // Perform a fence operation to make sure all memory operations are flushed
   //
@@ -607,22 +609,36 @@ PcatRootBridgeIoMap (
     return EFI_INVALID_PARAMETER;
   }
 
-  //
-  // This config must be change according to Loongson 2F address window registers setting
-  // PCI 0x80000000 to RAM 0x00000000 is power on default
-  // PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) -> DDR 
-  // (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI WIN0
-  //
-  PhysicalAddress = (EFI_PHYSICAL_ADDRESS)(CACHED_TO_PHYS((UINTN)HostAddress));
-  
-  if ((PhysicalAddress + *NumberOfBytes) > 0x10000000)  {
-    return EFI_UNSUPPORTED;
-  }
-  else {
+  switch (Operation) {
+  case EfiPciOperationBusMasterCommonBuffer:
     //
-    // The transfer is below 256M
+    // This config must be change according to Loongson 2F address window registers setting
+    // PCI 0x80000000 to RAM 0x00000000 is power on default
+    // PCI (0x0000_0000_8000_0000 - 0x0000_0000_8fff_ffff) -> DDR 
+    // (0x0000_0000_0000_0000 - 0x0000_0000_ffff_ffff)  PCI WIN0
     //
-    *DeviceAddress = PhysicalAddress + 0x80000000;
+    PhysicalAddress = (EFI_PHYSICAL_ADDRESS)(CACHED_TO_PHYS((UINTN)HostAddress));
+    
+    if ((PhysicalAddress + *NumberOfBytes) > 0x10000000)  {
+      return EFI_UNSUPPORTED;
+    }
+    else {
+      //
+      // The transfer is below 256M
+      //
+      *DeviceAddress = PhysicalAddress + 0x80000000;
+    }
+    break;
+  //
+  // HostAddres is pci view pci space
+  // DeviceAddress is cpu view pci memory space
+  //
+  case EfiPciOperationBusMasterRead:
+    *DeviceAddress = PrivateData->PhysicalMemoryBase + HostAddress;
+    break;
+    
+  default:
+    break;
   }
 
   //

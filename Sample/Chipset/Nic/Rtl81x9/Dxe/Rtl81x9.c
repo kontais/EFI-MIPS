@@ -30,7 +30,7 @@ InitializeRtl81x9Driver (
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverSupported (
+Rtl81x9SimpleNetworkDriverSupported (
   IN EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN EFI_HANDLE                     Controller,
   IN EFI_DEVICE_PATH_PROTOCOL       *RemainingDevicePath
@@ -38,7 +38,7 @@ SimpleNetworkDriverSupported (
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverStart (
+Rtl81x9SimpleNetworkDriverStart (
   IN EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN EFI_HANDLE                     Controller,
   IN EFI_DEVICE_PATH_PROTOCOL       *RemainingDevicePath
@@ -46,7 +46,7 @@ SimpleNetworkDriverStart (
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverStop (
+Rtl81x9SimpleNetworkDriverStop (
   IN  EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN  EFI_HANDLE                     Controller,
   IN  UINTN                          NumberOfChildren,
@@ -56,10 +56,10 @@ SimpleNetworkDriverStop (
 //
 // Simple Network Protocol Driver Global Variables
 //
-EFI_DRIVER_BINDING_PROTOCOL mSimpleNetworkDriverBinding = {
-  SimpleNetworkDriverSupported,
-  SimpleNetworkDriverStart,
-  SimpleNetworkDriverStop,
+EFI_DRIVER_BINDING_PROTOCOL mRtl81x9SimpleNetworkDriverBinding = {
+  Rtl81x9SimpleNetworkDriverSupported,
+  Rtl81x9SimpleNetworkDriverStart,
+  Rtl81x9SimpleNetworkDriverStop,
   0xa,
   NULL,
   NULL
@@ -72,7 +72,7 @@ EFI_PCI_IO_PROTOCOL         *mPciIo;
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverSupported (
+Rtl81x9SimpleNetworkDriverSupported (
   IN EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN EFI_HANDLE                     Controller,
   IN EFI_DEVICE_PATH_PROTOCOL       *RemainingDevicePath
@@ -175,7 +175,7 @@ SimpleNetworkDriverSupported (
     return EFI_UNSUPPORTED;
   }
   //
-  // Examine Ide PCI Configuration table fields
+  // Examine NIC PCI Configuration table fields
   //
   if ((PciData.Hdr.VendorId != RT_VENDORID) ||
       (PciData.Hdr.DeviceId != RT_DEVICEID_8139) ||
@@ -197,7 +197,7 @@ SimpleNetworkDriverSupported (
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverStart (
+Rtl81x9SimpleNetworkDriverStart (
   IN EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN EFI_HANDLE                     Controller,
   IN EFI_DEVICE_PATH_PROTOCOL       *RemainingDevicePath
@@ -350,7 +350,7 @@ Arguments:
                     Controller,           
                     &gEfiPciIoProtocolGuid, 
                     (VOID **)&Rtl81x9Private->PciIo,
-                    mSimpleNetworkDriverBinding.DriverBindingHandle,
+                    mRtl81x9SimpleNetworkDriverBinding.DriverBindingHandle,
                     Rtl81x9Private->DeviceHandle,   
                     EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER
                     );
@@ -388,7 +388,7 @@ StartErrorExit:
 
 EFI_STATUS
 EFIAPI
-SimpleNetworkDriverStop (
+Rtl81x9SimpleNetworkDriverStop (
   IN  EFI_DRIVER_BINDING_PROTOCOL    *This,
   IN  EFI_HANDLE                     Controller,
   IN  UINTN                          NumberOfChildren,
@@ -478,9 +478,9 @@ Returns:
   return EfiLibInstallAllDriverProtocols (
           ImageHandle,
           SystemTable,
-          &mSimpleNetworkDriverBinding,
+          &mRtl81x9SimpleNetworkDriverBinding,
           NULL,
-          &gSimpleNetworkComponentName,
+          &gRtl81x9SimpleNetworkComponentName,
           NULL,
           NULL
           );

@@ -23,26 +23,6 @@ Abstract:
 
 #include "Sm712Uga.h"
 
-EFI_LINUX_THUNK_PROTOCOL *mLinux;
-static EFI_EVENT          mUgaScreenExitBootServicesEvent;
-
-STATIC
-EFI_STATUS
-Sm712UgaStartWindow (
-  IN  UGA_PRIVATE_DATA    *Private,
-  IN  UINT32              HorizontalResolution,
-  IN  UINT32              VerticalResolution,
-  IN  UINT32              ColorDepth,
-  IN  UINT32              RefreshRate
-  );
-
-STATIC
-VOID
-EFIAPI
-KillNtUgaThread (
-  IN EFI_EVENT  Event,
-  IN VOID       *Context
-  );
 
 //
 // UGA Protocol Member Functions
@@ -77,13 +57,9 @@ Sm712UgaGetMode (
 --*/
 // TODO:    ADD IN/OUT description here
 {
-  UGA_PRIVATE_DATA  *Private;
+  SM712_UGA_PRIVATE_DATA  *Private;
 
-  Private = UGA_DRAW_PRIVATE_DATA_FROM_THIS (This);
-
-  if (Private->HardwareNeedsStarting) {
-    return EFI_NOT_STARTED;
-  }
+  Private = SM712_UGA_PRIVATE_DATA_FROM_THIS (This);
 
   if ((HorizontalResolution == NULL) ||
       (VerticalResolution   == NULL) ||
@@ -131,37 +107,38 @@ Sm712UgaSetMode (
 // TODO:    ADD IN/OUT description here
 {
   EFI_STATUS        Status;
-  UGA_PRIVATE_DATA  *Private;
+  SM712_UGA_PRIVATE_DATA  *Private;
   EFI_UGA_PIXEL     Fill;
+  EFI_UGA_PIXEL *NewFillLine;
 
-  Private = UGA_DRAW_PRIVATE_DATA_FROM_THIS (This);
-
-  if (Private->HardwareNeedsStarting) {
-    Status = Sm712UgaStartWindow (
-              Private,
-              HorizontalResolution,
-              VerticalResolution,
-              ColorDepth,
-              RefreshRate
-              );
-    if (EFI_ERROR (Status)) {
-      return EFI_DEVICE_ERROR;
-    }
-
-    Private->HardwareNeedsStarting = FALSE;
-  }
-  Status = Private->UgaIo->UgaSize(Private->UgaIo,
-             HorizontalResolution,
-             VerticalResolution);
+  Private = SM712_UGA_PRIVATE_DATA_FROM_THIS (This);
 
   Private->HorizontalResolution = HorizontalResolution;
   Private->VerticalResolution   = VerticalResolution;
   Private->ColorDepth           = ColorDepth;
   Private->RefreshRate          = RefreshRate;
 
+  Private->VedioMemBase = (UINT8*)0xB4000000;
+
+  Status = gBS->AllocatePool (
+                  EfiBootServicesData,
+                  sizeof (EFI_UGA_PIXEL) * Private->HorizontalResolution,
+                  &NewFillLine
+                  );
+  if (EFI_ERROR (Status)) {
+    return EFI_DEVICE_ERROR;
+  }
+
+  if (Private->FillLine != NULL) {
+    gBS->FreePool (Private->FillLine);
+  }
+
+  Private->FillLine             = NewFillLine;
+
   Fill.Red                      = 0x7f;
-  Fill.Green                    = 0x7F;
+  Fill.Green                    = 0x7f;
   Fill.Blue                     = 0x7f;
+
   This->Blt (
           This,
           &Fill,
@@ -224,16 +201,12 @@ Sm712UgaBlt (
                              buffer.
 
 --*/
-// TODO:    SourceY - add argument and description to function comment
-// TODO:    DestinationX - add argument and description to function comment
-// TODO:    DestinationY - add argument and description to function comment
-// TODO:    Delta - add argument and description to function comment
 {
-  UGA_PRIVATE_DATA  *Private;
+  SM712_UGA_PRIVATE_DATA  *Private;
   EFI_TPL           OriginalTPL;
   EFI_STATUS        Status;
 
-  Private = UGA_DRAW_PRIVATE_DATA_FROM_THIS (This);
+  Private = SM712_UGA_PRIVATE_DATA_FROM_THIS (This);
 
   if ((BltOperation < 0) || (BltOperation >= EfiUgaBltMax)) {
     return EFI_INVALID_PARAMETER;
@@ -258,11 +231,14 @@ Sm712UgaBlt (
   //
   OriginalTPL = gBS->RaiseTPL (EFI_TPL_NOTIFY);
 
-  Status = Private->UgaIo->UgaBlt (Private->UgaIo,
+  Status = UgaBlt (
+             Private,
              BltBuffer,
              BltOperation,
-             SourceX, SourceY,
-             DestinationX, DestinationY,
+             SourceX, 
+             SourceY,
+             DestinationX, 
+             DestinationY,
              Width, Height,
              Delta);
 
@@ -307,59 +283,9 @@ Returns:
   return EFI_SUCCESS;
 }
 
-
-STATIC
-EFI_STATUS
-Sm712UgaStartWindow (
-  IN  UGA_PRIVATE_DATA    *Private,
-  IN  UINT32              HorizontalResolution,
-  IN  UINT32              VerticalResolution,
-  IN  UINT32              ColorDepth,
-  IN  UINT32              RefreshRate
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  Private               - TODO: add argument description
-  HorizontalResolution  - TODO: add argument description
-  VerticalResolution    - TODO: add argument description
-  ColorDepth            - TODO: add argument description
-  RefreshRate           - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-{
-  EFI_STATUS          Status;
-
-  Private->HorizontalResolution = HorizontalResolution;
-  Private->VerticalResolution   = VerticalResolution;
-
-  //
-  // Register to be notified on exit boot services so we can destroy the window.
-  //
-  Status = gBS->CreateEvent (
-                  EFI_EVENT_SIGNAL_EXIT_BOOT_SERVICES,
-                  EFI_TPL_CALLBACK,
-                  KillNtUgaThread,
-                  Private,
-                  &mUgaScreenExitBootServicesEvent
-                  );
-
-  Status = UgaCreate(&Private->UgaIo);
-  return Status;
-}
-
 EFI_STATUS
 Sm712UgaConstructor (
-  UGA_PRIVATE_DATA    *Private
+  SM712_UGA_PRIVATE_DATA    *Private
   )
 /*++
 
@@ -372,71 +298,14 @@ Returns:
   None
 
 --*/
-// TODO:    Private - add argument and description to function comment
-// TODO:    EFI_SUCCESS - add return value to function comment
 {
 
   Private->UgaDraw.GetMode        = Sm712UgaGetMode;
   Private->UgaDraw.SetMode        = Sm712UgaSetMode;
   Private->UgaDraw.Blt            = Sm712UgaBlt;
 
-  Private->HardwareNeedsStarting  = TRUE;
-  Private->UgaIo = NULL;
-
+  Private->FillLine = NULL;
+  
   return EFI_SUCCESS;
 }
 
-EFI_STATUS
-Sm712UgaDestructor (
-  UGA_PRIVATE_DATA     *Private
-  )
-/*++
-
-Routine Description:
-
-Arguments:
-
-Returns:
-
-  None
-
---*/
-// TODO:    Private - add argument and description to function comment
-// TODO:    EFI_SUCCESS - add return value to function comment
-{
-  if (!Private->HardwareNeedsStarting) {
-    Private->UgaIo->UgaClose(Private->UgaIo);
-    Private->UgaIo = NULL;
-  }
-
-  return EFI_SUCCESS;
-}
-
-STATIC
-VOID
-EFIAPI
-KillNtUgaThread (
-  IN EFI_EVENT  Event,
-  IN VOID       *Context
-  )
-/*++
-
-Routine Description:
-
-  This is the UGA screen's callback notification function for exit-boot-services.
-  All we do here is call LinuxUgaDestructor().
-
-Arguments:
-
-  Event   - not used
-  Context - pointer to the Private structure.
-
-Returns:
-
-  None.
-
---*/
-{
-  EFI_STATUS  Status;
-  Status = Sm712UgaDestructor (Context);
-}

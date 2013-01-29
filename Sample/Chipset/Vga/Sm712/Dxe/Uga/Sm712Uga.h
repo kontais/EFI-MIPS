@@ -24,13 +24,14 @@ Abstract:
 
 #include "Tiano.h"
 #include "EfiDriverLib.h"
-
-typedef unsigned long UGA_COLOR;
+#include "Pci22.h"
+#include "Acpi.h"
 
 //
 // Driver Consumed Protocols
 //
 #include EFI_PROTOCOL_DEFINITION (DevicePath)
+#include EFI_PROTOCOL_DEFINITION (PciIo)
 #include EFI_PROTOCOL_DEFINITION (LinuxIo)
 
 //
@@ -40,20 +41,17 @@ typedef unsigned long UGA_COLOR;
 #include EFI_PROTOCOL_DEFINITION (ComponentName)
 #include EFI_PROTOCOL_DEFINITION (UgaDraw)
 #include EFI_PROTOCOL_DEFINITION (UgaIo)
-#include EFI_PROTOCOL_DEFINITION (Sm712UgaIo)
 #include "LinkedList.h"
 
 #define SM712_UGA_CLASS_NAME       L"SM712UgaWindow"
 
-#define UGA_PRIVATE_DATA_SIGNATURE  EFI_SIGNATURE_32 ('S', 'g', 'o', 'N')
+#define SM712_UGA_PRIVATE_DATA_SIGNATURE  EFI_SIGNATURE_32 ('S', 'm', 'G', 'o')
 typedef struct {
   UINT64                      Signature;
 
   EFI_HANDLE                  Handle;
   EFI_UGA_DRAW_PROTOCOL       UgaDraw;
-//  EFI_SIMPLE_TEXT_IN_PROTOCOL SimpleTextIn;
-
-//  EFI_LINUX_THUNK_PROTOCOL   *LinuxThunk;
+  EFI_PCI_IO_PROTOCOL          *PciIo;
 
   EFI_UNICODE_STRING_TABLE    *ControllerNameTable;
 
@@ -65,20 +63,15 @@ typedef struct {
   UINT32                      ColorDepth;
   UINT32                      RefreshRate;
 
-  //
-  // UGA Private Data knowing when to start hardware
-  //
-  BOOLEAN                     HardwareNeedsStarting;
+  UINT8                       *VedioMemBase;
 
-  CHAR16                      *WindowName;
+  EFI_UGA_PIXEL        *FillLine;
 
-  EFI_SM712_UGA_IO_PROTOCOL    *UgaIo;
+} SM712_UGA_PRIVATE_DATA;
 
-} UGA_PRIVATE_DATA;
+#define SM712_UGA_PRIVATE_DATA_FROM_THIS(a)  \
+         CR(a, SM712_UGA_PRIVATE_DATA, UgaDraw, SM712_UGA_PRIVATE_DATA_SIGNATURE)
 
-
-#define UGA_DRAW_PRIVATE_DATA_FROM_THIS(a)  \
-         CR(a, UGA_PRIVATE_DATA, UgaDraw, UGA_PRIVATE_DATA_SIGNATURE)
 
 //
 // Global Protocol Variables
@@ -112,7 +105,7 @@ Returns:
 
 EFI_STATUS
 Sm712UgaConstructor (
-  IN  UGA_PRIVATE_DATA    *Private
+  IN  SM712_UGA_PRIVATE_DATA    *Private
   )
 /*++
 
@@ -130,68 +123,12 @@ Returns:
 
 --*/
 ;
-
-EFI_STATUS
-Sm712UgaDestructor (
-  IN  UGA_PRIVATE_DATA    *Private
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  Private - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-;
-
-//
-// EFI 1.1 driver model prototypes for Win LINUX UGA
-//
-
-EFI_STATUS
-EFIAPI
-Sm712UgaInitialize (
-  IN EFI_HANDLE            ImageHandle,
-  IN EFI_SYSTEM_TABLE      *SystemTable
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  ImageHandle - TODO: add argument description
-  SystemTable - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-;
-
-
-
-
-EFI_STATUS
-UgaCreate (EFI_SM712_UGA_IO_PROTOCOL **Uga);
-
 
 EFI_STATUS
 EFIAPI
 Sm712UgaDriverBindingSupported (
   IN  EFI_DRIVER_BINDING_PROTOCOL     *This,
-  IN  EFI_HANDLE                      Handle,
+  IN  EFI_HANDLE                      Controller,
   IN  EFI_DEVICE_PATH_PROTOCOL        *RemainingDevicePath
   )
 /*++
@@ -203,7 +140,7 @@ Routine Description:
 Arguments:
 
   This                - TODO: add argument description
-  Handle              - TODO: add argument description
+  Controller          - TODO: add argument description
   RemainingDevicePath - TODO: add argument description
 
 Returns:
@@ -217,7 +154,7 @@ EFI_STATUS
 EFIAPI
 Sm712UgaDriverBindingStart (
   IN  EFI_DRIVER_BINDING_PROTOCOL     *This,
-  IN  EFI_HANDLE                      Handle,
+  IN  EFI_HANDLE                      Controller,
   IN  EFI_DEVICE_PATH_PROTOCOL        *RemainingDevicePath
   )
 /*++
@@ -229,7 +166,7 @@ Routine Description:
 Arguments:
 
   This                - TODO: add argument description
-  Handle              - TODO: add argument description
+  Controller          - TODO: add argument description
   RemainingDevicePath - TODO: add argument description
 
 Returns:
@@ -243,7 +180,7 @@ EFI_STATUS
 EFIAPI
 Sm712UgaDriverBindingStop (
   IN  EFI_DRIVER_BINDING_PROTOCOL  *This,
-  IN  EFI_HANDLE                   Handle,
+  IN  EFI_HANDLE                   Controller,
   IN  UINTN                        NumberOfChildren,
   IN  EFI_HANDLE                   *ChildHandleBuffer
   )
@@ -256,7 +193,7 @@ Routine Description:
 Arguments:
 
   This              - TODO: add argument description
-  Handle            - TODO: add argument description
+  Controller        - TODO: add argument description
   NumberOfChildren  - TODO: add argument description
   ChildHandleBuffer - TODO: add argument description
 

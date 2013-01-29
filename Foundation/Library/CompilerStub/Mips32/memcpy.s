@@ -23,11 +23,18 @@ Abstract:
 
   .text
   .align 2
+
+  .globl memmove
+  .ent   memmove
+  .type  memmove, @function
+
+
   .globl memcpy
   .ent   memcpy
   .type  memcpy, @function
 
 memcpy:
+memmove:
 /*++
 
 Invoke: 
