@@ -302,38 +302,6 @@ Sm712GopBlt (
 //
 // Construction and Destruction functions
 //
-
-EFI_STATUS
-Sm712GopSupported (
-  IN  EFI_LINUX_IO_PROTOCOL  *LinuxIo
-  )
-/*++
-
-Routine Description:
-
-Arguments:
-
-Returns:
-
-  None
-
---*/
-// TODO:    LinuxIo - add argument and description to function comment
-// TODO:    EFI_UNSUPPORTED - add return value to function comment
-// TODO:    EFI_SUCCESS - add return value to function comment
-{
-  //
-  // Check to see if the IO abstraction represents a device type we support.
-  //
-  // This would be replaced a check of PCI subsystem ID, etc.
-  //
-  if (!EfiCompareGuid (LinuxIo->TypeGuid, &gEfiLinuxUgaGuid)) {
-    return EFI_UNSUPPORTED;
-  }
-
-  return EFI_SUCCESS;
-}
-
 EFI_STATUS
 Sm712GopConstructor (
   SM712_GOP_PRIVATE_DATA    *Private

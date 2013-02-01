@@ -27,8 +27,7 @@ FILE_GUID       = d1c4ddee-aef7-478c-8aca-9569dd0cc8fd
 
 [sources.common]
   Sm712Gop.h
-#  Sm712GopDriver.c
-  Sm712GopDriverNoPci.c
+  Sm712GopDriver.c
   Sm712GopScreen.c
   Sm712Dev.c
   Sm712Dev.h

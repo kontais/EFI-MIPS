@@ -91,12 +91,10 @@ Returns:
 
 --*/
 // TODO:    This - add argument and description to function comment
-// TODO:    Handle - add argument and description to function comment
+// TODO:    Controller - add argument and description to function comment
 // TODO:    RemainingDevicePath - add argument and description to function comment
 {
   EFI_STATUS                Status;
-  EFI_DEVICE_PATH_PROTOCOL  *ParentDevicePath;
-  EFI_DEV_PATH              *Node;
   EFI_PCI_IO_PROTOCOL       *PciIo;
   PCI_TYPE00                PciData;
 
@@ -106,24 +104,14 @@ Returns:
   Status = gBS->OpenProtocol (
                   Controller,
                   &gEfiDevicePathProtocolGuid,
-                  (VOID **) &ParentDevicePath,
+                  NULL,
                   This->DriverBindingHandle,
                   Controller,
-                  EFI_OPEN_PROTOCOL_BY_DRIVER
+                  EFI_OPEN_PROTOCOL_TEST_PROTOCOL
                   );
   if (EFI_ERROR (Status)) {
     return Status;
   }
-
-  //
-  // Clsoe protocol, don't use device path protocol in the .Support() function
-  //
-  gBS->CloseProtocol (
-        Controller,
-        &gEfiDevicePathProtocolGuid,
-        This->DriverBindingHandle,
-        Controller
-        );
 
   //
   // Now test the EfiPciIoProtocol
@@ -196,21 +184,20 @@ Returns:
 
 --*/
 // TODO:    This - add argument and description to function comment
-// TODO:    Handle - add argument and description to function comment
+// TODO:    Controller - add argument and description to function comment
 // TODO:    RemainingDevicePath - add argument and description to function comment
 // TODO:    EFI_UNSUPPORTED - add return value to function comment
 {
   EFI_STATUS                Status;
   SM712_GOP_PRIVATE_DATA    *Private;
-  EFI_DEVICE_PATH_PROTOCOL  *ParentDevicePath;
 
   Status = gBS->OpenProtocol (
                   Controller,
                   &gEfiDevicePathProtocolGuid,
-                  (VOID **) &ParentDevicePath,
+                  NULL,
                   This->DriverBindingHandle,
                   Controller,
-                  EFI_OPEN_PROTOCOL_BY_DRIVER
+                  EFI_OPEN_PROTOCOL_TEST_PROTOCOL
                   );
   if (EFI_ERROR (Status)) {
     return Status;
@@ -225,12 +212,6 @@ Returns:
                   EFI_OPEN_PROTOCOL_BY_DRIVER
                   );
   if (EFI_ERROR (Status)) {
-  gBS->CloseProtocol (
-        Controller,
-        &gEfiDevicePathProtocolGuid,
-        This->DriverBindingHandle,
-        Controller
-        );
     return Status;
   }
 
@@ -271,12 +252,6 @@ Done:
   if (EFI_ERROR (Status)) {
     gBS->CloseProtocol (
           Controller,
-          &gEfiDevicePathProtocolGuid,
-          This->DriverBindingHandle,
-          Controller
-          );
-    gBS->CloseProtocol (
-          Controller,
           &gEfiPciIoProtocolGuid,
           This->DriverBindingHandle,
           Controller
@@ -309,7 +284,7 @@ Returns:
 
 --*/
 // TODO:    This - add argument and description to function comment
-// TODO:    Handle - add argument and description to function comment
+// TODO:    Controller - add argument and description to function comment
 // TODO:    NumberOfChildren - add argument and description to function comment
 // TODO:    ChildHandleBuffer - add argument and description to function comment
 // TODO:    EFI_NOT_STARTED - add return value to function comment
@@ -348,12 +323,6 @@ Returns:
                   &Private->GraphicsOutput
                   );
   if (!EFI_ERROR (Status)) {
-    gBS->CloseProtocol (
-          Controller,
-          &gEfiDevicePathProtocolGuid,
-          This->DriverBindingHandle,
-          Controller
-          );
     gBS->CloseProtocol (
           Controller,
           &gEfiPciIoProtocolGuid,

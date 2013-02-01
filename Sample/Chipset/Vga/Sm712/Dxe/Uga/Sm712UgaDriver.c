@@ -94,16 +94,32 @@ Returns:
 // TODO:    Controller - add argument and description to function comment
 // TODO:    RemainingDevicePath - add argument and description to function comment
 {
-  EFI_STATUS              Status;
-  EFI_LINUX_IO_PROTOCOL  *LinuxIo;
+  EFI_STATUS                Status;
+  EFI_PCI_IO_PROTOCOL       *PciIo;
+  PCI_TYPE00                PciData;
 
   //
   // Open the IO Abstraction(s) needed to perform the supported test
   //
   Status = gBS->OpenProtocol (
                   Controller,
-                  &gEfiLinuxIoProtocolGuid,
-                  &LinuxIo,
+                  &gEfiDevicePathProtocolGuid,
+                  NULL,
+                  This->DriverBindingHandle,
+                  Controller,
+                  EFI_OPEN_PROTOCOL_TEST_PROTOCOL
+                  );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  //
+  // Now test the EfiPciIoProtocol
+  //
+  Status = gBS->OpenProtocol (
+                  Controller,
+                  &gEfiPciIoProtocolGuid,
+                  (VOID **) &PciIo,
                   This->DriverBindingHandle,
                   Controller,
                   EFI_OPEN_PROTOCOL_BY_DRIVER
@@ -111,14 +127,37 @@ Returns:
   if (EFI_ERROR (Status)) {
     return Status;
   }
+  //
+  // Now further check the PCI header: Vendor Id , Device Id and Revision id
+  //
+  Status = PciIo->Pci.Read (
+                        PciIo,
+                        EfiPciIoWidthUint8,
+                        0,
+                        sizeof (PciData),
+                        &PciData
+                        );
 
-  Status = Sm712UgaSupported (LinuxIo);
+  if (EFI_ERROR (Status)) {
+    gBS->CloseProtocol (
+          Controller,
+          &gEfiPciIoProtocolGuid,
+          This->DriverBindingHandle,
+          Controller
+          );
+    return EFI_UNSUPPORTED;
+  }
   //
-  // Close the I/O Abstraction(s) used to perform the supported test
+  // Examine SM712 PCI Configuration table fields
   //
+  if ((PciData.Hdr.VendorId != SM712_VENDORID) ||
+      (PciData.Hdr.DeviceId != SM712_DEVICEID)) {
+    Status = EFI_UNSUPPORTED;
+  }
+
   gBS->CloseProtocol (
         Controller,
-        &gEfiLinuxIoProtocolGuid,
+        &gEfiPciIoProtocolGuid,
         This->DriverBindingHandle,
         Controller
         );
@@ -149,23 +188,31 @@ Returns:
 // TODO:    RemainingDevicePath - add argument and description to function comment
 // TODO:    EFI_UNSUPPORTED - add return value to function comment
 {
-  EFI_LINUX_IO_PROTOCOL  *LinuxIo;
-  EFI_STATUS              Status;
+  EFI_STATUS                Status;
   SM712_UGA_PRIVATE_DATA        *Private;
 
-  //
-  // Grab the protocols we need
-  //
   Status = gBS->OpenProtocol (
                   Controller,
-                  &gEfiLinuxIoProtocolGuid,
-                  &LinuxIo,
+                  &gEfiDevicePathProtocolGuid,
+                  NULL,
+                  This->DriverBindingHandle,
+                  Controller,
+                  EFI_OPEN_PROTOCOL_TEST_PROTOCOL
+                  );
+  if (EFI_ERROR (Status)) {
+    return Status;
+  }
+
+  Status = gBS->OpenProtocol (
+                  Controller,
+                  &gEfiPciIoProtocolGuid,
+                  (VOID**)&mPciIo,
                   This->DriverBindingHandle,
                   Controller,
                   EFI_OPEN_PROTOCOL_BY_DRIVER
                   );
   if (EFI_ERROR (Status)) {
-    return EFI_UNSUPPORTED;
+    return Status;
   }
 
   //
@@ -180,22 +227,14 @@ Returns:
   if (EFI_ERROR (Status)) {
     goto Done;
   }
+  
   //
   // Set up context record
   //
-  Private->Signature            = SM712_UGA_PRIVATE_DATA_SIGNATURE;
-  Private->Handle               = Controller;
-
-  Private->ControllerNameTable  = NULL;
-
-  EfiLibAddUnicodeString (
-    "eng",
-    gSm712UgaComponentName.SupportedLanguages,
-    &Private->ControllerNameTable,
-    LinuxIo->EnvString
-    );
-
-
+  EfiZeroMem (Private, sizeof (SM712_UGA_PRIVATE_DATA));
+  Private->Signature  = SM712_UGA_PRIVATE_DATA_SIGNATURE;
+  Private->Handle     = Controller;
+  Private->PciIo      = mPciIo;
   Status              = Sm712UgaConstructor (Private);
   if (EFI_ERROR (Status)) {
     goto Done;
@@ -209,24 +248,15 @@ Returns:
                   EFI_NATIVE_INTERFACE,
                   &Private->UgaDraw
                   );
-
 Done:
   if (EFI_ERROR (Status)) {
     gBS->CloseProtocol (
           Controller,
-          &gEfiLinuxIoProtocolGuid,
+          &gEfiPciIoProtocolGuid,
           This->DriverBindingHandle,
           Controller
           );
-
     if (Private != NULL) {
-      //
-      // On Error Free back private data
-      //
-      if (Private->ControllerNameTable != NULL) {
-        EfiLibFreeUnicodeStringTable (Private->ControllerNameTable);
-      }
-
       gBS->FreePool (Private);
     }
   }
@@ -285,7 +315,7 @@ Returns:
   Private = SM712_UGA_PRIVATE_DATA_FROM_THIS (UgaDraw);
 
   //
-  // Remove the SGO interface from the system
+  // Remove the UGA interface from the system
   //
   Status = gBS->UninstallProtocolInterface (
                   Private->Handle,
@@ -295,7 +325,7 @@ Returns:
   if (!EFI_ERROR (Status)) {
     gBS->CloseProtocol (
           Controller,
-          &gEfiLinuxIoProtocolGuid,
+          &gEfiPciIoProtocolGuid,
           This->DriverBindingHandle,
           Controller
           );

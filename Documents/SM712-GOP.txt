@@ -1,0 +1,63 @@
+
+
+gEfiGraphicsOutputProtocolGuid (Sm712GopDriver.c)
+
+gEfiSimpleTextOutProtocolGuid (GraphicsConsole.c)
+gEfiSimpleTextOutProtocolGuid WinNtConsoleDriverBindingStart (Console.c)
+gEfiSimpleTextOutProtocolGuid ConSplitter.c
+gEfiSimpleTextOutProtocolGuid TerminalDriverBindingStart (Terminal.c)
+gEfiSimpleTextOutProtocolGuid VgaClassDriverBindingStart
+
+
+//
+// VgaClass
+//
+VgaClassDriverBindingSupported <- gEfiVgaMiniPortProtocolGuid <- gEfiPciIoProtocolGuid
+VgaClassDriverBindingStart -> gEfiSimpleTextOutProtocolGuid
+
+//
+// Terminal.c
+//
+TerminalDriverBindingSupported <- gEfiSerialIoProtocolGuid
+TerminalDriverBindingStart  -> gEfiSimpleTextOutProtocolGuid -> gEfiSimpleTextInProtocolGuid
+
+//
+// CMD.exe Console
+//
+WinNtConsoleDriverBindingSupported <- gEfiWinNtIoProtocolGuid <- gEfiWinNtConsoleGuid
+WinNtConsoleDriverBindingStart -> gEfiSimpleTextOutProtocolGuid -> gEfiSimpleTextInProtocolGuid
+    -> WinNtThunk->WriteConsoleOutput -> DEBUG(());
+
+
+
+//
+// GOP
+//
+WinNtGopDriverBindingSupported <- gEfiWinNtIoProtocolGuid <- gEfiWinNtGopGuid
+WinNtGopDriverBindingStart     ->  gEfiGraphicsOutputProtocolGuid
+
+GraphicsConsoleControllerDriverSupported <- gEfiGraphicsOutputProtocolGuid
+GraphicsConsoleControllerDriverStart -> gEfiSimpleTextOutProtocolGuid
+    
+
+
+
+
+(ConPlatform.c)
+ConPlatformTextOutDriverBindingSupported <- gEfiSimpleTextOutProtocolGuid
+    // If the device path is an instance in the ConOut environment variable(L"ConOut"),
+    // then install EfiConsoleOutDeviceGuid onto ControllerHandle
+ConPlatformTextOutDriverBindingStart -> gEfiConsoleOutDeviceGuid, L"ConOutDev"
+
+
+(ConSplitter.c) ConSplitterDriverEntry
+gConSplitterConOutDriverBinding
+	ConSplitterConOutDriverBindingSupported <- gEfiConsoleOutDeviceGuid
+	ConSplitterConOutDriverBindingStart     -> ConSplitterTextOutAddDevice (CurrentNumberOfConsoles)
+
+    Status = gBS->InstallMultipleProtocolInterfaces (
+                    &gEfiGraphicsOutputProtocolGuid,
+                    &mConOut.GraphicsOutput,
+      gST->ConsoleOutHandle = mConOut.VirtualHandle;
+      gST->ConOut           = &mConOut.TextOut;
+

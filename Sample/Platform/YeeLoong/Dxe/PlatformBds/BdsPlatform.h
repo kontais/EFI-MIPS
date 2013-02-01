@@ -61,16 +61,16 @@ typedef struct {
 } NT_ISA_SERIAL_DEVICE_PATH;
 
 typedef struct {
-  VENDOR_DEVICE_PATH              NtBus;
-  WIN_NT_VENDOR_DEVICE_PATH_NODE  NtUgaDevice;
+  ACPI_HID_DEVICE_PATH            PciBus;
+  PCI_DEVICE_PATH                 PciDev;
   EFI_DEVICE_PATH_PROTOCOL        End;
-} NT_PLATFORM_UGA_DEVICE_PATH;
+} YL_PLATFORM_UGA_DEVICE_PATH;
 
 typedef struct {
-  VENDOR_DEVICE_PATH              NtBus;
-  WIN_NT_VENDOR_DEVICE_PATH_NODE  NtGopDevice;
+  ACPI_HID_DEVICE_PATH            PciBus;
+  PCI_DEVICE_PATH                 PciDev;
   EFI_DEVICE_PATH_PROTOCOL        End;
-} NT_PLATFORM_GOP_DEVICE_PATH;
+} YL_PLATFORM_GOP_DEVICE_PATH;
 
 //
 // Platform BDS Functions

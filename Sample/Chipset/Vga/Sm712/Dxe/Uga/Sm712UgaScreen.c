@@ -22,6 +22,7 @@ Abstract:
 --*/
 
 #include "Sm712Uga.h"
+#include "Sm712.h"
 
 
 //
@@ -112,6 +113,13 @@ Sm712UgaSetMode (
   EFI_UGA_PIXEL *NewFillLine;
 
   Private = SM712_UGA_PRIVATE_DATA_FROM_THIS (This);
+
+  // SM712 Now only support 1024*600*16
+  if ((HorizontalResolution != Private->HorizontalResolution) ||
+      (VerticalResolution != Private->VerticalResolution) ||
+      (ColorDepth != Private->ColorDepth)) {
+    return EFI_UNSUPPORTED;
+  }
 
   Private->HorizontalResolution = HorizontalResolution;
   Private->VerticalResolution   = VerticalResolution;
@@ -253,37 +261,6 @@ Sm712UgaBlt (
 //
 
 EFI_STATUS
-Sm712UgaSupported (
-  IN  EFI_LINUX_IO_PROTOCOL  *LinuxIo
-  )
-/*++
-
-Routine Description:
-
-Arguments:
-
-Returns:
-
-  None
-
---*/
-// TODO:    LinuxIo - add argument and description to function comment
-// TODO:    EFI_UNSUPPORTED - add return value to function comment
-// TODO:    EFI_SUCCESS - add return value to function comment
-{
-  //
-  // Check to see if the IO abstraction represents a device type we support.
-  //
-  // This would be replaced a check of PCI subsystem ID, etc.
-  //
-  if (!EfiCompareGuid (LinuxIo->TypeGuid, &gEfiLinuxUgaGuid)) {
-    return EFI_UNSUPPORTED;
-  }
-
-  return EFI_SUCCESS;
-}
-
-EFI_STATUS
 Sm712UgaConstructor (
   SM712_UGA_PRIVATE_DATA    *Private
   )
@@ -303,6 +280,12 @@ Returns:
   Private->UgaDraw.GetMode        = Sm712UgaGetMode;
   Private->UgaDraw.SetMode        = Sm712UgaSetMode;
   Private->UgaDraw.Blt            = Sm712UgaBlt;
+
+
+  Private->HorizontalResolution = SM712_WIDTH;
+  Private->VerticalResolution   = SM712_HEIGHT;
+  Private->ColorDepth           = SM712_DEPTH;
+  Private->RefreshRate          = SM712_HZ;
 
   Private->FillLine = NULL;
   

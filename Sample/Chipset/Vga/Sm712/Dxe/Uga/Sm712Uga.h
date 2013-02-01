@@ -32,7 +32,6 @@ Abstract:
 //
 #include EFI_PROTOCOL_DEFINITION (DevicePath)
 #include EFI_PROTOCOL_DEFINITION (PciIo)
-#include EFI_PROTOCOL_DEFINITION (LinuxIo)
 
 //
 // Driver Produced Protocols
@@ -53,7 +52,6 @@ typedef struct {
   EFI_UGA_DRAW_PROTOCOL       UgaDraw;
   EFI_PCI_IO_PROTOCOL          *PciIo;
 
-  EFI_UNICODE_STRING_TABLE    *ControllerNameTable;
 
   //
   // UGA Private Data for GetMode ()
@@ -78,30 +76,7 @@ typedef struct {
 //
 extern EFI_DRIVER_BINDING_PROTOCOL  gSm712UgaDriverBinding;
 extern EFI_COMPONENT_NAME_PROTOCOL  gSm712UgaComponentName;
-
-//
-// Uga Hardware abstraction internal worker functions
-//
-EFI_STATUS
-Sm712UgaSupported (
-  IN  EFI_LINUX_IO_PROTOCOL  *LinuxIo
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  Sm712Io - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-;
+extern EFI_PCI_IO_PROTOCOL          *mPciIo;
 
 EFI_STATUS
 Sm712UgaConstructor (
@@ -188,18 +163,11 @@ Sm712UgaDriverBindingStop (
 
 Routine Description:
 
-  TODO: Add function description
-
 Arguments:
-
-  This              - TODO: add argument description
-  Controller        - TODO: add argument description
-  NumberOfChildren  - TODO: add argument description
-  ChildHandleBuffer - TODO: add argument description
 
 Returns:
 
-  TODO: add return values
+  None
 
 --*/
 ;

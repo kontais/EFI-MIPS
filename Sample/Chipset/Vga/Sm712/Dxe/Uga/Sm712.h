@@ -28,4 +28,19 @@ Abstract:
 #define SM712_VENDORID   (0x126F)
 #define SM712_DEVICEID   (0x0712)
 
+EFI_STATUS
+UgaBlt(
+       IN  SM712_UGA_PRIVATE_DATA                  *Private,
+       IN  EFI_UGA_PIXEL                           *BltBuffer OPTIONAL,
+       IN  EFI_UGA_BLT_OPERATION                   BltOperation,
+       IN  UINTN                                   SourceX,
+       IN  UINTN                                   SourceY,
+       IN  UINTN                                   DestinationX,
+       IN  UINTN                                   DestinationY,
+       IN  UINTN                                   Width,
+       IN  UINTN                                   Height,
+       IN  UINTN                                   Delta OPTIONAL
+  )
+;
+
 #endif /* _SM721_DEV_H_ */

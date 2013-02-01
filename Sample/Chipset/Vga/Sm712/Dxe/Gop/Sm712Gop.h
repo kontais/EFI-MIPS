@@ -33,7 +33,6 @@ Abstract:
 //
 #include EFI_PROTOCOL_DEFINITION (DevicePath)
 #include EFI_PROTOCOL_DEFINITION (PciIo)
-#include EFI_PROTOCOL_DEFINITION (LinuxIo)
 
 //
 // Driver Produced Protocols
@@ -70,7 +69,6 @@ typedef struct {
   //
   SM712_GOP_MODE_DATA                  *ModeData;
   EFI_GRAPHICS_OUTPUT_BLT_PIXEL        *FillLine;
-  EFI_UNICODE_STRING_TABLE    *ControllerNameTable;
 
 } SM712_GOP_PRIVATE_DATA;
 
@@ -83,28 +81,7 @@ typedef struct {
 //
 extern EFI_DRIVER_BINDING_PROTOCOL  gSm712GopDriverBinding;
 extern EFI_COMPONENT_NAME_PROTOCOL  gSm712GopComponentName;
-extern EFI_PCI_IO_PROTOCOL          *mPciIo;;
-
-EFI_STATUS
-Sm712GopSupported (
-  IN  EFI_LINUX_IO_PROTOCOL  *LinuxIo
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  Sm712Io - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-;
+extern EFI_PCI_IO_PROTOCOL          *mPciIo;
 
 EFI_STATUS
 Sm712GopConstructor (
@@ -119,35 +96,6 @@ Routine Description:
 Arguments:
 
   Private - TODO: add argument description
-
-Returns:
-
-  TODO: add return values
-
---*/
-;
-
-
-//
-// EFI 1.1 driver model prototypes for SM712 GOP
-//
-
-EFI_STATUS
-EFIAPI
-Sm712GopInitialize (
-  IN EFI_HANDLE            ImageHandle,
-  IN EFI_SYSTEM_TABLE      *SystemTable
-  )
-/*++
-
-Routine Description:
-
-  TODO: Add function description
-
-Arguments:
-
-  ImageHandle - TODO: add argument description
-  SystemTable - TODO: add argument description
 
 Returns:
 
@@ -198,7 +146,7 @@ Routine Description:
 Arguments:
 
   This                - TODO: add argument description
-  Handle              - TODO: add argument description
+  Controller          - TODO: add argument description
   RemainingDevicePath - TODO: add argument description
 
 Returns:

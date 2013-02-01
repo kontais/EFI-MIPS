@@ -30,82 +30,90 @@ UINT16                      gPlatformBootTimeOutDefault = 10;
 //
 // Platform specific keyboard device path
 //
-NT_PLATFORM_UGA_DEVICE_PATH gUgaDevicePath0 = {
+YL_PLATFORM_UGA_DEVICE_PATH gUgaDevicePath0 = {
   {
-    HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (VENDOR_DEVICE_PATH)),
-    (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8),
-    EFI_LINUX_THUNK_PROTOCOL_GUID
+    ACPI_DEVICE_PATH,
+    ACPI_DP,
+    (UINT8) (sizeof(ACPI_HID_DEVICE_PATH)),
+    (UINT8) ((sizeof(ACPI_HID_DEVICE_PATH)) >> 8),
+    EISA_PNP_ID(0x0A03),
+    0
   },
   {
     HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)),
-    (UINT8) ((sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)) >> 8),
-    EFI_LINUX_UGA_GUID,
-    0
+    HW_PCI_DP,
+    (UINT8) (sizeof (PCI_DEVICE_PATH)),
+    (UINT8) ((sizeof (PCI_DEVICE_PATH)) >> 8),
+    0,
+    8
   },
   gEndEntire
 };
 
-NT_PLATFORM_UGA_DEVICE_PATH gUgaDevicePath1 = {
+/*
+YL_PLATFORM_UGA_DEVICE_PATH gUgaDevicePath1 = {
   {
-    HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (VENDOR_DEVICE_PATH)),
-    (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8),
-    EFI_LINUX_THUNK_PROTOCOL_GUID
+    ACPI_DEVICE_PATH,
+    ACPI_DP,
+    (UINT8) (sizeof(ACPI_HID_DEVICE_PATH)),
+    (UINT8) ((sizeof(ACPI_HID_DEVICE_PATH)) >> 8),
+    EISA_PNP_ID(0x0A03),
+    0
   },
   {
     HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)),
-    (UINT8) ((sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)) >> 8),
-    EFI_LINUX_UGA_GUID,
-    1
+    HW_PCI_DP,
+    (UINT8) (sizeof (PCI_DEVICE_PATH)),
+    (UINT8) ((sizeof (PCI_DEVICE_PATH)) >> 8),
+    0,
+    8
   },
   gEndEntire
 };
+*/
 
 #if (EFI_SPECIFICATION_VERSION >= 0x00020000)
-NT_PLATFORM_GOP_DEVICE_PATH gGopDevicePath0 = {
+YL_PLATFORM_GOP_DEVICE_PATH gGopDevicePath0 = {
   {
-    HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (VENDOR_DEVICE_PATH)),
-    (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8),
-    EFI_LINUX_THUNK_PROTOCOL_GUID
+    ACPI_DEVICE_PATH,
+    ACPI_DP,
+    (UINT8) (sizeof(ACPI_HID_DEVICE_PATH)),
+    (UINT8) ((sizeof(ACPI_HID_DEVICE_PATH)) >> 8),
+    EISA_PNP_ID(0x0A03),
+    0
   },
   {
     HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)),
-    (UINT8) ((sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)) >> 8),
-    EFI_LINUX_GOP_GUID,
-    0
+    HW_PCI_DP,
+    (UINT8) (sizeof (PCI_DEVICE_PATH)),
+    (UINT8) ((sizeof (PCI_DEVICE_PATH)) >> 8),
+    0,
+    8
   },
   gEndEntire
 };
 
-NT_PLATFORM_GOP_DEVICE_PATH gGopDevicePath1 = {
+/*
+YL_PLATFORM_GOP_DEVICE_PATH gGopDevicePath1 = {
   {
-    HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (VENDOR_DEVICE_PATH)),
-    (UINT8) ((sizeof (VENDOR_DEVICE_PATH)) >> 8),
-    EFI_LINUX_THUNK_PROTOCOL_GUID
+    ACPI_DEVICE_PATH,
+    ACPI_DP,
+    (UINT8) (sizeof(ACPI_HID_DEVICE_PATH)),
+    (UINT8) ((sizeof(ACPI_HID_DEVICE_PATH)) >> 8),
+    EISA_PNP_ID(0x0A03),
+    0
   },
   {
     HARDWARE_DEVICE_PATH,
-    HW_VENDOR_DP,
-    (UINT8) (sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)),
-    (UINT8) ((sizeof (WIN_NT_VENDOR_DEVICE_PATH_NODE)) >> 8),
-    EFI_LINUX_GOP_GUID,
-    1
+    HW_PCI_DP,
+    (UINT8) (sizeof (PCI_DEVICE_PATH)),
+    (UINT8) ((sizeof (PCI_DEVICE_PATH)) >> 8),
+    0,
+    8
   },
   gEndEntire
 };
+*/
 #endif
 
 //
@@ -200,19 +208,23 @@ BDS_CONSOLE_CONNECT_ENTRY   gPlatformConsole[] = {
     (EFI_DEVICE_PATH_PROTOCOL *) &gUgaDevicePath0,
     (CONSOLE_OUT | CONSOLE_IN)
   },
-  {
+/*
+{
     (EFI_DEVICE_PATH_PROTOCOL *) &gUgaDevicePath1,
     (CONSOLE_OUT | CONSOLE_IN)
   },
+*/
 #if (EFI_SPECIFICATION_VERSION >= 0x00020000)
   {
     (EFI_DEVICE_PATH_PROTOCOL *) &gGopDevicePath0,
     (CONSOLE_OUT | CONSOLE_IN)
   },
+/*
   {
     (EFI_DEVICE_PATH_PROTOCOL *) &gGopDevicePath1,
     (CONSOLE_OUT | CONSOLE_IN)
   },
+*/
 #endif
   {
     NULL,
